@@ -1,5 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { DropResult } from "react-beautiful-dnd";
+
+// Store
+import { AppContext } from "../store/context";
+import { Types } from "../store/reducers";
 
 // Types
 import { CardType, ListType } from "../types/app";
@@ -52,7 +56,12 @@ const useKanban = () => {
     "l-4",
   ]);
 
+  const { dispatch } = useContext(AppContext);
+
   const onDragEnd = (result: DropResult) => {
+    // Dispatch action to change state to not dragging.
+    dispatch({ type: Types.NotDragging });
+
     const { destination, source, draggableId, type } = result;
 
     // If card is dropped somewhere else from list, return.
@@ -102,11 +111,18 @@ const useKanban = () => {
     });
   };
 
+  const onDragStart = () => {
+    // Toggle dragging
+    dispatch({ type: Types.Dragging });
+    console.log("heheh");
+  };
+
   return {
     lists,
     cards,
     listOrder,
     onDragEnd,
+    onDragStart,
     setLists,
     setCards,
     setListOrder,
