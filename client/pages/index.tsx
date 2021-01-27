@@ -9,18 +9,7 @@ import {
   DropResult,
 } from "react-beautiful-dnd";
 import Column from "../components/Column";
-
-export interface CardType {
-  id: string;
-  title: string;
-  description?: string;
-}
-
-export interface ColumnType {
-  id: string;
-  title: string;
-  cardIds: string[];
-}
+import { CardType, ColumnType } from "../types/app";
 
 function Home() {
   const [cards, setCards] = useState<{ [key: string]: CardType }>({
@@ -45,19 +34,16 @@ function Home() {
   const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId, type } = result;
 
-    if (!destination) {
-      return;
-    }
+    if (!destination) return;
 
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
-    ) {
+    )
       return;
-    }
 
     if (type === "column") {
-      const newColumnOrder = Array.from(columnOrder);
+      const newColumnOrder = [...columnOrder];
       newColumnOrder.splice(source.index, 1);
       newColumnOrder.splice(destination.index, 0, draggableId);
       setColumnOrder(newColumnOrder);
@@ -97,7 +83,7 @@ function Home() {
       <Droppable droppableId="all-columns" direction="horizontal" type="column">
         {(provided) => (
           <div
-            className="bg-cream-50 h-screen flex"
+            className="bg-cream-50 h-screen flex justify-center"
             {...provided.droppableProps}
             ref={provided.innerRef}
           >

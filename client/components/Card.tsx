@@ -1,5 +1,5 @@
 import { Draggable } from "react-beautiful-dnd";
-import { CardType } from "../pages";
+import { CardType } from "../types/app";
 
 interface CardProps {
   card: CardType;
@@ -11,7 +11,7 @@ const Card: React.FC<CardProps> = ({ card, index }) => {
     <Draggable draggableId={card.id} index={index} key={card.id}>
       {(provided) => (
         <div
-          className="bg-white border border-cream-100 rounded-md shadow-sm p-3"
+          className="bg-white border border-cream-100 rounded-md shadow-sm p-3 mb-2"
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
