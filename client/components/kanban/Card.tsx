@@ -1,5 +1,5 @@
 import { Draggable } from "react-beautiful-dnd";
-import { CardType } from "../types/app";
+import { CardType } from "../../types/app";
 
 interface CardProps {
   card: CardType;

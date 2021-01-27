@@ -1,29 +1,29 @@
 import { Draggable, Droppable } from "react-beautiful-dnd";
 
-import { CardType, ColumnType } from "../types/app";
+import { CardType, ListType } from "../../types/app";
 import Card from "./Card";
 
-interface ColumnProps {
-  column: ColumnType;
+interface ListProps {
+  list: ListType;
   cards: CardType[];
   index: number;
 }
 
-const Column: React.FC<ColumnProps> = ({ column, cards, index }) => {
+const List: React.FC<ListProps> = ({ list, cards, index }) => {
   return (
-    <Draggable draggableId={column.id} index={index}>
-      {(columnProvided) => (
+    <Draggable draggableId={list.id} index={index}>
+      {(listProvided) => (
         <div
           className="flex flex-col w-64 px-2"
-          {...columnProvided.draggableProps}
-          ref={columnProvided.innerRef}
+          {...listProvided.draggableProps}
+          ref={listProvided.innerRef}
         >
-          <div className="flex py-4" {...columnProvided.dragHandleProps}>
+          <div className="flex py-4" {...listProvided.dragHandleProps}>
             <div className="flex-grow border-b-2 h-1/2 border-cream-200"></div>
-            <div className="font-bold text-lg px-4"> {column.title}</div>
+            <div className="font-bold text-lg px-4"> {list.title}</div>
             <div className="flex-grow border-b-2 h-1/2 border-cream-200"></div>
           </div>
-          <Droppable droppableId={column.id} type="card">
+          <Droppable droppableId={list.id} type="card">
             {(provided) => (
               <div
                 className="flex flex-col flex-grow"
@@ -43,4 +43,4 @@ const Column: React.FC<ColumnProps> = ({ column, cards, index }) => {
   );
 };
 
-export default Column;
+export default List;

@@ -4,7 +4,7 @@ export interface CardType {
   description?: string;
 }
 
-export interface ColumnType {
+export interface ListType {
   id: string;
   title: string;
   cardIds: string[];
