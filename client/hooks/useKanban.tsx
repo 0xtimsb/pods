@@ -6,23 +6,51 @@ import { CardType, ListType } from "../types/app";
 
 const useKanban = () => {
   const [cards, setCards] = useState<{ [key: string]: CardType }>({
-    "c-1": { id: "c-1", title: "Card 1", description: "New Card Decribtion" },
-    "c-2": { id: "c-2", title: "Card 2", description: "New Card Decribtion" },
-    "c-3": { id: "c-3", title: "Card 3", description: "New Card Decribtion" },
+    "c-1": {
+      id: "c-1",
+      title: "Star the repo!",
+      description: "New Card Decribtion",
+    },
+    "c-2": {
+      id: "c-2",
+      title: "Fork the repo!",
+      description: "New Card Decribtion",
+    },
+    "c-3": {
+      id: "c-3",
+      title: "Check out Pod.",
+      description:
+        "Use Pod for Project Management and Communicaion with Teams.",
+    },
   });
   const [lists, setLists] = useState<{ [key: string]: ListType }>({
     "l-1": {
       id: "l-1",
-      title: "Todo",
+      title: "To Do",
       cardIds: ["c-1", "c-2"],
     },
     "l-2": {
       id: "l-2",
-      title: "Todo 2",
+      title: "In Progress",
       cardIds: ["c-3"],
     },
+    "l-3": {
+      id: "l-3",
+      title: "Review",
+      cardIds: [],
+    },
+    "l-4": {
+      id: "l-4",
+      title: "Done",
+      cardIds: [],
+    },
   });
-  const [listOrder, setListOrder] = useState<string[]>(["l-1", "l-2"]);
+  const [listOrder, setListOrder] = useState<string[]>([
+    "l-1",
+    "l-2",
+    "l-3",
+    "l-4",
+  ]);
 
   const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId, type } = result;
@@ -60,11 +88,11 @@ const useKanban = () => {
     }
 
     // Moving card from one list to other list.
-    const startCardIds = Array.from(start.cardIds);
+    const startCardIds = [...start.cardIds];
     startCardIds.splice(source.index, 1);
     const newStart: ListType = { ...start, cardIds: startCardIds };
 
-    const finishCardIds = Array.from(finish.cardIds);
+    const finishCardIds = [...finish.cardIds];
     finishCardIds.splice(destination.index, 0, draggableId);
     const newFinish: ListType = { ...finish, cardIds: finishCardIds };
     setLists({
@@ -74,7 +102,15 @@ const useKanban = () => {
     });
   };
 
-  return { lists, cards, listOrder, onDragEnd };
+  return {
+    lists,
+    cards,
+    listOrder,
+    onDragEnd,
+    setLists,
+    setCards,
+    setListOrder,
+  };
 };
 
 export default useKanban;

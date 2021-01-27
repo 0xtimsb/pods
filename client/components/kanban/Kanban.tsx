@@ -1,14 +1,34 @@
+import { useEffect } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { v4 } from "uuid";
 
 // Hooks
 import useKanban from "../../hooks/useKanban";
+import { ListType } from "../../types/app";
 
 // Components
 import Add from "./Add";
 import List from "./List";
 
 const Kanban = () => {
-  const { lists, cards, listOrder, onDragEnd } = useKanban();
+  const {
+    lists,
+    cards,
+    listOrder,
+    onDragEnd,
+    setLists,
+    setListOrder,
+  } = useKanban();
+
+  useEffect(() => {}, [lists]);
+
+  const handleAddList = () => {
+    const newKey = `l-${v4()}`;
+    const newList: ListType = { id: newKey, title: "New List", cardIds: [] };
+    setLists({ ...lists, [newKey]: newList });
+    setListOrder([...listOrder, newKey]);
+  };
+
   return (
     <div className="flex justify-center">
       <DragDropContext onDragEnd={onDragEnd}>
@@ -32,7 +52,7 @@ const Kanban = () => {
         </Droppable>
       </DragDropContext>
       <div className="flex flex-col py-3">
-        <Add />
+        <Add onClick={handleAddList} />
       </div>
     </div>
   );
