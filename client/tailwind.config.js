@@ -12,7 +12,8 @@ module.exports = {
       colors: {
         cream: {
           50: "#F6F2EF",
-          100: "#E2DEDB",
+          100: "#EBE8E6",
+          200: "#E2DEDB",
         },
       },
     },

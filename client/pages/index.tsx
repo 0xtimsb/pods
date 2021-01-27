@@ -8,6 +8,8 @@ import {
   Droppable,
   DropResult,
 } from "react-beautiful-dnd";
+import { IoAdd } from "react-icons/io5";
+
 import Column from "../components/Column";
 import { CardType, ColumnType } from "../types/app";
 
@@ -79,31 +81,44 @@ function Home() {
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="all-columns" direction="horizontal" type="column">
-        {(provided) => (
-          <div
-            className="bg-cream-50 h-screen flex justify-center"
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-          >
-            {columnOrder.map((key, index) => {
-              const column = columns[key];
-              const columnCards = column.cardIds.map((cardId) => cards[cardId]);
-              return (
-                <Column
-                  key={key}
-                  column={column}
-                  cards={columnCards}
-                  index={index}
-                />
-              );
-            })}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <div className="bg-cream-50 h-screen flex justify-center">
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable
+          droppableId="all-columns"
+          direction="horizontal"
+          type="column"
+        >
+          {(provided) => (
+            <div
+              className="flex"
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {columnOrder.map((key, index) => {
+                const column = columns[key];
+                const columnCards = column.cardIds.map(
+                  (cardId) => cards[cardId]
+                );
+                return (
+                  <Column
+                    key={key}
+                    column={column}
+                    cards={columnCards}
+                    index={index}
+                  />
+                );
+              })}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+      <div className="flex flex-col py-3">
+        <div className="cursor-pointer rounded-full hover:bg-cream-100 p-2">
+          <IoAdd fontSize={21} />
+        </div>
+      </div>
+    </div>
   );
 }
 

@@ -19,9 +19,9 @@ const Column: React.FC<ColumnProps> = ({ column, cards, index }) => {
           ref={columnProvided.innerRef}
         >
           <div className="flex py-4" {...columnProvided.dragHandleProps}>
-            <div className="flex-grow border-b-2 h-1/2 border-cream-100"></div>
+            <div className="flex-grow border-b-2 h-1/2 border-cream-200"></div>
             <div className="font-bold text-lg px-4"> {column.title}</div>
-            <div className="flex-grow border-b-2 h-1/2 border-cream-100"></div>
+            <div className="flex-grow border-b-2 h-1/2 border-cream-200"></div>
           </div>
           <Droppable droppableId={column.id} type="card">
             {(provided) => (
