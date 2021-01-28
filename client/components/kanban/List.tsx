@@ -5,11 +5,14 @@ import Card from "./Card";
 
 interface ListProps {
   list: ListType;
-  cards: CardType[];
+  cards: {
+    [key: string]: CardType;
+  };
   index: number;
 }
 
 const List: React.FC<ListProps> = ({ list, cards, index }) => {
+  const listCards = list.cardIds.map((cardId) => cards[cardId]);
   return (
     <Draggable draggableId={list.id} index={index}>
       {(listProvided) => (
@@ -30,8 +33,13 @@ const List: React.FC<ListProps> = ({ list, cards, index }) => {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {cards.map((card, cardIndex) => (
-                  <Card key={card.id} card={card} index={cardIndex} />
+                {listCards.map((card, cardIndex) => (
+                  <Card
+                    key={card.id}
+                    card={card}
+                    cards={cards}
+                    index={cardIndex}
+                  />
                 ))}
                 {provided.placeholder}
               </div>

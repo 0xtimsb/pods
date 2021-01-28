@@ -18,6 +18,7 @@ const Kanban = () => {
     onDragStart,
     setLists,
     setListOrder,
+    setCards,
   } = useKanban();
 
   const handleAddList = () => {
@@ -39,9 +40,8 @@ const Kanban = () => {
             >
               {listOrder.map((key, index) => {
                 const list = lists[key];
-                const listCards = list.cardIds.map((cardId) => cards[cardId]);
                 return (
-                  <List key={key} list={list} cards={listCards} index={index} />
+                  <List key={key} list={list} cards={cards} index={index} />
                 );
               })}
               {provided.placeholder}

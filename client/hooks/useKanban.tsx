@@ -114,7 +114,6 @@ const useKanban = () => {
   const onDragStart = () => {
     // Toggle dragging
     dispatch({ type: Types.Dragging });
-    console.log("heheh");
   };
 
   return {

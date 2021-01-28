@@ -10,13 +10,20 @@ import { CardType } from "../../types/app";
 
 interface CardProps {
   card: CardType;
+  cards: {
+    [key: string]: CardType;
+  };
   index: number;
 }
 
-const Card: React.FC<CardProps> = ({ card, index }) => {
+const Card: React.FC<CardProps> = ({ card, cards, index }) => {
   const [hover, setHover] = useState<boolean>(false);
 
   const { state } = useContext(AppContext);
+
+  const handleRemoveCard = () => {
+    cards[card.id];
+  };
 
   return (
     <Draggable draggableId={card.id} index={index} key={card.id}>
@@ -41,7 +48,7 @@ const Card: React.FC<CardProps> = ({ card, index }) => {
                 <MdEdit />
               </div>
               <div className="cursor-pointer p-2 flex justify-center items-center hover:bg-gray-100">
-                <MdClose />
+                <MdClose onClick={handleRemoveCard} />
               </div>
             </div>
           )}
