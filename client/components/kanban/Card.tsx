@@ -43,13 +43,9 @@ const Card: React.FC<CardProps> = ({ card, cards, index }) => {
             <div className="text-xs">{card.description}</div>
           </div>
           {hover && !state.isDragging && (
-            <div className="overflow-hidden flex absolute -bottom-1.5 -right-1.5 bg-white border border-cream-200 rounded-md shadow">
-              <div className="cursor-pointer p-2 flex justify-center items-center hover:bg-gray-100">
-                <MdEdit />
-              </div>
-              <div className="cursor-pointer p-2 flex justify-center items-center hover:bg-gray-100">
-                <MdClose onClick={handleRemoveCard} />
-              </div>
+            <div className="flex absolute -bottom-1.5 -right-1.5 bg-white border border-cream-200 rounded-md shadow gap-3 px-3 py-2">
+              <MdEdit className="cursor-pointer" />
+              <MdClose className="cursor-pointer" onClick={handleRemoveCard} />
             </div>
           )}
         </div>
