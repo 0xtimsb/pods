@@ -9,6 +9,13 @@ import { createConnection } from "typeorm";
 import { buildSchema } from "type-graphql";
 import path from "path";
 
+import Redis from "ioredis";
+import connectRedis from "connect-redis";
+import session from "express-session";
+
+// Constants
+import { __prod__ } from "./constants";
+
 // Resolvers
 import { UserResolver } from "./resolvers/UserResolver";
 
@@ -16,6 +23,7 @@ const main = async () => {
   await createConnection({
     type: "postgres",
     logging: true,
+    synchronize: true,
     url: process.env.DATABASE_URL,
     migrations: [path.join(__dirname, "./migrations/*")],
     entities: [path.join(__dirname, "./entities/*")],
@@ -24,12 +32,48 @@ const main = async () => {
   const schema = await buildSchema({
     resolvers: [UserResolver],
     //  emitSchemaFile: path.resolve(__dirname, "schema.gql"),  // To emit schema file
+    validate: false,
   });
 
-  const server = new ApolloServer({ schema });
-
   const app = express();
-  server.applyMiddleware({ app });
+
+  if (__prod__) {
+    app.set("trust proxy", 1); // trust first proxy
+  }
+
+  const RedisStore = connectRedis(session);
+  const redis = new Redis(process.env.REDIS_URL);
+
+  app.use(
+    session({
+      store: new RedisStore({
+        client: redis,
+        disableTouch: true, // To store data and extra calls
+      }),
+      cookie: {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
+        sameSite: "lax", // csrf (cross-site request forgery)
+        secure: __prod__, // Cookie only works in https.
+      },
+      saveUninitialized: false,
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+    })
+  );
+
+  const apolloServer = new ApolloServer({
+    schema,
+    context: ({ req, res }) => ({ req, res, redis }),
+  });
+
+  apolloServer.applyMiddleware({
+    app,
+    cors: {
+      origin: process.env.CORS_ORIGIN,
+      credentials: true,
+    },
+  });
 
   app.listen(parseInt(process.env.PORT), () =>
     console.log(

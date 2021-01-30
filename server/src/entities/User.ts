@@ -1,14 +1,53 @@
-import { Field, ID, ObjectType } from "type-graphql";
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
+import { Field, ObjectType } from "type-graphql";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
+} from "typeorm";
+import { Pod } from "./Pod";
 
 @Entity()
 @ObjectType()
 export class User extends BaseEntity {
+  @Field()
   @PrimaryGeneratedColumn()
-  @Field(() => ID)
   id: number;
 
-  @Column()
   @Field()
-  age: number;
+  @Column({ unique: true })
+  username: string;
+
+  @Field()
+  @Column({ unique: true })
+  email: string;
+
+  @Column()
+  password!: string;
+
+  @Field(() => String)
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Field(() => String)
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @ManyToMany(() => Pod, (pod) => pod.users)
+  @JoinTable({
+    name: "member",
+    joinColumn: {
+      name: "user",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "pod",
+      referencedColumnName: "id",
+    },
+  })
+  pods: Pod[];
 }
