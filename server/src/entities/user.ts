@@ -10,6 +10,7 @@ import {
   JoinTable,
 } from "typeorm";
 import { Pod } from "./pod";
+import { Task } from "./task";
 
 @Entity()
 @ObjectType()
@@ -51,4 +52,19 @@ export class User extends BaseEntity {
     },
   })
   pods: Pod[];
+
+  @Field(() => [Task])
+  @ManyToMany(() => Task, (task) => task.users)
+  @JoinTable({
+    name: "assign",
+    joinColumn: {
+      name: "user",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "task",
+      referencedColumnName: "id",
+    },
+  })
+  tasks: Task[];
 }

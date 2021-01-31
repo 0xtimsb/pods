@@ -6,16 +6,16 @@ import {
   BaseEntity,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToMany,
+  ManyToOne,
   OneToMany,
 } from "typeorm";
 
-import { Story } from "./story";
-import { User } from "./user";
+import { Pod } from "./pod";
+import { Task } from "./task";
 
 @Entity()
 @ObjectType()
-export class Pod extends BaseEntity {
+export class Story extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
   id: number;
@@ -23,6 +23,10 @@ export class Pod extends BaseEntity {
   @Field()
   @Column()
   name: string;
+
+  @Field()
+  @Column()
+  index: number;
 
   @Field(() => String)
   @CreateDateColumn()
@@ -32,9 +36,9 @@ export class Pod extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToMany(() => User, (user) => user.pods)
-  users: User[];
+  @ManyToOne(() => Pod, (pod) => pod.stories)
+  pod: Pod;
 
-  @OneToMany(() => Story, (story) => story.pod)
-  stories: Story[];
+  @OneToMany(() => Task, (task) => task.story)
+  tasks: Task[];
 }

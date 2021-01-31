@@ -7,7 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToMany,
-  OneToMany,
+  ManyToOne,
 } from "typeorm";
 
 import { Story } from "./story";
@@ -15,7 +15,7 @@ import { User } from "./user";
 
 @Entity()
 @ObjectType()
-export class Pod extends BaseEntity {
+export class Task extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
   id: number;
@@ -23,6 +23,14 @@ export class Pod extends BaseEntity {
   @Field()
   @Column()
   name: string;
+
+  @Field()
+  @Column()
+  description: string;
+
+  @Field()
+  @Column()
+  index: number;
 
   @Field(() => String)
   @CreateDateColumn()
@@ -35,6 +43,6 @@ export class Pod extends BaseEntity {
   @ManyToMany(() => User, (user) => user.pods)
   users: User[];
 
-  @OneToMany(() => Story, (story) => story.pod)
-  stories: Story[];
+  @ManyToOne(() => Story, (story) => story.tasks)
+  story: Story;
 }
