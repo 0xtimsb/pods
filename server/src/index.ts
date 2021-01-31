@@ -76,9 +76,7 @@ const main = async () => {
   });
 
   app.listen(parseInt(process.env.PORT), () =>
-    console.log(
-      `Running: http://localhost:${process.env.PORT}${server.graphqlPath}`
-    )
+    console.log(`Running: http://localhost:${process.env.PORT}/graphql`)
   );
 };
 

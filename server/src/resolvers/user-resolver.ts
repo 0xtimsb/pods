@@ -7,7 +7,7 @@ import {
   Resolver,
   Root,
 } from "type-graphql";
-import { getConnection } from "typeorm";
+import { createQueryBuilder, getConnection } from "typeorm";
 import argon2 from "argon2";
 import { v4 } from "uuid";
 
@@ -27,6 +27,7 @@ import { Context } from "../types/context";
 
 // Constants
 import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
+import { Pod } from "../entities/pod";
 
 @Resolver(User)
 export class UserResolver {
@@ -227,5 +228,19 @@ export class UserResolver {
     }
     // Current user wants to see someone else email
     return "";
+  }
+
+  // Field Resolver to prevent extra data query to database, when pods are not needed by graphql.
+  @FieldResolver(() => [Pod])
+  pods(@Root() user: User, @Ctx() { req }: Context) {
+    // Show pods for current user only.
+    if (req.session.userId !== user.id) {
+      return [];
+    }
+    // Returns all the pods, but not user, having user.id as current user id
+    return createQueryBuilder(Pod, "pod")
+      .innerJoin("pod.users", "user")
+      .where("user.id = :id", { id: user.id })
+      .getMany();
   }
 }
