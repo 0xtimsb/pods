@@ -2,7 +2,3 @@
 # yarn lockfile v1
 
 
-connect-redis@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/connect-redis/-/connect-redis-5.0.0.tgz#68fe890117e761ee98e13a14b835338bd6bf044c"
-  integrity sha512-R4nTW5uXeG5s6zr/q4abmtcdloglZrL/A3cpa0JU0RLFJU4mTR553HUY8OZ0ngeySkGDclwQ5xmCcjjKkxdOSg==

@@ -16,7 +16,5 @@
     "url": "https://github.com/smitbarmase/pods/issues"
   },
   "homepage": "https://github.com/smitbarmase/pods",
-  "dependencies": {
-    "connect-redis": "^5.0.0"
-  }
+  "dependencies": {}
 }

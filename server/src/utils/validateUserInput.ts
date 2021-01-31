@@ -1,4 +1,4 @@
-import { UserInput } from "../inputs/UserInput";
+import { UserInput } from "../inputs/user-input";
 
 export const validateUserInput = ({ email, username, password }: UserInput) => {
   const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

@@ -17,7 +17,7 @@ import session from "express-session";
 import { __prod__ } from "./constants";
 
 // Resolvers
-import { UserResolver } from "./resolvers/UserResolver";
+import { UserResolver } from "./resolvers/user-resolver";
 
 const main = async () => {
   await createConnection({

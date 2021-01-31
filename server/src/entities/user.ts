@@ -9,7 +9,7 @@ import {
   ManyToMany,
   JoinTable,
 } from "typeorm";
-import { Pod } from "./Pod";
+import { Pod } from "./pod";
 
 @Entity()
 @ObjectType()
@@ -37,6 +37,7 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Field(() => [Pod])
   @ManyToMany(() => Pod, (pod) => pod.users)
   @JoinTable({
     name: "member",
