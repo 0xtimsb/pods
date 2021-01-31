@@ -13,6 +13,7 @@ import { v4 } from "uuid";
 
 // Entities
 import { User } from "../entities/user";
+import { Pod } from "../entities/pod";
 
 // Inputs and Objects
 import { UserInput } from "../inputs/user-input";
@@ -27,7 +28,6 @@ import { Context } from "../types/context";
 
 // Constants
 import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
-import { Pod } from "../entities/pod";
 
 @Resolver(User)
 export class UserResolver {
