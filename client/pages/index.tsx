@@ -1,3 +1,4 @@
+// Components
 import Kanban from "../components/kanban/Kanban";
 
 // Store
