@@ -1,20 +1,14 @@
 {
-  "name": "pods",
-  "version": "1.0.0",
-  "description": "A project management + communication tool for teams",
-  "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "codegen": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace client codegen\"",
+    "start": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace client dev\""
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/smitbarmase/pods.git"
-  },
-  "author": "Smit Barmase",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/smitbarmase/pods/issues"
-  },
-  "homepage": "https://github.com/smitbarmase/pods",
-  "dependencies": {}
+  "dependencies": {
+    "concurrently": "^5.3.0"
+  }
 }
