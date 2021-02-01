@@ -7,17 +7,14 @@ import {
   Root,
 } from "type-graphql";
 import { createQueryBuilder, getConnection } from "typeorm";
-import { Story } from "../entities/story";
 
 // Entities
 import { Task } from "../entities/task";
-import { User } from "../entities/user";
-import { StoryInput } from "../inputs/story-input";
+import { Story } from "../entities/story";
 
 // Inputs and Objects
-import { TaskInput } from "../inputs/task-input";
 import { StoryResponse } from "../objects/story-response";
-import { TaskResponse } from "../objects/task-response";
+import { StoryInput } from "../inputs/story-input";
 
 @Resolver(Story)
 export class StoryResolver {
@@ -26,7 +23,7 @@ export class StoryResolver {
     return Story.findOne(storyId);
   }
 
-  @Mutation(() => TaskResponse)
+  @Mutation(() => StoryResponse)
   async createStory(@Arg("data") data: StoryInput): Promise<StoryResponse> {
     const { title, podId } = data;
 
