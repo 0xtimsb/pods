@@ -22,7 +22,7 @@ export class Story extends BaseEntity {
 
   @Field()
   @Column()
-  name: string;
+  title: string;
 
   @Field()
   @Column()
