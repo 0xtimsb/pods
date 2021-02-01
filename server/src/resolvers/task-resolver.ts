@@ -19,8 +19,8 @@ import { TaskResponse } from "../objects/task-response";
 @Resolver(Task)
 export class TaskResolver {
   @Query(() => Task, { nullable: true })
-  pod(@Arg("taskId") taskId: number) {
-    return Task.findOne(taskId);
+  task(@Arg("id") id: number) {
+    return Task.findOne(id);
   }
 
   @Mutation(() => TaskResponse)
@@ -49,6 +49,7 @@ export class TaskResolver {
         .values({
           title,
           description,
+          index: 1,
         })
         .returning("*")
         .execute();

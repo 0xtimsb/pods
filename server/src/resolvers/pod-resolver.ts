@@ -19,6 +19,7 @@ import { PodInput } from "../inputs/pod-input";
 
 // Types
 import { Context } from "../types/context";
+import { Story } from "../entities/story";
 
 @Resolver(Pod)
 export class PodResolver {
@@ -139,6 +140,15 @@ export class PodResolver {
     // Returns all the users, but not pod, having pod.id
     return createQueryBuilder(User, "user")
       .innerJoin("user.pods", "pod")
+      .where("pod.id = :id", { id: pod.id })
+      .getMany();
+  }
+
+  @FieldResolver(() => [Story])
+  stories(@Root() pod: Pod) {
+    // Returns all the stories, but not pod, having pod.id
+    return createQueryBuilder(Story, "story")
+      .innerJoin("story.pod", "pod")
       .where("pod.id = :id", { id: pod.id })
       .getMany();
   }

@@ -19,8 +19,8 @@ import { StoryInput } from "../inputs/story-input";
 @Resolver(Story)
 export class StoryResolver {
   @Query(() => Story, { nullable: true })
-  pod(@Arg("storyId") storyId: number) {
-    return Story.findOne(storyId);
+  story(@Arg("id") id: number) {
+    return Story.findOne(id);
   }
 
   @Mutation(() => StoryResponse)
@@ -48,6 +48,7 @@ export class StoryResolver {
         .into(Story)
         .values({
           title,
+          index: 0,
         })
         .returning("*")
         .execute();

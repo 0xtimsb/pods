@@ -24,12 +24,12 @@ export class Task extends BaseEntity {
   @Column()
   title: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ default: "" })
   description: string;
 
   @Field()
-  @Column()
+  @Column({ default: 0 })
   index: number;
 
   @Field(() => String)

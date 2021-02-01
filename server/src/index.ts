@@ -19,6 +19,8 @@ import { __prod__ } from "./constants";
 // Resolvers
 import { UserResolver } from "./resolvers/user-resolver";
 import { PodResolver } from "./resolvers/pod-resolver";
+import { StoryResolver } from "./resolvers/story-resolver";
+import { TaskResolver } from "./resolvers/task-resolver";
 
 const main = async () => {
   await createConnection({
@@ -31,7 +33,7 @@ const main = async () => {
   });
 
   const schema = await buildSchema({
-    resolvers: [UserResolver, PodResolver],
+    resolvers: [UserResolver, PodResolver, StoryResolver, TaskResolver],
     //  emitSchemaFile: path.resolve(__dirname, "schema.gql"),  // To emit schema file
     validate: false,
   });

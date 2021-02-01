@@ -1,5 +1,7 @@
-import { useContext, useState } from "react";
+import { useQuery } from "@apollo/client";
+import { useContext, useEffect, useState } from "react";
 import { DropResult } from "react-beautiful-dnd";
+import { useMeLazyQuery, useMeQuery } from "../generated/graphql";
 
 // Store
 import { AppContext } from "../store/context";

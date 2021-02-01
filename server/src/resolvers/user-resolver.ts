@@ -21,7 +21,7 @@ import { UserResponse } from "../objects/user-response";
 
 // Utils
 import { sendEmail } from "../utils/send-email";
-import { validateUserInput } from "../utils/validateUserInput";
+import { validateUserInput } from "../utils/validate-user-input";
 
 // Types
 import { Context } from "../types/context";
