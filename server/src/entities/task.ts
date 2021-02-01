@@ -29,8 +29,8 @@ export class Task extends BaseEntity {
   description: string;
 
   @Field()
-  @Column({ default: 0 })
-  index: number;
+  @Column()
+  rank: string;
 
   @Field(() => String)
   @CreateDateColumn()

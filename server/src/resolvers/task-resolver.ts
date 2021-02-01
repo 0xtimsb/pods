@@ -15,6 +15,7 @@ import { User } from "../entities/user";
 // Inputs and Objects
 import { TaskInput } from "../inputs/task-input";
 import { TaskResponse } from "../objects/task-response";
+import { midString } from "../utils/mid-string";
 
 @Resolver(Task)
 export class TaskResolver {
@@ -41,6 +42,14 @@ export class TaskResolver {
 
     let task;
     try {
+      // Appending assigning the last rank
+      const lastTask = await Task.findOne({
+        select: ["rank"],
+        order: {
+          rank: "DESC",
+        },
+      });
+
       // Creates new task
       const result = await getConnection()
         .createQueryBuilder()
@@ -49,7 +58,7 @@ export class TaskResolver {
         .values({
           title,
           description,
-          index: 1,
+          rank: lastTask ? midString(lastTask.rank, "") : midString("", ""),
         })
         .returning("*")
         .execute();
