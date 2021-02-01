@@ -22,10 +22,10 @@ export class Task extends BaseEntity {
 
   @Field()
   @Column()
-  name: string;
+  title: string;
 
   @Field()
-  @Column()
+  @Column({ default: "" })
   description: string;
 
   @Field()
