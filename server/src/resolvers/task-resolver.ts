@@ -58,7 +58,7 @@ export class TaskResolver {
         .values({
           title,
           description,
-          rank: lastTask ? midString(lastTask.rank, "") : midString("", ""),
+          rank: lastTask ? midString(lastTask.rank, "") : midString("", ""), // generates non-identical ranks using lexorank algorithm
         })
         .returning("*")
         .execute();
