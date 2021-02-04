@@ -1,6 +1,7 @@
 import {
   Arg,
   FieldResolver,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -20,7 +21,7 @@ import { midString } from "../utils/mid-string";
 @Resolver(Task)
 export class TaskResolver {
   @Query(() => Task, { nullable: true })
-  task(@Arg("id") id: number) {
+  task(@Arg("id", () => Int) id: number) {
     return Task.findOne(id);
   }
 
@@ -44,6 +45,11 @@ export class TaskResolver {
     try {
       // Appending assigning the last rank
       const lastTask = await Task.findOne({
+        where: {
+          story: {
+            id: storyId,
+          },
+        },
         select: ["rank"],
         order: {
           rank: "DESC",

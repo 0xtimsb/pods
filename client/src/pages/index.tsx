@@ -1,17 +1,11 @@
-// Components
-import Kanban from "../components/kanban/Kanban";
+import Kanban from "../components/Kanban";
 
-// Store
-import { AppProvider } from "../store/context";
-
-function Home() {
+const Home = () => {
   return (
     <div className="bg-cream-50 h-screen">
-      <AppProvider>
-        <Kanban />
-      </AppProvider>
+      <Kanban podId={1} />
     </div>
   );
-}
+};
 
 export default Home;

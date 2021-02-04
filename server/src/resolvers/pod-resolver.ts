@@ -2,6 +2,7 @@ import {
   Arg,
   Ctx,
   FieldResolver,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -24,7 +25,7 @@ import { Story } from "../entities/story";
 @Resolver(Pod)
 export class PodResolver {
   @Query(() => Pod, { nullable: true })
-  pod(@Arg("id") id: number) {
+  pod(@Arg("id", () => Int) id: number) {
     return Pod.findOne(id);
   }
 

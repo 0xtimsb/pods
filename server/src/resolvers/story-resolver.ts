@@ -1,6 +1,7 @@
 import {
   Arg,
   FieldResolver,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -15,11 +16,12 @@ import { Story } from "../entities/story";
 // Inputs and Objects
 import { StoryResponse } from "../objects/story-response";
 import { StoryInput } from "../inputs/story-input";
+import { midString } from "../utils/mid-string";
 
 @Resolver(Story)
 export class StoryResolver {
   @Query(() => Story, { nullable: true })
-  story(@Arg("id") id: number) {
+  story(@Arg("id", () => Int) id: number) {
     return Story.findOne(id);
   }
 
@@ -41,6 +43,14 @@ export class StoryResolver {
 
     let story;
     try {
+      // Appending assigning the last rank
+      const lastStory = await Story.findOne({
+        select: ["rank"],
+        order: {
+          rank: "DESC",
+        },
+      });
+
       // Creates new story
       const result = await getConnection()
         .createQueryBuilder()
@@ -48,7 +58,7 @@ export class StoryResolver {
         .into(Story)
         .values({
           title,
-          index: 0,
+          rank: lastStory ? midString(lastStory.rank, "") : midString("", ""), // generates non-identical ranks using lexorank algorithm
         })
         .returning("*")
         .execute();

@@ -17,16 +17,28 @@ export type Query = {
   __typename?: 'Query';
   me?: Maybe<User>;
   pod?: Maybe<Pod>;
+  story?: Maybe<Story>;
+  task?: Maybe<Task>;
 };
 
 
 export type QueryPodArgs = {
-  id: Scalars['Float'];
+  id: Scalars['Int'];
+};
+
+
+export type QueryStoryArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type QueryTaskArgs = {
+  id: Scalars['Int'];
 };
 
 export type User = {
   __typename?: 'User';
-  id: Scalars['Float'];
+  id: Scalars['Int'];
   username: Scalars['String'];
   email: Scalars['String'];
   createdAt: Scalars['String'];
@@ -37,21 +49,33 @@ export type User = {
 
 export type Pod = {
   __typename?: 'Pod';
-  id: Scalars['Float'];
+  id: Scalars['Int'];
   name: Scalars['String'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   users: Array<User>;
+  stories: Array<Story>;
+};
+
+export type Story = {
+  __typename?: 'Story';
+  id: Scalars['Int'];
+  title: Scalars['String'];
+  rank: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+  tasks: Array<Task>;
 };
 
 export type Task = {
   __typename?: 'Task';
-  id: Scalars['Float'];
+  id: Scalars['Int'];
   title: Scalars['String'];
-  description: Scalars['String'];
-  index: Scalars['Float'];
+  description?: Maybe<Scalars['String']>;
+  rank: Scalars['String'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
+  users: Array<User>;
 };
 
 export type Mutation = {
@@ -65,6 +89,12 @@ export type Mutation = {
   joinPod: Scalars['Boolean'];
   leavePod: Scalars['Boolean'];
   deletePod: Scalars['Boolean'];
+  createStory: StoryResponse;
+  deleteStory: Scalars['Boolean'];
+  createTask: TaskResponse;
+  assignUserToTask: Scalars['Boolean'];
+  removeUserFromTask: Scalars['Boolean'];
+  deleteTask: Scalars['Boolean'];
 };
 
 
@@ -111,6 +141,38 @@ export type MutationDeletePodArgs = {
   podId: Scalars['Float'];
 };
 
+
+export type MutationCreateStoryArgs = {
+  data: StoryInput;
+};
+
+
+export type MutationDeleteStoryArgs = {
+  storyId: Scalars['Float'];
+};
+
+
+export type MutationCreateTaskArgs = {
+  data: TaskInput;
+};
+
+
+export type MutationAssignUserToTaskArgs = {
+  userId: Scalars['Float'];
+  taskId: Scalars['Float'];
+};
+
+
+export type MutationRemoveUserFromTaskArgs = {
+  userId: Scalars['Float'];
+  taskId: Scalars['Float'];
+};
+
+
+export type MutationDeleteTaskArgs = {
+  taskId: Scalars['Float'];
+};
+
 export type UserResponse = {
   __typename?: 'UserResponse';
   errors?: Maybe<Array<FieldError>>;
@@ -139,6 +201,29 @@ export type PodInput = {
   name: Scalars['String'];
 };
 
+export type StoryResponse = {
+  __typename?: 'StoryResponse';
+  errors?: Maybe<Array<FieldError>>;
+  story?: Maybe<Story>;
+};
+
+export type StoryInput = {
+  title: Scalars['String'];
+  podId: Scalars['Float'];
+};
+
+export type TaskResponse = {
+  __typename?: 'TaskResponse';
+  errors?: Maybe<Array<FieldError>>;
+  task?: Maybe<Task>;
+};
+
+export type TaskInput = {
+  title: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  storyId: Scalars['Float'];
+};
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -147,6 +232,27 @@ export type MeQuery = (
   & { me?: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'username'>
+  )> }
+);
+
+export type PodQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type PodQuery = (
+  { __typename?: 'Query' }
+  & { pod?: Maybe<(
+    { __typename?: 'Pod' }
+    & Pick<Pod, 'id' | 'name'>
+    & { stories: Array<(
+      { __typename?: 'Story' }
+      & Pick<Story, 'id' | 'title' | 'rank'>
+      & { tasks: Array<(
+        { __typename?: 'Task' }
+        & Pick<Task, 'id' | 'title' | 'rank'>
+      )> }
+    )> }
   )> }
 );
 
@@ -184,3 +290,47 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const PodDocument = gql`
+    query Pod($id: Int!) {
+  pod(id: $id) {
+    id
+    name
+    stories {
+      id
+      title
+      rank
+      tasks {
+        id
+        title
+        rank
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __usePodQuery__
+ *
+ * To run a query within a React component, call `usePodQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePodQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePodQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function usePodQuery(baseOptions: Apollo.QueryHookOptions<PodQuery, PodQueryVariables>) {
+        return Apollo.useQuery<PodQuery, PodQueryVariables>(PodDocument, baseOptions);
+      }
+export function usePodLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PodQuery, PodQueryVariables>) {
+          return Apollo.useLazyQuery<PodQuery, PodQueryVariables>(PodDocument, baseOptions);
+        }
+export type PodQueryHookResult = ReturnType<typeof usePodQuery>;
+export type PodLazyQueryHookResult = ReturnType<typeof usePodLazyQuery>;
+export type PodQueryResult = Apollo.QueryResult<PodQuery, PodQueryVariables>;

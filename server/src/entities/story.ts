@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "type-graphql";
+import { Field, Int, ObjectType } from "type-graphql";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -16,7 +16,7 @@ import { Task } from "./task";
 @Entity()
 @ObjectType()
 export class Story extends BaseEntity {
-  @Field()
+  @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -26,7 +26,7 @@ export class Story extends BaseEntity {
 
   @Field()
   @Column()
-  index: number;
+  rank: string;
 
   @Field(() => String)
   @CreateDateColumn()
