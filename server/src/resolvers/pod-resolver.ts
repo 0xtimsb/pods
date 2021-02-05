@@ -151,6 +151,7 @@ export class PodResolver {
     return createQueryBuilder(Story, "story")
       .innerJoin("story.pod", "pod")
       .where("pod.id = :id", { id: pod.id })
+      .orderBy("story.rank")
       .getMany();
   }
 }

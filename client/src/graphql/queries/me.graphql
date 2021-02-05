@@ -12,12 +12,31 @@ query Pod($id: Int!) {
     stories {
       id
       title
-      rank
       tasks {
         id
         title
-        rank
       }
     }
   }
+}
+
+mutation CreatePod($name: String!) {
+  createPod(data: { name: $name }) {
+    pod {
+      id
+      name
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
+
+mutation MoveStory($id: Int!, $sourceIndex: Int!, $destinationIndex: Int!) {
+  moveStory(
+    id: $id
+    sourceIndex: $sourceIndex
+    destinationIndex: $destinationIndex
+  )
 }

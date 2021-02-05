@@ -25,6 +25,55 @@ export class StoryResolver {
     return Story.findOne(id);
   }
 
+  @Mutation(() => Boolean)
+  async moveStory(
+    @Arg("id", () => Int) id: number,
+    @Arg("sourceIndex", () => Int) sourceIndex: number,
+    @Arg("destinationIndex", () => Int) destinationIndex: number
+  ): Promise<Boolean> {
+    try {
+      // If out of index, don't do anything.
+      if (destinationIndex < 0 || sourceIndex < 0) return false;
+
+      // If same index, no need to update.
+      if (sourceIndex === destinationIndex) return false;
+
+      // Get new destination rank
+      let prevStory = undefined;
+      let nextStory = undefined;
+
+      if (destinationIndex === 0) {
+        [nextStory] = await Story.getRepository()
+          .createQueryBuilder("story")
+          .orderBy("story.rank", "ASC")
+          .limit(1)
+          .getMany();
+      } else {
+        const isShift = destinationIndex < sourceIndex;
+        [prevStory, nextStory] = await Story.getRepository()
+          .createQueryBuilder("story")
+          .orderBy("story.rank", "ASC")
+          .limit(2)
+          .offset(isShift ? destinationIndex - 1 : destinationIndex)
+          .getMany();
+      }
+
+      // Updates new rank
+      await Story.update(
+        { id },
+        {
+          rank: midString(
+            prevStory ? prevStory.rank : "",
+            nextStory ? nextStory.rank : ""
+          ),
+        }
+      );
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
   @Mutation(() => StoryResponse)
   async createStory(@Arg("data") data: StoryInput): Promise<StoryResponse> {
     const { title, podId } = data;
@@ -106,6 +155,7 @@ export class StoryResolver {
     return createQueryBuilder(Task, "task")
       .innerJoin("task.story", "story")
       .where("story.id = :id", { id: story.id })
+      .orderBy("task.rank")
       .getMany();
   }
 }

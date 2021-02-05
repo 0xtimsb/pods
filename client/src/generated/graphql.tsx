@@ -89,6 +89,7 @@ export type Mutation = {
   joinPod: Scalars['Boolean'];
   leavePod: Scalars['Boolean'];
   deletePod: Scalars['Boolean'];
+  moveStory: Scalars['Boolean'];
   createStory: StoryResponse;
   deleteStory: Scalars['Boolean'];
   createTask: TaskResponse;
@@ -139,6 +140,13 @@ export type MutationLeavePodArgs = {
 
 export type MutationDeletePodArgs = {
   podId: Scalars['Float'];
+};
+
+
+export type MutationMoveStoryArgs = {
+  destinationIndex: Scalars['Int'];
+  sourceIndex: Scalars['Int'];
+  id: Scalars['Int'];
 };
 
 
@@ -247,13 +255,44 @@ export type PodQuery = (
     & Pick<Pod, 'id' | 'name'>
     & { stories: Array<(
       { __typename?: 'Story' }
-      & Pick<Story, 'id' | 'title' | 'rank'>
+      & Pick<Story, 'id' | 'title'>
       & { tasks: Array<(
         { __typename?: 'Task' }
-        & Pick<Task, 'id' | 'title' | 'rank'>
+        & Pick<Task, 'id' | 'title'>
       )> }
     )> }
   )> }
+);
+
+export type CreatePodMutationVariables = Exact<{
+  name: Scalars['String'];
+}>;
+
+
+export type CreatePodMutation = (
+  { __typename?: 'Mutation' }
+  & { createPod: (
+    { __typename?: 'PodResponse' }
+    & { pod?: Maybe<(
+      { __typename?: 'Pod' }
+      & Pick<Pod, 'id' | 'name'>
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>> }
+  ) }
+);
+
+export type MoveStoryMutationVariables = Exact<{
+  id: Scalars['Int'];
+  sourceIndex: Scalars['Int'];
+  destinationIndex: Scalars['Int'];
+}>;
+
+
+export type MoveStoryMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'moveStory'>
 );
 
 
@@ -298,11 +337,9 @@ export const PodDocument = gql`
     stories {
       id
       title
-      rank
       tasks {
         id
         title
-        rank
       }
     }
   }
@@ -334,3 +371,78 @@ export function usePodLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PodQue
 export type PodQueryHookResult = ReturnType<typeof usePodQuery>;
 export type PodLazyQueryHookResult = ReturnType<typeof usePodLazyQuery>;
 export type PodQueryResult = Apollo.QueryResult<PodQuery, PodQueryVariables>;
+export const CreatePodDocument = gql`
+    mutation CreatePod($name: String!) {
+  createPod(data: {name: $name}) {
+    pod {
+      id
+      name
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
+    `;
+export type CreatePodMutationFn = Apollo.MutationFunction<CreatePodMutation, CreatePodMutationVariables>;
+
+/**
+ * __useCreatePodMutation__
+ *
+ * To run a mutation, you first call `useCreatePodMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePodMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPodMutation, { data, loading, error }] = useCreatePodMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useCreatePodMutation(baseOptions?: Apollo.MutationHookOptions<CreatePodMutation, CreatePodMutationVariables>) {
+        return Apollo.useMutation<CreatePodMutation, CreatePodMutationVariables>(CreatePodDocument, baseOptions);
+      }
+export type CreatePodMutationHookResult = ReturnType<typeof useCreatePodMutation>;
+export type CreatePodMutationResult = Apollo.MutationResult<CreatePodMutation>;
+export type CreatePodMutationOptions = Apollo.BaseMutationOptions<CreatePodMutation, CreatePodMutationVariables>;
+export const MoveStoryDocument = gql`
+    mutation MoveStory($id: Int!, $sourceIndex: Int!, $destinationIndex: Int!) {
+  moveStory(
+    id: $id
+    sourceIndex: $sourceIndex
+    destinationIndex: $destinationIndex
+  )
+}
+    `;
+export type MoveStoryMutationFn = Apollo.MutationFunction<MoveStoryMutation, MoveStoryMutationVariables>;
+
+/**
+ * __useMoveStoryMutation__
+ *
+ * To run a mutation, you first call `useMoveStoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMoveStoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [moveStoryMutation, { data, loading, error }] = useMoveStoryMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      sourceIndex: // value for 'sourceIndex'
+ *      destinationIndex: // value for 'destinationIndex'
+ *   },
+ * });
+ */
+export function useMoveStoryMutation(baseOptions?: Apollo.MutationHookOptions<MoveStoryMutation, MoveStoryMutationVariables>) {
+        return Apollo.useMutation<MoveStoryMutation, MoveStoryMutationVariables>(MoveStoryDocument, baseOptions);
+      }
+export type MoveStoryMutationHookResult = ReturnType<typeof useMoveStoryMutation>;
+export type MoveStoryMutationResult = Apollo.MutationResult<MoveStoryMutation>;
+export type MoveStoryMutationOptions = Apollo.BaseMutationOptions<MoveStoryMutation, MoveStoryMutationVariables>;

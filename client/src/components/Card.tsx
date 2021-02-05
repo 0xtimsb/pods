@@ -10,7 +10,11 @@ const Card = ({ type, subItems }) => {
           className={snapshot.isDraggingOver ? "" : ""}
         >
           {subItems.map((item, index) => (
-            <Draggable key={item.id} draggableId={item.id} index={index}>
+            <Draggable
+              key={item.id}
+              draggableId={item.__typename + item.id}
+              index={index}
+            >
               {(provided, snapshot) => (
                 <div
                   ref={provided.innerRef}

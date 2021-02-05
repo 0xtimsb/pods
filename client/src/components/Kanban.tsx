@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DragDropContext,
   Droppable,
@@ -6,55 +6,39 @@ import {
   OnDragEndResponder,
 } from "react-beautiful-dnd";
 import cloneDeep from "lodash.clonedeep";
-import Card from "./Card";
-import { usePodQuery } from "../generated/graphql";
 
-// Reordering in list.
-const reorder = (list: any[], startIndex: number, endIndex: number) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-  return result;
-};
+import Card from "./Card";
+import {
+  PodQuery,
+  useMoveStoryMutation,
+  usePodQuery,
+} from "../generated/graphql";
 
 interface KanbanProps {
   podId: number;
 }
 
-interface Story {
-  id: string;
-  rank: string;
-  title: string;
-  tasks: Task[];
-}
-
-interface Task {
-  id: string;
-  rank: string;
-  title: string;
-}
+// Reordering in list.
+const reorder = (list: any[], startIndex: number, endIndex: number) => {
+  const result = cloneDeep(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  return result;
+};
 
 const Kanban: React.FC<KanbanProps> = ({ podId }) => {
   const { data } = usePodQuery({ variables: { id: podId } });
-  const [stories, setStories] = useState<Story[]>(null);
+  const [moveStoryMutation] = useMoveStoryMutation();
 
-  // Update stories when data updates!
+  const [stories, setStories] = useState<PodQuery["pod"]["stories"]>(null);
+
   useEffect(() => {
     if (data) {
-      const { pod } = data;
-      const newStories = pod.stories.map(({ id, title, rank, tasks }) => {
-        const newId = "S" + id;
-        const newTasks = tasks.map(({ id, rank, title }) => {
-          const newId = "T" + id;
-          return { id: newId + id, rank, title };
-        });
-        return { id: newId, rank, title, tasks: newTasks };
-      });
-      setStories(newStories);
+      setStories(data.pod.stories);
     }
   }, [data]);
 
-  if (!stories) return null;
+  if (!stories) return <p>Loading...</p>;
 
   const onDragEnd: OnDragEndResponder = (result) => {
     // Dropped somewhere not in context.
@@ -67,8 +51,18 @@ const Kanban: React.FC<KanbanProps> = ({ podId }) => {
 
     // If stories reorder, else figure out how to reorder tasks.
     if (result.type === "stories") {
-      const items = reorder(stories, sourceIndex, destinationIndex);
-      setStories(items);
+      if (sourceIndex === destinationIndex) return;
+      const newStories = reorder(stories, sourceIndex, destinationIndex);
+      setStories(newStories);
+
+      // Make rank update request to graphql server.
+      moveStoryMutation({
+        variables: {
+          id: stories[sourceIndex].id,
+          sourceIndex,
+          destinationIndex,
+        },
+      });
     } else if (result.type === "tasks") {
       // Make map
       const map = stories.reduce((acc, story) => {
@@ -82,7 +76,7 @@ const Kanban: React.FC<KanbanProps> = ({ podId }) => {
       const sourceTasks = map[sourceParentId];
       const destinationTasks = map[destinationParentId];
 
-      let newStories = cloneDeep(stories);
+      let newStories = cloneDeep(data.pod.stories);
 
       // If tasks are reordered in same story.
       if (sourceParentId === destinationParentId) {
@@ -92,7 +86,7 @@ const Kanban: React.FC<KanbanProps> = ({ podId }) => {
           destinationIndex
         );
         newStories = newStories.map((story) => {
-          if (story.id === sourceParentId) {
+          if (story.__typename + story.id === sourceParentId) {
             story.tasks = reorderedTasks;
           }
           return story;
@@ -106,9 +100,9 @@ const Kanban: React.FC<KanbanProps> = ({ podId }) => {
         let newDestinationTasks = cloneDeep(destinationTasks);
         newDestinationTasks.splice(destinationIndex, 0, draggedItem);
         newStories = newStories.map((story) => {
-          if (story.id === sourceParentId) {
+          if (story.__typename + story.id === sourceParentId) {
             story.tasks = newSourceTasks;
-          } else if (story.id === destinationParentId) {
+          } else if (story.__typename + story.id === destinationParentId) {
             story.tasks = newDestinationTasks;
           }
           return story;
@@ -127,7 +121,11 @@ const Kanban: React.FC<KanbanProps> = ({ podId }) => {
             className={snapshot.isDraggingOver ? "" : ""}
           >
             {stories.map((story, index) => (
-              <Draggable key={story.id} draggableId={story.id} index={index}>
+              <Draggable
+                key={story.id}
+                draggableId={story.__typename + story.id}
+                index={index}
+              >
                 {(provided, snapshot) => (
                   <div
                     ref={provided.innerRef}
@@ -145,7 +143,10 @@ const Kanban: React.FC<KanbanProps> = ({ podId }) => {
                     >
                       Drag
                     </span>
-                    <Card subItems={story.tasks} type={story.id} />
+                    <Card
+                      subItems={story.tasks}
+                      type={story.__typename + story.id}
+                    />
                   </div>
                 )}
               </Draggable>
