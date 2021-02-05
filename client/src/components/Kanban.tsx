@@ -20,7 +20,7 @@ interface KanbanProps {
 
 // Reordering in list.
 const reorder = (list: any[], startIndex: number, endIndex: number) => {
-  const result = cloneDeep(list);
+  const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
   return result;
@@ -66,7 +66,7 @@ const Kanban: React.FC<KanbanProps> = ({ podId }) => {
     } else if (result.type === "tasks") {
       // Make map
       const map = stories.reduce((acc, story) => {
-        acc[story.id] = story.tasks;
+        acc[story.__typename + story.id] = story.tasks;
         return acc;
       }, {});
 
@@ -76,7 +76,7 @@ const Kanban: React.FC<KanbanProps> = ({ podId }) => {
       const sourceTasks = map[sourceParentId];
       const destinationTasks = map[destinationParentId];
 
-      let newStories = cloneDeep(data.pod.stories);
+      let newStories = cloneDeep(stories);
 
       // If tasks are reordered in same story.
       if (sourceParentId === destinationParentId) {
