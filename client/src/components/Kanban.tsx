@@ -7,7 +7,12 @@ import {
 import cloneDeep from "lodash.clonedeep";
 
 import Card from "./Card";
-import { useMoveStoryMutation, usePodQuery } from "../generated/graphql";
+import {
+  Task,
+  useMoveStoryMutation,
+  useMoveTaskMutation,
+  usePodQuery,
+} from "../generated/graphql";
 
 interface KanbanProps {
   podId: number;
@@ -24,6 +29,7 @@ const reorder = (list: any[], startIndex: number, endIndex: number) => {
 const Kanban: React.FC<KanbanProps> = ({ podId }) => {
   const { data } = usePodQuery({ variables: { id: podId } });
   const [moveStoryMutation] = useMoveStoryMutation();
+  const [moveTaskMutation] = useMoveTaskMutation();
 
   if (!data) return <p>Loading...</p>;
 
@@ -79,41 +85,105 @@ const Kanban: React.FC<KanbanProps> = ({ podId }) => {
       const sourceParentId = result.source.droppableId;
       const destinationParentId = result.destination.droppableId;
 
-      const sourceTasks = map[sourceParentId];
-      const destinationTasks = map[destinationParentId];
+      const sourceTasks: Task[] = map[sourceParentId];
+      const destinationTasks: Task[] = map[destinationParentId];
 
       let newStories = cloneDeep(stories);
 
+      // result.source.index refers to index of task in that story!
+
+      const sourceStory = stories.find(
+        (story) => story.__typename + story.id === sourceParentId
+      );
+      const destinationStory = stories.find(
+        (story) => story.__typename + story.id === destinationParentId
+      );
+
       // If tasks are reordered in same story.
       if (sourceParentId === destinationParentId) {
-        const reorderedTasks = reorder(
-          sourceTasks,
-          sourceIndex,
-          destinationIndex
-        );
-        newStories = newStories.map((story) => {
-          if (story.__typename + story.id === sourceParentId) {
-            story.tasks = reorderedTasks;
-          }
-          return story;
+        // Make rank update request to graphql server.
+        moveTaskMutation({
+          variables: {
+            id: sourceTasks[sourceIndex].id,
+            sourceIndex,
+            destinationIndex,
+            sourceStoryId: sourceStory.id,
+            destinationStoryId: destinationStory.id,
+          },
+          optimisticResponse: {
+            __typename: "Mutation",
+            moveTask: true,
+          },
+          update: (proxy) => {
+            proxy.modify({
+              id: proxy.identify(sourceStory),
+              fields: {
+                tasks(existingTaskRefs) {
+                  console.log("Before: ", existingTaskRefs);
+                  const reorderedTasks = reorder(
+                    existingTaskRefs,
+                    sourceIndex,
+                    destinationIndex
+                  );
+                  return reorderedTasks;
+                },
+              },
+            });
+          },
         });
-        setStories(newStories);
       } else {
         // If tasks are reordered between diffrent stories.
-        let newSourceTasks = cloneDeep(sourceTasks);
-        const [draggedItem] = newSourceTasks.splice(sourceIndex, 1);
-
-        let newDestinationTasks = cloneDeep(destinationTasks);
-        newDestinationTasks.splice(destinationIndex, 0, draggedItem);
-        newStories = newStories.map((story) => {
-          if (story.__typename + story.id === sourceParentId) {
-            story.tasks = newSourceTasks;
-          } else if (story.__typename + story.id === destinationParentId) {
-            story.tasks = newDestinationTasks;
-          }
-          return story;
+        moveTaskMutation({
+          variables: {
+            id: sourceTasks[sourceIndex].id,
+            sourceIndex,
+            destinationIndex,
+            sourceStoryId: sourceStory.id,
+            destinationStoryId: destinationStory.id,
+          },
+          optimisticResponse: {
+            __typename: "Mutation",
+            moveTask: true,
+          },
+          update: (proxy) => {
+            let draggedItem = null;
+            proxy.modify({
+              id: proxy.identify(sourceStory),
+              fields: {
+                tasks(existingTaskRefs) {
+                  const newSourceTasks = Array.from(existingTaskRefs);
+                  [draggedItem] = newSourceTasks.splice(sourceIndex, 1);
+                  return newSourceTasks;
+                },
+              },
+            });
+            proxy.modify({
+              id: proxy.identify(destinationStory),
+              fields: {
+                tasks(existingTaskRefs) {
+                  const newDestinationTasks = Array.from(existingTaskRefs);
+                  newDestinationTasks.splice(destinationIndex, 0, draggedItem);
+                  return newDestinationTasks;
+                },
+              },
+            });
+          },
         });
-        setStories(newStories);
+
+        // let newSourceTasks = cloneDeep(sourceTasks);
+        // const [draggedItem] = newSourceTasks.splice(sourceIndex, 1);
+
+        // let newDestinationTasks = cloneDeep(destinationTasks);
+        // newDestinationTasks.splice(destinationIndex, 0, draggedItem);
+        // newStories = newStories.map((story) => {
+        //   if (story.__typename + story.id === sourceParentId) {
+        //     story.tasks = newSourceTasks;
+        //   } else if (story.__typename + story.id === destinationParentId) {
+        //     story.tasks = newDestinationTasks;
+        //   }
+        //   return story;
+        // });
+        // setStories(newStories);
       }
     }
   };

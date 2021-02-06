@@ -61,12 +61,10 @@ export class TaskResolver {
             .innerJoin("task.story", "story")
             .where("story.id = :id", { id: sourceStoryId })
             .orderBy("task.rank", "ASC")
-            .skip(isShift ? destinationIndex - 1 : destinationIndex)
+            .offset(isShift ? destinationIndex - 1 : destinationIndex)
             .limit(2)
             .getMany();
         }
-
-        console.log(prevStory, nextStory);
 
         // Updates new rank
         await Task.update(
@@ -98,12 +96,10 @@ export class TaskResolver {
             .innerJoin("task.story", "story")
             .where("story.id = :id", { id: destinationStoryId })
             .orderBy("task.rank", "ASC")
-            .skip(destinationIndex - 1)
+            .offset(destinationIndex - 1)
             .limit(2)
             .getMany();
         }
-
-        console.log(prevStory, nextStory);
 
         // Updates new rank in new story.
         await Task.update(

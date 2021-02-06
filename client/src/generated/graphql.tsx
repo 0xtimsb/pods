@@ -92,6 +92,7 @@ export type Mutation = {
   moveStory: Scalars['Boolean'];
   createStory: StoryResponse;
   deleteStory: Scalars['Boolean'];
+  moveTask: Scalars['Boolean'];
   createTask: TaskResponse;
   assignUserToTask: Scalars['Boolean'];
   removeUserFromTask: Scalars['Boolean'];
@@ -157,6 +158,15 @@ export type MutationCreateStoryArgs = {
 
 export type MutationDeleteStoryArgs = {
   storyId: Scalars['Float'];
+};
+
+
+export type MutationMoveTaskArgs = {
+  destinationStoryId: Scalars['Int'];
+  sourceStoryId: Scalars['Int'];
+  destinationIndex: Scalars['Int'];
+  sourceIndex: Scalars['Int'];
+  id: Scalars['Int'];
 };
 
 
@@ -293,6 +303,20 @@ export type MoveStoryMutationVariables = Exact<{
 export type MoveStoryMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'moveStory'>
+);
+
+export type MoveTaskMutationVariables = Exact<{
+  id: Scalars['Int'];
+  sourceIndex: Scalars['Int'];
+  destinationIndex: Scalars['Int'];
+  sourceStoryId: Scalars['Int'];
+  destinationStoryId: Scalars['Int'];
+}>;
+
+
+export type MoveTaskMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'moveTask'>
 );
 
 
@@ -446,3 +470,43 @@ export function useMoveStoryMutation(baseOptions?: Apollo.MutationHookOptions<Mo
 export type MoveStoryMutationHookResult = ReturnType<typeof useMoveStoryMutation>;
 export type MoveStoryMutationResult = Apollo.MutationResult<MoveStoryMutation>;
 export type MoveStoryMutationOptions = Apollo.BaseMutationOptions<MoveStoryMutation, MoveStoryMutationVariables>;
+export const MoveTaskDocument = gql`
+    mutation MoveTask($id: Int!, $sourceIndex: Int!, $destinationIndex: Int!, $sourceStoryId: Int!, $destinationStoryId: Int!) {
+  moveTask(
+    id: $id
+    sourceIndex: $sourceIndex
+    destinationIndex: $destinationIndex
+    sourceStoryId: $sourceStoryId
+    destinationStoryId: $destinationStoryId
+  )
+}
+    `;
+export type MoveTaskMutationFn = Apollo.MutationFunction<MoveTaskMutation, MoveTaskMutationVariables>;
+
+/**
+ * __useMoveTaskMutation__
+ *
+ * To run a mutation, you first call `useMoveTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMoveTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [moveTaskMutation, { data, loading, error }] = useMoveTaskMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      sourceIndex: // value for 'sourceIndex'
+ *      destinationIndex: // value for 'destinationIndex'
+ *      sourceStoryId: // value for 'sourceStoryId'
+ *      destinationStoryId: // value for 'destinationStoryId'
+ *   },
+ * });
+ */
+export function useMoveTaskMutation(baseOptions?: Apollo.MutationHookOptions<MoveTaskMutation, MoveTaskMutationVariables>) {
+        return Apollo.useMutation<MoveTaskMutation, MoveTaskMutationVariables>(MoveTaskDocument, baseOptions);
+      }
+export type MoveTaskMutationHookResult = ReturnType<typeof useMoveTaskMutation>;
+export type MoveTaskMutationResult = Apollo.MutationResult<MoveTaskMutation>;
+export type MoveTaskMutationOptions = Apollo.BaseMutationOptions<MoveTaskMutation, MoveTaskMutationVariables>;
