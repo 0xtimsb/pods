@@ -43,11 +43,11 @@ export class TaskResolver {
         if (sourceIndex === destinationIndex) return false;
 
         // Get new destination rank
-        let prevStory = undefined;
-        let nextStory = undefined;
+        let prevTask = undefined;
+        let nextTask = undefined;
 
         if (destinationIndex === 0) {
-          [nextStory] = await Task.getRepository()
+          [nextTask] = await Task.getRepository()
             .createQueryBuilder("task")
             .innerJoin("task.story", "story")
             .where("story.id = :id", { id: sourceStoryId })
@@ -56,7 +56,7 @@ export class TaskResolver {
             .getMany();
         } else {
           const isShift = destinationIndex < sourceIndex;
-          [prevStory, nextStory] = await Task.getRepository()
+          [prevTask, nextTask] = await Task.getRepository()
             .createQueryBuilder("task")
             .innerJoin("task.story", "story")
             .where("story.id = :id", { id: sourceStoryId })
@@ -71,19 +71,19 @@ export class TaskResolver {
           { id },
           {
             rank: midString(
-              prevStory ? prevStory.rank : "",
-              nextStory ? nextStory.rank : ""
+              prevTask ? prevTask.rank : "",
+              nextTask ? nextTask.rank : ""
             ),
           }
         );
       } else {
         // If drag and drop happened in diffrent stories.
         // Get new destination rank
-        let prevStory = undefined;
-        let nextStory = undefined;
+        let prevTask = undefined;
+        let nextTask = undefined;
 
         if (destinationIndex === 0) {
-          [nextStory] = await Task.getRepository()
+          [nextTask] = await Task.getRepository()
             .createQueryBuilder("task")
             .innerJoin("task.story", "story")
             .where("story.id = :id", { id: destinationStoryId })
@@ -91,7 +91,7 @@ export class TaskResolver {
             .limit(1)
             .getMany();
         } else {
-          [prevStory, nextStory] = await Task.getRepository()
+          [prevTask, nextTask] = await Task.getRepository()
             .createQueryBuilder("task")
             .innerJoin("task.story", "story")
             .where("story.id = :id", { id: destinationStoryId })
@@ -106,8 +106,8 @@ export class TaskResolver {
           { id },
           {
             rank: midString(
-              prevStory ? prevStory.rank : "",
-              nextStory ? nextStory.rank : ""
+              prevTask ? prevTask.rank : "",
+              nextTask ? nextTask.rank : ""
             ),
             story: {
               id: destinationStoryId,
