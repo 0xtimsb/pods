@@ -1,0 +1,12 @@
+mutation CreateTask($title: String!, $storyId: Int!) {
+  createTask(data: { title: $title, storyId: $storyId }) {
+    task {
+      id
+      title
+    }
+    errors {
+      field
+      message
+    }
+  }
+}

@@ -1,0 +1,3 @@
+mutation DeletePod($podId: Int!) {
+  deletePod(podId: $podId)
+}

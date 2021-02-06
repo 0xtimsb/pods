@@ -85,8 +85,8 @@ export class PodResolver {
 
   @Mutation(() => Boolean)
   async joinPod(
-    @Arg("podId") podId: number,
-    @Arg("userId") userId: number
+    @Arg("podId", () => Int) podId: number,
+    @Arg("userId", () => Int) userId: number
   ): Promise<Boolean> {
     // Need to check if leader is doing this or not. TODO
 
@@ -105,8 +105,8 @@ export class PodResolver {
 
   @Mutation(() => Boolean)
   async leavePod(
-    @Arg("podId") podId: number,
-    @Arg("userId") userId: number
+    @Arg("podId", () => Int) podId: number,
+    @Arg("userId", () => Int) userId: number
   ): Promise<Boolean> {
     // Remove user from the pod
     try {
@@ -122,7 +122,7 @@ export class PodResolver {
   }
 
   @Mutation(() => Boolean)
-  async deletePod(@Arg("podId") podId: number): Promise<Boolean> {
+  async deletePod(@Arg("podId", () => Int) podId: number): Promise<Boolean> {
     try {
       await getConnection()
         .createQueryBuilder()

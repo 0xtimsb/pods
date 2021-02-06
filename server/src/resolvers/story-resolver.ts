@@ -135,7 +135,9 @@ export class StoryResolver {
   }
 
   @Mutation(() => Boolean)
-  async deleteStory(@Arg("storyId") storyId: number): Promise<Boolean> {
+  async deleteStory(
+    @Arg("storyId", () => Int) storyId: number
+  ): Promise<Boolean> {
     try {
       await getConnection()
         .createQueryBuilder()

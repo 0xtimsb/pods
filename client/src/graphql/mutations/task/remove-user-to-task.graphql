@@ -1,0 +1,3 @@
+mutation RemoveUserFromTask($userId: Int!, $taskId: Int!) {
+  removeUserFromTask(userId: $userId, taskId: $taskId)
+}

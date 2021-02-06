@@ -189,8 +189,8 @@ export class TaskResolver {
 
   @Mutation(() => Boolean)
   async assignUserToTask(
-    @Arg("taskId") taskId: number,
-    @Arg("userId") userId: number
+    @Arg("taskId", () => Int) taskId: number,
+    @Arg("userId", () => Int) userId: number
   ): Promise<Boolean> {
     // Need to check if leader is doing this or not. TODO
 
@@ -209,8 +209,8 @@ export class TaskResolver {
 
   @Mutation(() => Boolean)
   async removeUserFromTask(
-    @Arg("taskId") taskId: number,
-    @Arg("userId") userId: number
+    @Arg("taskId", () => Int) taskId: number,
+    @Arg("userId", () => Int) userId: number
   ): Promise<Boolean> {
     // Remove user from the task
     try {
@@ -226,7 +226,7 @@ export class TaskResolver {
   }
 
   @Mutation(() => Boolean)
-  async deleteTask(@Arg("taskId") taskId: number): Promise<Boolean> {
+  async deleteTask(@Arg("taskId", () => Int) taskId: number): Promise<Boolean> {
     try {
       await getConnection()
         .createQueryBuilder()

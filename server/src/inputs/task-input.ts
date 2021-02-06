@@ -1,4 +1,4 @@
-import { InputType, Field } from "type-graphql";
+import { InputType, Field, Int } from "type-graphql";
 
 @InputType()
 export class TaskInput {
@@ -8,6 +8,6 @@ export class TaskInput {
   @Field({ nullable: true })
   description: string;
 
-  @Field()
+  @Field(() => Int)
   storyId: number;
 }
