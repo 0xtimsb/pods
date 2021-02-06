@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   DragDropContext,
   Droppable,
@@ -8,11 +7,7 @@ import {
 import cloneDeep from "lodash.clonedeep";
 
 import Card from "./Card";
-import {
-  PodQuery,
-  useMoveStoryMutation,
-  usePodQuery,
-} from "../generated/graphql";
+import { useMoveStoryMutation, usePodQuery } from "../generated/graphql";
 
 interface KanbanProps {
   podId: number;
@@ -30,15 +25,10 @@ const Kanban: React.FC<KanbanProps> = ({ podId }) => {
   const { data } = usePodQuery({ variables: { id: podId } });
   const [moveStoryMutation] = useMoveStoryMutation();
 
-  const [stories, setStories] = useState<PodQuery["pod"]["stories"]>(null);
+  if (!data) return <p>Loading...</p>;
 
-  useEffect(() => {
-    if (data) {
-      setStories(data.pod.stories);
-    }
-  }, [data]);
-
-  if (!stories) return <p>Loading...</p>;
+  const { pod } = data;
+  const { stories } = pod;
 
   const onDragEnd: OnDragEndResponder = (result) => {
     // Dropped somewhere not in context.
@@ -52,8 +42,6 @@ const Kanban: React.FC<KanbanProps> = ({ podId }) => {
     // If stories reorder, else figure out how to reorder tasks.
     if (result.type === "stories") {
       if (sourceIndex === destinationIndex) return;
-      const newStories = reorder(stories, sourceIndex, destinationIndex);
-      setStories(newStories);
 
       // Make rank update request to graphql server.
       moveStoryMutation({
@@ -61,6 +49,24 @@ const Kanban: React.FC<KanbanProps> = ({ podId }) => {
           id: stories[sourceIndex].id,
           sourceIndex,
           destinationIndex,
+        },
+        optimisticResponse: {
+          __typename: "Mutation",
+          moveStory: true,
+        },
+        update: (proxy) => {
+          proxy.modify({
+            id: proxy.identify(pod),
+            fields: {
+              stories(existingStoryRefs) {
+                return reorder(
+                  existingStoryRefs,
+                  sourceIndex,
+                  destinationIndex
+                );
+              },
+            },
+          });
         },
       });
     } else if (result.type === "tasks") {

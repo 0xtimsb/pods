@@ -53,8 +53,8 @@ export class StoryResolver {
         [prevStory, nextStory] = await Story.getRepository()
           .createQueryBuilder("story")
           .orderBy("story.rank", "ASC")
-          .limit(2)
           .offset(isShift ? destinationIndex - 1 : destinationIndex)
+          .limit(2)
           .getMany();
       }
 

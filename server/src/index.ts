@@ -25,7 +25,7 @@ import { TaskResolver } from "./resolvers/task-resolver";
 const main = async () => {
   await createConnection({
     type: "postgres",
-    logging: true,
+    logging: false,
     synchronize: true,
     url: process.env.DATABASE_URL,
     migrations: [path.join(__dirname, "./migrations/*")],

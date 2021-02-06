@@ -25,6 +25,106 @@ export class TaskResolver {
     return Task.findOne(id);
   }
 
+  @Mutation(() => Boolean)
+  async moveTask(
+    @Arg("id", () => Int) id: number,
+    @Arg("sourceIndex", () => Int) sourceIndex: number,
+    @Arg("destinationIndex", () => Int) destinationIndex: number,
+    @Arg("sourceStoryId", () => Int) sourceStoryId: number,
+    @Arg("destinationStoryId", () => Int) destinationStoryId: number
+  ): Promise<Boolean> {
+    try {
+      // If out of index, don't do anything.
+      if (destinationIndex < 0 || sourceIndex < 0) return false;
+
+      // If drag and drop happened in same story.
+      if (sourceStoryId === destinationStoryId) {
+        // If same index, no need to update.
+        if (sourceIndex === destinationIndex) return false;
+
+        // Get new destination rank
+        let prevStory = undefined;
+        let nextStory = undefined;
+
+        if (destinationIndex === 0) {
+          [nextStory] = await Task.getRepository()
+            .createQueryBuilder("task")
+            .innerJoin("task.story", "story")
+            .where("story.id = :id", { id: sourceStoryId })
+            .orderBy("task.rank", "ASC")
+            .limit(1)
+            .getMany();
+        } else {
+          const isShift = destinationIndex < sourceIndex;
+          [prevStory, nextStory] = await Task.getRepository()
+            .createQueryBuilder("task")
+            .innerJoin("task.story", "story")
+            .where("story.id = :id", { id: sourceStoryId })
+            .orderBy("task.rank", "ASC")
+            .skip(isShift ? destinationIndex - 1 : destinationIndex)
+            .limit(2)
+            .getMany();
+        }
+
+        console.log(prevStory, nextStory);
+
+        // Updates new rank
+        await Task.update(
+          { id },
+          {
+            rank: midString(
+              prevStory ? prevStory.rank : "",
+              nextStory ? nextStory.rank : ""
+            ),
+          }
+        );
+      } else {
+        // If drag and drop happened in diffrent stories.
+        // Get new destination rank
+        let prevStory = undefined;
+        let nextStory = undefined;
+
+        if (destinationIndex === 0) {
+          [nextStory] = await Task.getRepository()
+            .createQueryBuilder("task")
+            .innerJoin("task.story", "story")
+            .where("story.id = :id", { id: destinationStoryId })
+            .orderBy("task.rank", "ASC")
+            .limit(1)
+            .getMany();
+        } else {
+          [prevStory, nextStory] = await Task.getRepository()
+            .createQueryBuilder("task")
+            .innerJoin("task.story", "story")
+            .where("story.id = :id", { id: destinationStoryId })
+            .orderBy("task.rank", "ASC")
+            .skip(destinationIndex - 1)
+            .limit(2)
+            .getMany();
+        }
+
+        console.log(prevStory, nextStory);
+
+        // Updates new rank in new story.
+        await Task.update(
+          { id },
+          {
+            rank: midString(
+              prevStory ? prevStory.rank : "",
+              nextStory ? nextStory.rank : ""
+            ),
+            story: {
+              id: destinationStoryId,
+            },
+          }
+        );
+      }
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
   @Mutation(() => TaskResponse)
   async createTask(@Arg("data") data: TaskInput): Promise<TaskResponse> {
     const { title, description, storyId } = data;
