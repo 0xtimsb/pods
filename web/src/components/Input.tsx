@@ -1,12 +1,21 @@
-const Input: React.FC<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>> = ({
-  children,
-  className,
-  ...props
-}) => {
+import { FiMail } from "react-icons/fi";
+import { IconType } from "react-icons/lib";
+
+interface InputProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
+  Icon?: IconType;
+}
+
+const Input: React.FC<InputProps> = ({ children, className, Icon, ...props }) => {
   return (
-    <input className={`px-3 text-sm font-medium rounded border border-gray-900 ${className}`} {...props}>
-      {children}
-    </input>
+    <div className={`relative flex items-center ${className}`}>
+      {Icon && <Icon className="absolute left-3 text-gray-900" />}
+      <input
+        className={`w-full h-10 text-sm rounded border border-gray-300 focus:outline-none focus:border-gray-900 ${
+          Icon ? "pl-10" : "px-3"
+        }`}
+        {...props}
+      />
+    </div>
   );
 };
 

@@ -5,7 +5,6 @@ import { useMeQuery } from "../generated/graphql";
 
 // Components
 import Layout from "./Layout";
-import Navbar from "./Navbar";
 import AuthLayout from "./Auth/AuthLayout";
 
 function App() {
@@ -17,16 +16,13 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Layout>
-        <Navbar />
-        <Switch>
-          {data.me ? (
-            <Route exact render={() => <div>Hiii your are here</div>} />
-          ) : (
-            <Route exact render={() => <AuthLayout refetch={refetch} />} />
-          )}
-        </Switch>
-      </Layout>
+      <Switch>
+        {data.me ? (
+          <Route exact render={() => <div>Hiii your are here</div>} />
+        ) : (
+          <Route exact render={() => <AuthLayout refetch={refetch} />} />
+        )}
+      </Switch>
     </BrowserRouter>
   );
 }

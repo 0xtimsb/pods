@@ -5,7 +5,7 @@ const Button: React.FC<React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLBu
 }) => {
   return (
     <button
-      className={`bg-gray-900 text-white text-sm font-medium rounded border border-gray-900 hover:bg-white hover:text-black ${className}`}
+      className={`w-full bg-gray-900 text-white text-sm font-medium rounded border border-gray-900 hover:bg-white hover:text-black ${className}`}
       {...props}
     >
       {children}
