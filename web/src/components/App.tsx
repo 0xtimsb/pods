@@ -4,8 +4,8 @@ import { Route, BrowserRouter, Switch } from "react-router-dom";
 import { useMeQuery } from "../generated/graphql";
 
 // Components
-import Layout from "./Layout";
-import AuthLayout from "./Auth/AuthLayout";
+import Layout from "./common/Layout";
+import AuthLayout from "./auth/AuthLayout";
 
 function App() {
   const { data, loading, error, refetch } = useMeQuery();

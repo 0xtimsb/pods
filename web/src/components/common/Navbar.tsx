@@ -5,7 +5,7 @@ const Navbar: React.FC = () => {
     <div className="sticky top-0 h-16 flex justify-center border-b border-gray-200">
       <div className="w-full max-w-6xl px-20 flex items-center justify-between">
         <div className="flex items-center space-x-5">
-          <Link to="/" className="text-gray-900 text-2xl font-extrabold">
+          <Link to="/" className="text-gray-900 text-3xl font-extrabold">
             Pods
           </Link>
         </div>

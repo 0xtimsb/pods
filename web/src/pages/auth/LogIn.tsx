@@ -1,9 +1,9 @@
-import { FiLock, FiMail, FiSmile } from "react-icons/fi";
+import { FiLock, FiMail } from "react-icons/fi";
 
-import Layout from "../../components/Layout";
-import Button from "../../components/Button";
-import Input from "../../components/Input";
-import Navbar from "../../components/Navbar";
+import Layout from "../../components/common/Layout";
+import Button from "../../components/common/Button";
+import Input from "../../components/common/Input";
+import Navbar from "../../components/common/Navbar";
 import { Link } from "react-router-dom";
 
 const LogIn = ({ refetch }: any) => {
