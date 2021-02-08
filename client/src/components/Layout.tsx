@@ -1,13 +1,8 @@
-import Navbar from "./Navbar";
+import { useEffect } from "react";
+import { useMeQuery } from "../generated/graphql";
 
-const Layout: React.FC = ({ children }) => {
-  return (
-    <div className="bg-cream-50 h-screen">
-      <Navbar />
-      <div>{children}</div>
-      <div className="">Footer</div>
-    </div>
-  );
+const Layout = ({ children }) => {
+  return <div className="bg-cream-50 h-screen">{children}</div>;
 };
 
 export default Layout;

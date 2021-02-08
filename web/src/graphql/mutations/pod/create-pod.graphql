@@ -1,0 +1,12 @@
+mutation CreatePod($name: String!) {
+  createPod(data: { name: $name }) {
+    pod {
+      id
+      name
+    }
+    errors {
+      field
+      message
+    }
+  }
+}

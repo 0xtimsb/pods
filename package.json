@@ -1,12 +1,12 @@
 {
   "private": true,
   "workspaces": [
-    "client",
+    "web",
     "server"
   ],
   "scripts": {
-    "codegen": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace client codegen\"",
-    "dev": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace client dev\""
+    "codegen": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web codegen\"",
+    "dev": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web start\""
   },
   "dependencies": {
     "concurrently": "^5.3.0"

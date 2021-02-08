@@ -1,12 +1,4 @@
-import {
-  Arg,
-  Ctx,
-  FieldResolver,
-  Mutation,
-  Query,
-  Resolver,
-  Root,
-} from "type-graphql";
+import { Arg, Ctx, FieldResolver, Mutation, Query, Resolver, Root } from "type-graphql";
 import { createQueryBuilder, getConnection } from "typeorm";
 import argon2 from "argon2";
 import { v4 } from "uuid";
@@ -33,18 +25,17 @@ import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
 export class UserResolver {
   @Query(() => User, { nullable: true })
   me(@Ctx() { req }: Context) {
+    console.log("me run!");
     // Not logged in.
     if (!req.session.userId) {
       return null;
     }
+
     return User.findOne(req.session.userId);
   }
 
   @Mutation(() => UserResponse)
-  async register(
-    @Arg("data") data: UserInput,
-    @Ctx() { req }: Context
-  ): Promise<UserResponse> {
+  async register(@Arg("data") data: UserInput, @Ctx() { req }: Context): Promise<UserResponse> {
     const { username, password: notHashedPassword, email } = data;
 
     const errors = validateUserInput(data);
@@ -91,9 +82,7 @@ export class UserResolver {
     @Ctx() { req }: Context
   ): Promise<UserResponse> {
     const user = await User.findOne(
-      usernameOrEmail.includes("@")
-        ? { where: { email: usernameOrEmail } }
-        : { where: { username: usernameOrEmail } }
+      usernameOrEmail.includes("@") ? { where: { email: usernameOrEmail } } : { where: { username: usernameOrEmail } }
     );
     if (!user) {
       return {
@@ -146,17 +135,9 @@ export class UserResolver {
     if (!user) return true; // Invalid email, return true to prevent invalid email access
 
     const token = v4();
-    await redis.set(
-      FORGET_PASSWORD_PREFIX + token,
-      user.id,
-      "ex",
-      1000 * 60 * 60 * 24 * 3
-    ); // 3 days
+    await redis.set(FORGET_PASSWORD_PREFIX + token, user.id, "ex", 1000 * 60 * 60 * 24 * 3); // 3 days
 
-    await sendEmail(
-      email,
-      `<a href="http://localhost:3000/change-password/${token}">reset password</a>`
-    );
+    await sendEmail(email, `<a href="http://localhost:3000/change-password/${token}">reset password</a>`);
 
     return true;
   }

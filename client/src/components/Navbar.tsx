@@ -1,15 +1,12 @@
 import Link from "next/link";
-import { useMeQuery, usePodQuery } from "../generated/graphql";
+import { MeQueryResult } from "../generated/graphql";
 
-const Navbar: React.FC = () => {
-  const { data } = useMeQuery();
+interface NavbarProps {
+  me?: MeQueryResult["data"]["me"];
+}
 
-  if (!data) return <div>Loading...</div>;
-
-  const {
-    me: { pods },
-  } = data;
-
+const Navbar: React.FC<NavbarProps> = ({ me }) => {
+  const { pods } = me;
   return (
     <div className="sticky top-0 bg-gray-400">
       <div className="max-w-6xl w-full mx-auto flex justify-between p-3">

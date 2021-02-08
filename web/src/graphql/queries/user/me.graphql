@@ -1,0 +1,10 @@
+query Me {
+  me {
+    id
+    username
+    pods {
+      id
+      name
+    }
+  }
+}
