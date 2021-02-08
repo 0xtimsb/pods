@@ -1,10 +1,19 @@
 import React from "react";
 import { render } from "react-dom";
+import { ApolloProvider } from "@apollo/client";
 
 // Components
 import App from "./components/App";
 
-// Styles
-import "./index.css";
+// Apollo client
+import client from "./lib/apolloClient";
 
-render(<App />, document.getElementById("root"));
+// Styles
+import "./styles/index.css";
+
+render(
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>,
+  document.getElementById("root")
+);

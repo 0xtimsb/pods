@@ -5,7 +5,7 @@
     "server"
   ],
   "scripts": {
-    "codegen": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web codegen\"",
+    "generate": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web generate\"",
     "dev": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web start\""
   },
   "dependencies": {

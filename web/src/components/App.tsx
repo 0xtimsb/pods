@@ -1,22 +1,33 @@
-import { ApolloProvider } from "@apollo/client";
+import { Route, BrowserRouter, Switch } from "react-router-dom";
 
-// Apollo client
-import client from "../lib/apolloClient";
+// Graphql
+import { useMeQuery } from "../generated/graphql";
+
+// Components
+import Layout from "./Layout";
+import Navbar from "./Navbar";
+import AuthLayout from "./Auth/AuthLayout";
 
 function App() {
+  const { data, loading, error, refetch } = useMeQuery();
+
+  if (loading) return <Layout>Loading...</Layout>;
+
+  if (error || !data) return <Layout>Error occured: {error}</Layout>;
+
   return (
-    <ApolloProvider client={client}>
-      <div className="h-screen bg-white">
-        <div className="sticky top-0 h-16 flex justify-center border-b border-gray-200">
-          <div className="w-full max-w-6xl px-16 flex items-center">
-            <div className="text-gray-900 text-sm cursor-pointer">Login</div>
-            <div className="bg-gray-900 text-white px-2.5 py-2 rounded border border-gray-900 text-sm cursor-pointer hover:bg-white hover:text-black">
-              Sign Up
-            </div>
-          </div>
-        </div>
-      </div>
-    </ApolloProvider>
+    <BrowserRouter>
+      <Layout>
+        <Navbar />
+        <Switch>
+          {data.me ? (
+            <Route exact render={() => <div>Hiii your are here</div>} />
+          ) : (
+            <Route exact render={() => <AuthLayout refetch={refetch} />} />
+          )}
+        </Switch>
+      </Layout>
+    </BrowserRouter>
   );
 }
 
