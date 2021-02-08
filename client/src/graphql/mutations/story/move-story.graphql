@@ -1,7 +1,0 @@
-mutation MoveStory($id: Int!, $sourceIndex: Int!, $destinationIndex: Int!) {
-  moveStory(
-    id: $id
-    sourceIndex: $sourceIndex
-    destinationIndex: $destinationIndex
-  )
-}

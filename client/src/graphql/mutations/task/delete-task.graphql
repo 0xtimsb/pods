@@ -1,3 +1,0 @@
-mutation DeleteTask($taskId: Int!) {
-  deleteTask(taskId: $taskId)
-}

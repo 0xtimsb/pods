@@ -1,3 +1,0 @@
-mutation JoinPod($userId: Int!, $podId: Int!) {
-  joinPod(userId: $userId, podId: $podId)
-}

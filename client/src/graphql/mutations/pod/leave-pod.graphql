@@ -1,3 +1,0 @@
-mutation LeavePod($userId: Int!, $podId: Int!) {
-  leavePod(userId: $userId, podId: $podId)
-}

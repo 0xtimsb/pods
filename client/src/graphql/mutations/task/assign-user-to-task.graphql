@@ -1,3 +1,0 @@
-mutation AssignUserToTask($userId: Int!, $taskId: Int!) {
-  assignUserToTask(userId: $userId, taskId: $taskId)
-}
