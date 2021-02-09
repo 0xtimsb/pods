@@ -1,10 +1,12 @@
 query Me {
   me {
     id
+    email
     username
     pods {
       id
       name
+      createdAt
     }
   }
 }

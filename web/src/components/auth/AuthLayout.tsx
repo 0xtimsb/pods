@@ -11,11 +11,11 @@ import { Exact } from "../../generated/graphql";
 import LogIn from "../../pages/auth/LogIn";
 import SignUp from "../../pages/auth/SignUp";
 
-const AuthLayout = ({ refetch }: any) => {
+const AuthLayout = () => {
   return (
     <Switch>
-      <Route exact path={LOGIN} render={() => <LogIn refetch={refetch} />} />
-      <Route exact path={SIGNUP} render={() => <SignUp refetch={refetch} />} />
+      <Route exact path={LOGIN} render={() => <LogIn />} />
+      <Route exact path={SIGNUP} render={() => <SignUp />} />
       {/* <Route exact path={FORGOT_PASSWORD} component={<div>Peee</div>} />
       <Route exact path={RESET_PASSWORD} render={() => <ResetPassword refetch={refetch} />} /> */}
       <Redirect to={LOGIN} />
