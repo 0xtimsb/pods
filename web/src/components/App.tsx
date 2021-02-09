@@ -5,24 +5,27 @@ import { useMeQuery } from "../generated/graphql";
 
 // Components
 import Layout from "./common/Layout";
-import AuthLayout from "./auth/AuthLayout";
-import { HOME } from "../routes";
+import AuthLayout from "./AuthLayout";
+import AppLayout from "./AppLayout";
+import Navbar from "./common/Navbar";
 
 function App() {
   const { data, loading, error } = useMeQuery();
 
-  if (loading) return <Layout>Loading...</Layout>;
+  if (loading) return <div>Loading...</div>;
 
-  if (error || !data) return <Layout>Error occured: {error}</Layout>;
+  if (error) return <div>Error occured...</div>;
 
   return (
     <BrowserRouter>
       <Switch>
-        {data.me ? (
-          <Route exact render={() => <div>Hiii your are here</div>} />
-        ) : (
-          <Route exact render={() => <AuthLayout />} />
-        )}
+        <Layout me={data?.me}>
+          {data && data.me ? (
+            <Route exact render={() => <AppLayout />} />
+          ) : (
+            <Route exact render={() => <AuthLayout />} />
+          )}
+        </Layout>
       </Switch>
     </BrowserRouter>
   );
