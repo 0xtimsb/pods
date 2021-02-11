@@ -1,0 +1,18 @@
+mutation Register($username: String!, $password: String!, $email: String!) {
+  register(data: { username: $username, email: $email, password: $password }) {
+    user {
+      id
+      email
+      username
+      pods {
+        id
+        name
+        createdAt
+      }
+    }
+    errors {
+      field
+      message
+    }
+  }
+}

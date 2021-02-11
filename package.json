@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "workspaces": [
+    "web",
+    "server"
+  ],
+  "scripts": {
+    "generate": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web generate\"",
+    "dev": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web start\""
+  },
+  "dependencies": {
+    "concurrently": "^5.3.0"
+  }
+}

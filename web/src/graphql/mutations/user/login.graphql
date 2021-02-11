@@ -1,0 +1,18 @@
+mutation Login($usernameOrEmail: String!, $password: String!) {
+  login(usernameOrEmail: $usernameOrEmail, password: $password) {
+    user {
+      id
+      email
+      username
+      pods {
+        id
+        name
+        createdAt
+      }
+    }
+    errors {
+      field
+      message
+    }
+  }
+}

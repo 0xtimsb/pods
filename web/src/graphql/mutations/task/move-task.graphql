@@ -1,0 +1,15 @@
+mutation MoveTask(
+  $id: Int!
+  $sourceIndex: Int!
+  $destinationIndex: Int!
+  $sourceStoryId: Int!
+  $destinationStoryId: Int!
+) {
+  moveTask(
+    id: $id
+    sourceIndex: $sourceIndex
+    destinationIndex: $destinationIndex
+    sourceStoryId: $sourceStoryId
+    destinationStoryId: $destinationStoryId
+  )
+}

@@ -1,0 +1,12 @@
+mutation CreateStory($title: String!, $podId: Int!) {
+  createStory(data: { title: $title, podId: $podId }) {
+    story {
+      id
+      title
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
