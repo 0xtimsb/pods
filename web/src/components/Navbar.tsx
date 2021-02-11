@@ -11,8 +11,8 @@ import {
 } from "react-router-dom";
 
 // Graphql
-import { MeQuery } from "../../generated/graphql";
-import Home from "../../pages/user/Home";
+import { MeQuery } from "../generated/graphql";
+import Home from "../pages/user/Home";
 
 // Routes
 import {
@@ -21,14 +21,16 @@ import {
   POD_BOARD,
   POD_DISCUSSION,
   POD_SETTINGS,
-} from "../../constants/routes";
+} from "../constants/routes";
 
 // Constants
-import podOptions from "../../constants/podOptions";
+import podOptions from "../constants/podOptions";
 
 export interface RouteParams {
-  id: string;
+  id?: string;
 }
+
+const isLinkActive = () => {};
 
 const Navbar: React.FC = () => {
   const client = useApolloClient();
@@ -46,6 +48,14 @@ const Navbar: React.FC = () => {
   });
 
   const isAuth = !!data?.me;
+
+  // Return classNames for active option link.
+  const getActiveLinkClassNames = (route: string) => {
+    if (location.pathname === generatePath(route, { id: params.id })) {
+      return "text-gray-900 border-gray-900";
+    }
+    return "text-gray-500 border-transparent hover:text-gray-700";
+  };
 
   return (
     <div className="sticky top-0 flex justify-center border-b border-gray-200">
@@ -72,13 +82,15 @@ const Navbar: React.FC = () => {
             </div>
           )}
         </div>
-        {isAuth && matchPath(location.pathname, POD)?.isExact && (
+        {isAuth && matchPath(location.pathname, POD) && (
           <div className="flex space-x-6">
             {podOptions.map(({ name, route }, index) => (
               <Link
                 to={generatePath(route, { id: params.id })}
                 key={index}
-                className="text-gray-500 border-b-2 text-sm hover:border-gray-900 border-transparent hover:text-gray-900 pb-2.5"
+                className={`pb-2.5 text-sm border-b-2 ${getActiveLinkClassNames(
+                  route
+                )}`}
               >
                 {name}
               </Link>

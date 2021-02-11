@@ -7,14 +7,14 @@ import {
   LOGIN,
   RESET_PASSWORD,
   SIGNUP,
-} from "../constants/routes";
+} from "../../constants/routes";
 
 // Graphql
-import { Exact } from "../generated/graphql";
+import { Exact } from "../../generated/graphql";
 
 // Components
-import LogIn from "../pages/auth/LogIn";
-import SignUp from "../pages/auth/SignUp";
+import LogIn from "../../pages/auth/LogIn";
+import SignUp from "../../pages/auth/SignUp";
 
 const AuthLayout = () => {
   return (

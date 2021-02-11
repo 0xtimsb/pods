@@ -6,7 +6,7 @@ import { FiLock, FiMail, FiSmile } from "react-icons/fi";
 import { useLoginMutation } from "../../generated/graphql";
 
 // Components
-import Layout from "../../components/common/Layout";
+import Layout from "../../components/Layout";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
 

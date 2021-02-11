@@ -8,7 +8,7 @@ import { MeQuery } from "../../generated/graphql";
 import { POD } from "../../constants/routes";
 
 // Components
-import Layout from "../../components/common/Layout";
+import Layout from "../../components/Layout";
 import { gql, useApolloClient } from "@apollo/client";
 
 interface HomeProps {}

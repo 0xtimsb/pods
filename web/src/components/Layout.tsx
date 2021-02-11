@@ -1,5 +1,5 @@
 // Graphql
-import { MeQuery } from "../../generated/graphql";
+import { MeQuery } from "../generated/graphql";
 
 // Components
 import Navbar from "./Navbar";
