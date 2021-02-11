@@ -3,13 +3,12 @@ import { FiLock, FiMail, FiSmile } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 
 // Graphql
-import { useRegisterMutation } from "../generated/graphql";
+import { useRegisterMutation } from "../../generated/graphql";
 
 // Components
-import Layout from "../components/common/Layout";
-import Button from "../components/common/Button";
-import Input from "../components/common/Input";
-import Navbar from "../components/common/Navbar";
+import Layout from "../../components/common/Layout";
+import Button from "../../components/common/Button";
+import Input from "../../components/common/Input";
 
 type FormData = {
   email: string;
@@ -40,7 +39,7 @@ const SignUp = () => {
   });
 
   return (
-    <>
+    <Layout>
       <form
         className="flex-grow flex flex-col justify-center items-center space-y-8"
         onSubmit={onSubmit}
@@ -75,7 +74,7 @@ const SignUp = () => {
           Already have an account? Log in
         </Link>
       </div>
-    </>
+    </Layout>
   );
 };
 

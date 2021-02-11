@@ -2,14 +2,19 @@ import { ApolloQueryResult } from "@apollo/client";
 import { Redirect, Route, Switch } from "react-router-dom";
 
 // Routes
-import { FORGOT_PASSWORD, LOGIN, RESET_PASSWORD, SIGNUP } from "../routes";
+import {
+  FORGOT_PASSWORD,
+  LOGIN,
+  RESET_PASSWORD,
+  SIGNUP,
+} from "../constants/routes";
 
 // Graphql
 import { Exact } from "../generated/graphql";
 
 // Components
-import LogIn from "../pages/LogIn";
-import SignUp from "../pages/SignUp";
+import LogIn from "../pages/auth/LogIn";
+import SignUp from "../pages/auth/SignUp";
 
 const AuthLayout = () => {
   return (

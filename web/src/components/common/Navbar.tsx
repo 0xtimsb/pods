@@ -1,18 +1,51 @@
-import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { gql, useApolloClient } from "@apollo/client";
+import {
+  generatePath,
+  Link,
+  useLocation,
+  match,
+  useParams,
+  matchPath,
+  useRouteMatch,
+} from "react-router-dom";
 
 // Graphql
 import { MeQuery } from "../../generated/graphql";
+import Home from "../../pages/user/Home";
 
 // Routes
-import { HOME, POD } from "../../routes";
+import {
+  HOME,
+  POD,
+  POD_BOARD,
+  POD_DISCUSSION,
+  POD_SETTINGS,
+} from "../../constants/routes";
 
-interface NavbarProps {
-  me: MeQuery["me"];
+// Constants
+import podOptions from "../../constants/podOptions";
+
+export interface RouteParams {
+  id: string;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ me }) => {
+const Navbar: React.FC = () => {
+  const client = useApolloClient();
   const location = useLocation();
-  const pageLinks = ["Overview", "Discussion", "Board", "Settings"];
+  const params = useParams<RouteParams>();
+
+  const data = client.readQuery<MeQuery>({
+    query: gql`
+      query Me {
+        me {
+          id
+        }
+      }
+    `,
+  });
+
+  const isAuth = !!data?.me;
 
   return (
     <div className="sticky top-0 flex justify-center border-b border-gray-200">
@@ -23,7 +56,7 @@ const Navbar: React.FC<NavbarProps> = ({ me }) => {
               Pods
             </Link>
           </div>
-          {me ? (
+          {isAuth ? (
             <div>Heee</div>
           ) : (
             <div className="flex items-center space-x-5">
@@ -39,15 +72,15 @@ const Navbar: React.FC<NavbarProps> = ({ me }) => {
             </div>
           )}
         </div>
-        {me && location.pathname.includes(POD) && (
+        {isAuth && matchPath(location.pathname, POD)?.isExact && (
           <div className="flex space-x-6">
-            {pageLinks.map((pageLink, index) => (
+            {podOptions.map(({ name, route }, index) => (
               <Link
-                to={HOME}
+                to={generatePath(route, { id: params.id })}
                 key={index}
                 className="text-gray-500 border-b-2 text-sm hover:border-gray-900 border-transparent hover:text-gray-900 pb-2.5"
               >
-                {pageLink}
+                {name}
               </Link>
             ))}
           </div>

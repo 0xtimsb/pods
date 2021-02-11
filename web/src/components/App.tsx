@@ -19,13 +19,11 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Layout me={data?.me}>
-          {data && data.me ? (
-            <Route exact render={() => <AppLayout me={data.me} />} />
-          ) : (
-            <Route exact render={() => <AuthLayout />} />
-          )}
-        </Layout>
+        {data && data.me ? (
+          <Route exact render={() => <AppLayout />} />
+        ) : (
+          <Route exact render={() => <AuthLayout />} />
+        )}
       </Switch>
     </BrowserRouter>
   );

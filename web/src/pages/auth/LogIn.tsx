@@ -3,13 +3,12 @@ import { Link } from "react-router-dom";
 import { FiLock, FiMail, FiSmile } from "react-icons/fi";
 
 // Graphql
-import { useLoginMutation } from "../generated/graphql";
+import { useLoginMutation } from "../../generated/graphql";
 
 // Components
-import Layout from "../components/common/Layout";
-import Button from "../components/common/Button";
-import Input from "../components/common/Input";
-import Navbar from "../components/common/Navbar";
+import Layout from "../../components/common/Layout";
+import Button from "../../components/common/Button";
+import Input from "../../components/common/Input";
 
 type FormData = {
   usernameOrEmail: string;
@@ -42,7 +41,7 @@ const LogIn = () => {
   const isTypingEmail = usernameOrEmail && usernameOrEmail.includes("@");
 
   return (
-    <>
+    <Layout>
       <form
         className="flex-grow flex flex-col justify-center items-center space-y-8"
         onSubmit={onSubmit}
@@ -74,7 +73,7 @@ const LogIn = () => {
           Don't have an account? Sign Up
         </Link>
       </div>
-    </>
+    </Layout>
   );
 };
 

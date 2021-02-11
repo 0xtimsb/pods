@@ -1,13 +1,9 @@
-import { gql } from "@apollo/client";
-import * as Apollo from "@apollo/client";
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]: Maybe<T[SubKey]> };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -18,478 +14,532 @@ export type Scalars = {
 };
 
 export type Query = {
-  __typename?: "Query";
+  __typename?: 'Query';
   me?: Maybe<User>;
   pod?: Maybe<Pod>;
   story?: Maybe<Story>;
   task?: Maybe<Task>;
 };
 
+
 export type QueryPodArgs = {
-  id: Scalars["Int"];
+  id: Scalars['Int'];
 };
+
 
 export type QueryStoryArgs = {
-  id: Scalars["Int"];
+  id: Scalars['Int'];
 };
 
+
 export type QueryTaskArgs = {
-  id: Scalars["Int"];
+  id: Scalars['Int'];
 };
 
 export type User = {
-  __typename?: "User";
-  id: Scalars["Int"];
-  username: Scalars["String"];
-  email: Scalars["String"];
-  createdAt: Scalars["String"];
-  updatedAt: Scalars["String"];
+  __typename?: 'User';
+  id: Scalars['Int'];
+  username: Scalars['String'];
+  email: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
   pods: Array<Pod>;
   tasks: Array<Task>;
 };
 
 export type Pod = {
-  __typename?: "Pod";
-  id: Scalars["Int"];
-  name: Scalars["String"];
-  createdAt: Scalars["String"];
-  updatedAt: Scalars["String"];
+  __typename?: 'Pod';
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
   users: Array<User>;
   stories: Array<Story>;
 };
 
 export type Story = {
-  __typename?: "Story";
-  id: Scalars["Int"];
-  title: Scalars["String"];
-  rank: Scalars["String"];
-  createdAt: Scalars["String"];
-  updatedAt: Scalars["String"];
+  __typename?: 'Story';
+  id: Scalars['Int'];
+  title: Scalars['String'];
+  rank: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
   tasks: Array<Task>;
 };
 
 export type Task = {
-  __typename?: "Task";
-  id: Scalars["Int"];
-  title: Scalars["String"];
-  description?: Maybe<Scalars["String"]>;
-  rank: Scalars["String"];
-  createdAt: Scalars["String"];
-  updatedAt: Scalars["String"];
+  __typename?: 'Task';
+  id: Scalars['Int'];
+  title: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  rank: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
   users: Array<User>;
 };
 
 export type Mutation = {
-  __typename?: "Mutation";
+  __typename?: 'Mutation';
   register: UserResponse;
   login: UserResponse;
-  logout: Scalars["Boolean"];
-  forgotPassword: Scalars["Boolean"];
+  logout: Scalars['Boolean'];
+  forgotPassword: Scalars['Boolean'];
   changePassword: UserResponse;
   createPod: PodResponse;
-  joinPod: Scalars["Boolean"];
-  leavePod: Scalars["Boolean"];
-  deletePod: Scalars["Boolean"];
-  moveStory: Scalars["Boolean"];
+  joinPod: Scalars['Boolean'];
+  leavePod: Scalars['Boolean'];
+  deletePod: Scalars['Boolean'];
+  moveStory: Scalars['Boolean'];
   createStory: StoryResponse;
-  deleteStory: Scalars["Boolean"];
-  moveTask: Scalars["Boolean"];
+  deleteStory: Scalars['Boolean'];
+  moveTask: Scalars['Boolean'];
   createTask: TaskResponse;
-  assignUserToTask: Scalars["Boolean"];
-  removeUserFromTask: Scalars["Boolean"];
-  deleteTask: Scalars["Boolean"];
+  assignUserToTask: Scalars['Boolean'];
+  removeUserFromTask: Scalars['Boolean'];
+  deleteTask: Scalars['Boolean'];
 };
+
 
 export type MutationRegisterArgs = {
   data: UserInput;
 };
 
+
 export type MutationLoginArgs = {
-  password: Scalars["String"];
-  usernameOrEmail: Scalars["String"];
+  password: Scalars['String'];
+  usernameOrEmail: Scalars['String'];
 };
+
 
 export type MutationForgotPasswordArgs = {
-  email: Scalars["String"];
+  email: Scalars['String'];
 };
 
+
 export type MutationChangePasswordArgs = {
-  newPassword: Scalars["String"];
-  token: Scalars["String"];
+  newPassword: Scalars['String'];
+  token: Scalars['String'];
 };
+
 
 export type MutationCreatePodArgs = {
   data: PodInput;
 };
 
+
 export type MutationJoinPodArgs = {
-  userId: Scalars["Int"];
-  podId: Scalars["Int"];
+  userId: Scalars['Int'];
+  podId: Scalars['Int'];
 };
+
 
 export type MutationLeavePodArgs = {
-  userId: Scalars["Int"];
-  podId: Scalars["Int"];
+  userId: Scalars['Int'];
+  podId: Scalars['Int'];
 };
+
 
 export type MutationDeletePodArgs = {
-  podId: Scalars["Int"];
+  podId: Scalars['Int'];
 };
 
+
 export type MutationMoveStoryArgs = {
-  destinationIndex: Scalars["Int"];
-  sourceIndex: Scalars["Int"];
-  id: Scalars["Int"];
+  destinationIndex: Scalars['Int'];
+  sourceIndex: Scalars['Int'];
+  id: Scalars['Int'];
 };
+
 
 export type MutationCreateStoryArgs = {
   data: StoryInput;
 };
 
+
 export type MutationDeleteStoryArgs = {
-  storyId: Scalars["Int"];
+  storyId: Scalars['Int'];
 };
 
+
 export type MutationMoveTaskArgs = {
-  destinationStoryId: Scalars["Int"];
-  sourceStoryId: Scalars["Int"];
-  destinationIndex: Scalars["Int"];
-  sourceIndex: Scalars["Int"];
-  id: Scalars["Int"];
+  destinationStoryId: Scalars['Int'];
+  sourceStoryId: Scalars['Int'];
+  destinationIndex: Scalars['Int'];
+  sourceIndex: Scalars['Int'];
+  id: Scalars['Int'];
 };
+
 
 export type MutationCreateTaskArgs = {
   data: TaskInput;
 };
 
+
 export type MutationAssignUserToTaskArgs = {
-  userId: Scalars["Int"];
-  taskId: Scalars["Int"];
+  userId: Scalars['Int'];
+  taskId: Scalars['Int'];
 };
+
 
 export type MutationRemoveUserFromTaskArgs = {
-  userId: Scalars["Int"];
-  taskId: Scalars["Int"];
+  userId: Scalars['Int'];
+  taskId: Scalars['Int'];
 };
 
+
 export type MutationDeleteTaskArgs = {
-  taskId: Scalars["Int"];
+  taskId: Scalars['Int'];
 };
 
 export type UserResponse = {
-  __typename?: "UserResponse";
+  __typename?: 'UserResponse';
   errors?: Maybe<Array<FieldError>>;
   user?: Maybe<User>;
 };
 
 export type FieldError = {
-  __typename?: "FieldError";
-  field: Scalars["String"];
-  message: Scalars["String"];
+  __typename?: 'FieldError';
+  field: Scalars['String'];
+  message: Scalars['String'];
 };
 
 export type UserInput = {
-  email: Scalars["String"];
-  username: Scalars["String"];
-  password: Scalars["String"];
+  email: Scalars['String'];
+  username: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type PodResponse = {
-  __typename?: "PodResponse";
+  __typename?: 'PodResponse';
   errors?: Maybe<Array<FieldError>>;
   pod?: Maybe<Pod>;
 };
 
 export type PodInput = {
-  name: Scalars["String"];
+  name: Scalars['String'];
 };
 
 export type StoryResponse = {
-  __typename?: "StoryResponse";
+  __typename?: 'StoryResponse';
   errors?: Maybe<Array<FieldError>>;
   story?: Maybe<Story>;
 };
 
 export type StoryInput = {
-  title: Scalars["String"];
-  podId: Scalars["Int"];
+  title: Scalars['String'];
+  podId: Scalars['Int'];
 };
 
 export type TaskResponse = {
-  __typename?: "TaskResponse";
+  __typename?: 'TaskResponse';
   errors?: Maybe<Array<FieldError>>;
   task?: Maybe<Task>;
 };
 
 export type TaskInput = {
-  title: Scalars["String"];
-  description?: Maybe<Scalars["String"]>;
-  storyId: Scalars["Int"];
+  title: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  storyId: Scalars['Int'];
 };
 
 export type CreatePodMutationVariables = Exact<{
-  name: Scalars["String"];
+  name: Scalars['String'];
 }>;
 
-export type CreatePodMutation = { __typename?: "Mutation" } & {
-  createPod: { __typename?: "PodResponse" } & {
-    pod?: Maybe<{ __typename?: "Pod" } & Pick<Pod, "id" | "name">>;
-    errors?: Maybe<
-      Array<
-        { __typename?: "FieldError" } & Pick<FieldError, "field" | "message">
-      >
-    >;
-  };
-};
+
+export type CreatePodMutation = (
+  { __typename?: 'Mutation' }
+  & { createPod: (
+    { __typename?: 'PodResponse' }
+    & { pod?: Maybe<(
+      { __typename?: 'Pod' }
+      & Pick<Pod, 'id' | 'name'>
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>> }
+  ) }
+);
 
 export type DeletePodMutationVariables = Exact<{
-  podId: Scalars["Int"];
+  podId: Scalars['Int'];
 }>;
 
-export type DeletePodMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "deletePod"
->;
+
+export type DeletePodMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deletePod'>
+);
 
 export type JoinPodMutationVariables = Exact<{
-  userId: Scalars["Int"];
-  podId: Scalars["Int"];
+  userId: Scalars['Int'];
+  podId: Scalars['Int'];
 }>;
 
-export type JoinPodMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "joinPod"
->;
+
+export type JoinPodMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'joinPod'>
+);
 
 export type LeavePodMutationVariables = Exact<{
-  userId: Scalars["Int"];
-  podId: Scalars["Int"];
+  userId: Scalars['Int'];
+  podId: Scalars['Int'];
 }>;
 
-export type LeavePodMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "leavePod"
->;
+
+export type LeavePodMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'leavePod'>
+);
 
 export type CreateStoryMutationVariables = Exact<{
-  title: Scalars["String"];
-  podId: Scalars["Int"];
+  title: Scalars['String'];
+  podId: Scalars['Int'];
 }>;
 
-export type CreateStoryMutation = { __typename?: "Mutation" } & {
-  createStory: { __typename?: "StoryResponse" } & {
-    story?: Maybe<{ __typename?: "Story" } & Pick<Story, "id" | "title">>;
-    errors?: Maybe<
-      Array<
-        { __typename?: "FieldError" } & Pick<FieldError, "field" | "message">
-      >
-    >;
-  };
-};
+
+export type CreateStoryMutation = (
+  { __typename?: 'Mutation' }
+  & { createStory: (
+    { __typename?: 'StoryResponse' }
+    & { story?: Maybe<(
+      { __typename?: 'Story' }
+      & Pick<Story, 'id' | 'title'>
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>> }
+  ) }
+);
 
 export type DeleteStoryMutationVariables = Exact<{
-  storyId: Scalars["Int"];
+  storyId: Scalars['Int'];
 }>;
 
-export type DeleteStoryMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "deleteStory"
->;
+
+export type DeleteStoryMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteStory'>
+);
 
 export type MoveStoryMutationVariables = Exact<{
-  id: Scalars["Int"];
-  sourceIndex: Scalars["Int"];
-  destinationIndex: Scalars["Int"];
+  id: Scalars['Int'];
+  sourceIndex: Scalars['Int'];
+  destinationIndex: Scalars['Int'];
 }>;
 
-export type MoveStoryMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "moveStory"
->;
+
+export type MoveStoryMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'moveStory'>
+);
 
 export type AssignUserToTaskMutationVariables = Exact<{
-  userId: Scalars["Int"];
-  taskId: Scalars["Int"];
+  userId: Scalars['Int'];
+  taskId: Scalars['Int'];
 }>;
 
-export type AssignUserToTaskMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "assignUserToTask"
->;
+
+export type AssignUserToTaskMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'assignUserToTask'>
+);
 
 export type CreateTaskMutationVariables = Exact<{
-  title: Scalars["String"];
-  storyId: Scalars["Int"];
+  title: Scalars['String'];
+  storyId: Scalars['Int'];
 }>;
 
-export type CreateTaskMutation = { __typename?: "Mutation" } & {
-  createTask: { __typename?: "TaskResponse" } & {
-    task?: Maybe<{ __typename?: "Task" } & Pick<Task, "id" | "title">>;
-    errors?: Maybe<
-      Array<
-        { __typename?: "FieldError" } & Pick<FieldError, "field" | "message">
-      >
-    >;
-  };
-};
+
+export type CreateTaskMutation = (
+  { __typename?: 'Mutation' }
+  & { createTask: (
+    { __typename?: 'TaskResponse' }
+    & { task?: Maybe<(
+      { __typename?: 'Task' }
+      & Pick<Task, 'id' | 'title'>
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>> }
+  ) }
+);
 
 export type DeleteTaskMutationVariables = Exact<{
-  taskId: Scalars["Int"];
+  taskId: Scalars['Int'];
 }>;
 
-export type DeleteTaskMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "deleteTask"
->;
+
+export type DeleteTaskMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteTask'>
+);
 
 export type MoveTaskMutationVariables = Exact<{
-  id: Scalars["Int"];
-  sourceIndex: Scalars["Int"];
-  destinationIndex: Scalars["Int"];
-  sourceStoryId: Scalars["Int"];
-  destinationStoryId: Scalars["Int"];
+  id: Scalars['Int'];
+  sourceIndex: Scalars['Int'];
+  destinationIndex: Scalars['Int'];
+  sourceStoryId: Scalars['Int'];
+  destinationStoryId: Scalars['Int'];
 }>;
 
-export type MoveTaskMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "moveTask"
->;
+
+export type MoveTaskMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'moveTask'>
+);
 
 export type RemoveUserFromTaskMutationVariables = Exact<{
-  userId: Scalars["Int"];
-  taskId: Scalars["Int"];
+  userId: Scalars['Int'];
+  taskId: Scalars['Int'];
 }>;
 
-export type RemoveUserFromTaskMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "removeUserFromTask"
->;
+
+export type RemoveUserFromTaskMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'removeUserFromTask'>
+);
 
 export type ChangePasswordMutationVariables = Exact<{
-  newPassword: Scalars["String"];
-  token: Scalars["String"];
+  newPassword: Scalars['String'];
+  token: Scalars['String'];
 }>;
 
-export type ChangePasswordMutation = { __typename?: "Mutation" } & {
-  changePassword: { __typename?: "UserResponse" } & {
-    user?: Maybe<{ __typename?: "User" } & Pick<User, "id" | "username">>;
-    errors?: Maybe<
-      Array<
-        { __typename?: "FieldError" } & Pick<FieldError, "field" | "message">
-      >
-    >;
-  };
-};
+
+export type ChangePasswordMutation = (
+  { __typename?: 'Mutation' }
+  & { changePassword: (
+    { __typename?: 'UserResponse' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username'>
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>> }
+  ) }
+);
 
 export type ForgotPasswordMutationVariables = Exact<{
-  email: Scalars["String"];
+  email: Scalars['String'];
 }>;
 
-export type ForgotPasswordMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "forgotPassword"
->;
+
+export type ForgotPasswordMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'forgotPassword'>
+);
 
 export type LoginMutationVariables = Exact<{
-  usernameOrEmail: Scalars["String"];
-  password: Scalars["String"];
+  usernameOrEmail: Scalars['String'];
+  password: Scalars['String'];
 }>;
 
-export type LoginMutation = { __typename?: "Mutation" } & {
-  login: { __typename?: "UserResponse" } & {
-    user?: Maybe<
-      { __typename?: "User" } & Pick<User, "id" | "email" | "username"> & {
-          pods: Array<
-            { __typename?: "Pod" } & Pick<Pod, "id" | "name" | "createdAt">
-          >;
-        }
-    >;
-    errors?: Maybe<
-      Array<
-        { __typename?: "FieldError" } & Pick<FieldError, "field" | "message">
-      >
-    >;
-  };
-};
 
-export type LogoutMutationVariables = Exact<{ [key: string]: never }>;
+export type LoginMutation = (
+  { __typename?: 'Mutation' }
+  & { login: (
+    { __typename?: 'UserResponse' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'email' | 'username'>
+      & { pods: Array<(
+        { __typename?: 'Pod' }
+        & Pick<Pod, 'id' | 'name' | 'createdAt'>
+      )> }
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>> }
+  ) }
+);
 
-export type LogoutMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "logout"
->;
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'logout'>
+);
 
 export type RegisterMutationVariables = Exact<{
-  username: Scalars["String"];
-  password: Scalars["String"];
-  email: Scalars["String"];
+  username: Scalars['String'];
+  password: Scalars['String'];
+  email: Scalars['String'];
 }>;
 
-export type RegisterMutation = { __typename?: "Mutation" } & {
-  register: { __typename?: "UserResponse" } & {
-    user?: Maybe<
-      { __typename?: "User" } & Pick<User, "id" | "email" | "username"> & {
-          pods: Array<
-            { __typename?: "Pod" } & Pick<Pod, "id" | "name" | "createdAt">
-          >;
-        }
-    >;
-    errors?: Maybe<
-      Array<
-        { __typename?: "FieldError" } & Pick<FieldError, "field" | "message">
-      >
-    >;
-  };
-};
+
+export type RegisterMutation = (
+  { __typename?: 'Mutation' }
+  & { register: (
+    { __typename?: 'UserResponse' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'email' | 'username'>
+      & { pods: Array<(
+        { __typename?: 'Pod' }
+        & Pick<Pod, 'id' | 'name' | 'createdAt'>
+      )> }
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>> }
+  ) }
+);
 
 export type PodQueryVariables = Exact<{
-  id: Scalars["Int"];
+  id: Scalars['Int'];
 }>;
 
-export type PodQuery = { __typename?: "Query" } & {
-  pod?: Maybe<
-    { __typename?: "Pod" } & Pick<Pod, "id" | "name"> & {
-        stories: Array<
-          { __typename?: "Story" } & Pick<Story, "id" | "title"> & {
-              tasks: Array<
-                { __typename?: "Task" } & Pick<Task, "id" | "title">
-              >;
-            }
-        >;
-      }
-  >;
-};
 
-export type MeQueryVariables = Exact<{ [key: string]: never }>;
+export type PodQuery = (
+  { __typename?: 'Query' }
+  & { pod?: Maybe<(
+    { __typename?: 'Pod' }
+    & Pick<Pod, 'id' | 'name'>
+    & { stories: Array<(
+      { __typename?: 'Story' }
+      & Pick<Story, 'id' | 'title'>
+      & { tasks: Array<(
+        { __typename?: 'Task' }
+        & Pick<Task, 'id' | 'title'>
+      )> }
+    )> }
+  )> }
+);
 
-export type MeQuery = { __typename?: "Query" } & {
-  me?: Maybe<
-    { __typename?: "User" } & Pick<User, "id" | "email" | "username"> & {
-        pods: Array<
-          { __typename?: "Pod" } & Pick<Pod, "id" | "name" | "createdAt">
-        >;
-      }
-  >;
-};
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = (
+  { __typename?: 'Query' }
+  & { me?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'email' | 'username'>
+    & { pods: Array<(
+      { __typename?: 'Pod' }
+      & Pick<Pod, 'id' | 'name' | 'createdAt'>
+    )> }
+  )> }
+);
+
 
 export const CreatePodDocument = gql`
-  mutation CreatePod($name: String!) {
-    createPod(data: { name: $name }) {
-      pod {
-        id
-        name
-      }
-      errors {
-        field
-        message
-      }
+    mutation CreatePod($name: String!) {
+  createPod(data: {name: $name}) {
+    pod {
+      id
+      name
+    }
+    errors {
+      field
+      message
     }
   }
-`;
-export type CreatePodMutationFn = Apollo.MutationFunction<
-  CreatePodMutation,
-  CreatePodMutationVariables
->;
+}
+    `;
+export type CreatePodMutationFn = Apollo.MutationFunction<CreatePodMutation, CreatePodMutationVariables>;
 
 /**
  * __useCreatePodMutation__
@@ -508,34 +558,18 @@ export type CreatePodMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useCreatePodMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreatePodMutation,
-    CreatePodMutationVariables
-  >
-) {
-  return Apollo.useMutation<CreatePodMutation, CreatePodMutationVariables>(
-    CreatePodDocument,
-    baseOptions
-  );
-}
-export type CreatePodMutationHookResult = ReturnType<
-  typeof useCreatePodMutation
->;
+export function useCreatePodMutation(baseOptions?: Apollo.MutationHookOptions<CreatePodMutation, CreatePodMutationVariables>) {
+        return Apollo.useMutation<CreatePodMutation, CreatePodMutationVariables>(CreatePodDocument, baseOptions);
+      }
+export type CreatePodMutationHookResult = ReturnType<typeof useCreatePodMutation>;
 export type CreatePodMutationResult = Apollo.MutationResult<CreatePodMutation>;
-export type CreatePodMutationOptions = Apollo.BaseMutationOptions<
-  CreatePodMutation,
-  CreatePodMutationVariables
->;
+export type CreatePodMutationOptions = Apollo.BaseMutationOptions<CreatePodMutation, CreatePodMutationVariables>;
 export const DeletePodDocument = gql`
-  mutation DeletePod($podId: Int!) {
-    deletePod(podId: $podId)
-  }
-`;
-export type DeletePodMutationFn = Apollo.MutationFunction<
-  DeletePodMutation,
-  DeletePodMutationVariables
->;
+    mutation DeletePod($podId: Int!) {
+  deletePod(podId: $podId)
+}
+    `;
+export type DeletePodMutationFn = Apollo.MutationFunction<DeletePodMutation, DeletePodMutationVariables>;
 
 /**
  * __useDeletePodMutation__
@@ -554,34 +588,18 @@ export type DeletePodMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useDeletePodMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    DeletePodMutation,
-    DeletePodMutationVariables
-  >
-) {
-  return Apollo.useMutation<DeletePodMutation, DeletePodMutationVariables>(
-    DeletePodDocument,
-    baseOptions
-  );
-}
-export type DeletePodMutationHookResult = ReturnType<
-  typeof useDeletePodMutation
->;
+export function useDeletePodMutation(baseOptions?: Apollo.MutationHookOptions<DeletePodMutation, DeletePodMutationVariables>) {
+        return Apollo.useMutation<DeletePodMutation, DeletePodMutationVariables>(DeletePodDocument, baseOptions);
+      }
+export type DeletePodMutationHookResult = ReturnType<typeof useDeletePodMutation>;
 export type DeletePodMutationResult = Apollo.MutationResult<DeletePodMutation>;
-export type DeletePodMutationOptions = Apollo.BaseMutationOptions<
-  DeletePodMutation,
-  DeletePodMutationVariables
->;
+export type DeletePodMutationOptions = Apollo.BaseMutationOptions<DeletePodMutation, DeletePodMutationVariables>;
 export const JoinPodDocument = gql`
-  mutation JoinPod($userId: Int!, $podId: Int!) {
-    joinPod(userId: $userId, podId: $podId)
-  }
-`;
-export type JoinPodMutationFn = Apollo.MutationFunction<
-  JoinPodMutation,
-  JoinPodMutationVariables
->;
+    mutation JoinPod($userId: Int!, $podId: Int!) {
+  joinPod(userId: $userId, podId: $podId)
+}
+    `;
+export type JoinPodMutationFn = Apollo.MutationFunction<JoinPodMutation, JoinPodMutationVariables>;
 
 /**
  * __useJoinPodMutation__
@@ -601,32 +619,18 @@ export type JoinPodMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useJoinPodMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    JoinPodMutation,
-    JoinPodMutationVariables
-  >
-) {
-  return Apollo.useMutation<JoinPodMutation, JoinPodMutationVariables>(
-    JoinPodDocument,
-    baseOptions
-  );
-}
+export function useJoinPodMutation(baseOptions?: Apollo.MutationHookOptions<JoinPodMutation, JoinPodMutationVariables>) {
+        return Apollo.useMutation<JoinPodMutation, JoinPodMutationVariables>(JoinPodDocument, baseOptions);
+      }
 export type JoinPodMutationHookResult = ReturnType<typeof useJoinPodMutation>;
 export type JoinPodMutationResult = Apollo.MutationResult<JoinPodMutation>;
-export type JoinPodMutationOptions = Apollo.BaseMutationOptions<
-  JoinPodMutation,
-  JoinPodMutationVariables
->;
+export type JoinPodMutationOptions = Apollo.BaseMutationOptions<JoinPodMutation, JoinPodMutationVariables>;
 export const LeavePodDocument = gql`
-  mutation LeavePod($userId: Int!, $podId: Int!) {
-    leavePod(userId: $userId, podId: $podId)
-  }
-`;
-export type LeavePodMutationFn = Apollo.MutationFunction<
-  LeavePodMutation,
-  LeavePodMutationVariables
->;
+    mutation LeavePod($userId: Int!, $podId: Int!) {
+  leavePod(userId: $userId, podId: $podId)
+}
+    `;
+export type LeavePodMutationFn = Apollo.MutationFunction<LeavePodMutation, LeavePodMutationVariables>;
 
 /**
  * __useLeavePodMutation__
@@ -646,41 +650,27 @@ export type LeavePodMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useLeavePodMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    LeavePodMutation,
-    LeavePodMutationVariables
-  >
-) {
-  return Apollo.useMutation<LeavePodMutation, LeavePodMutationVariables>(
-    LeavePodDocument,
-    baseOptions
-  );
-}
+export function useLeavePodMutation(baseOptions?: Apollo.MutationHookOptions<LeavePodMutation, LeavePodMutationVariables>) {
+        return Apollo.useMutation<LeavePodMutation, LeavePodMutationVariables>(LeavePodDocument, baseOptions);
+      }
 export type LeavePodMutationHookResult = ReturnType<typeof useLeavePodMutation>;
 export type LeavePodMutationResult = Apollo.MutationResult<LeavePodMutation>;
-export type LeavePodMutationOptions = Apollo.BaseMutationOptions<
-  LeavePodMutation,
-  LeavePodMutationVariables
->;
+export type LeavePodMutationOptions = Apollo.BaseMutationOptions<LeavePodMutation, LeavePodMutationVariables>;
 export const CreateStoryDocument = gql`
-  mutation CreateStory($title: String!, $podId: Int!) {
-    createStory(data: { title: $title, podId: $podId }) {
-      story {
-        id
-        title
-      }
-      errors {
-        field
-        message
-      }
+    mutation CreateStory($title: String!, $podId: Int!) {
+  createStory(data: {title: $title, podId: $podId}) {
+    story {
+      id
+      title
+    }
+    errors {
+      field
+      message
     }
   }
-`;
-export type CreateStoryMutationFn = Apollo.MutationFunction<
-  CreateStoryMutation,
-  CreateStoryMutationVariables
->;
+}
+    `;
+export type CreateStoryMutationFn = Apollo.MutationFunction<CreateStoryMutation, CreateStoryMutationVariables>;
 
 /**
  * __useCreateStoryMutation__
@@ -700,34 +690,18 @@ export type CreateStoryMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useCreateStoryMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateStoryMutation,
-    CreateStoryMutationVariables
-  >
-) {
-  return Apollo.useMutation<CreateStoryMutation, CreateStoryMutationVariables>(
-    CreateStoryDocument,
-    baseOptions
-  );
-}
-export type CreateStoryMutationHookResult = ReturnType<
-  typeof useCreateStoryMutation
->;
+export function useCreateStoryMutation(baseOptions?: Apollo.MutationHookOptions<CreateStoryMutation, CreateStoryMutationVariables>) {
+        return Apollo.useMutation<CreateStoryMutation, CreateStoryMutationVariables>(CreateStoryDocument, baseOptions);
+      }
+export type CreateStoryMutationHookResult = ReturnType<typeof useCreateStoryMutation>;
 export type CreateStoryMutationResult = Apollo.MutationResult<CreateStoryMutation>;
-export type CreateStoryMutationOptions = Apollo.BaseMutationOptions<
-  CreateStoryMutation,
-  CreateStoryMutationVariables
->;
+export type CreateStoryMutationOptions = Apollo.BaseMutationOptions<CreateStoryMutation, CreateStoryMutationVariables>;
 export const DeleteStoryDocument = gql`
-  mutation DeleteStory($storyId: Int!) {
-    deleteStory(storyId: $storyId)
-  }
-`;
-export type DeleteStoryMutationFn = Apollo.MutationFunction<
-  DeleteStoryMutation,
-  DeleteStoryMutationVariables
->;
+    mutation DeleteStory($storyId: Int!) {
+  deleteStory(storyId: $storyId)
+}
+    `;
+export type DeleteStoryMutationFn = Apollo.MutationFunction<DeleteStoryMutation, DeleteStoryMutationVariables>;
 
 /**
  * __useDeleteStoryMutation__
@@ -746,38 +720,22 @@ export type DeleteStoryMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useDeleteStoryMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    DeleteStoryMutation,
-    DeleteStoryMutationVariables
-  >
-) {
-  return Apollo.useMutation<DeleteStoryMutation, DeleteStoryMutationVariables>(
-    DeleteStoryDocument,
-    baseOptions
-  );
-}
-export type DeleteStoryMutationHookResult = ReturnType<
-  typeof useDeleteStoryMutation
->;
+export function useDeleteStoryMutation(baseOptions?: Apollo.MutationHookOptions<DeleteStoryMutation, DeleteStoryMutationVariables>) {
+        return Apollo.useMutation<DeleteStoryMutation, DeleteStoryMutationVariables>(DeleteStoryDocument, baseOptions);
+      }
+export type DeleteStoryMutationHookResult = ReturnType<typeof useDeleteStoryMutation>;
 export type DeleteStoryMutationResult = Apollo.MutationResult<DeleteStoryMutation>;
-export type DeleteStoryMutationOptions = Apollo.BaseMutationOptions<
-  DeleteStoryMutation,
-  DeleteStoryMutationVariables
->;
+export type DeleteStoryMutationOptions = Apollo.BaseMutationOptions<DeleteStoryMutation, DeleteStoryMutationVariables>;
 export const MoveStoryDocument = gql`
-  mutation MoveStory($id: Int!, $sourceIndex: Int!, $destinationIndex: Int!) {
-    moveStory(
-      id: $id
-      sourceIndex: $sourceIndex
-      destinationIndex: $destinationIndex
-    )
-  }
-`;
-export type MoveStoryMutationFn = Apollo.MutationFunction<
-  MoveStoryMutation,
-  MoveStoryMutationVariables
->;
+    mutation MoveStory($id: Int!, $sourceIndex: Int!, $destinationIndex: Int!) {
+  moveStory(
+    id: $id
+    sourceIndex: $sourceIndex
+    destinationIndex: $destinationIndex
+  )
+}
+    `;
+export type MoveStoryMutationFn = Apollo.MutationFunction<MoveStoryMutation, MoveStoryMutationVariables>;
 
 /**
  * __useMoveStoryMutation__
@@ -798,34 +756,18 @@ export type MoveStoryMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useMoveStoryMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    MoveStoryMutation,
-    MoveStoryMutationVariables
-  >
-) {
-  return Apollo.useMutation<MoveStoryMutation, MoveStoryMutationVariables>(
-    MoveStoryDocument,
-    baseOptions
-  );
-}
-export type MoveStoryMutationHookResult = ReturnType<
-  typeof useMoveStoryMutation
->;
+export function useMoveStoryMutation(baseOptions?: Apollo.MutationHookOptions<MoveStoryMutation, MoveStoryMutationVariables>) {
+        return Apollo.useMutation<MoveStoryMutation, MoveStoryMutationVariables>(MoveStoryDocument, baseOptions);
+      }
+export type MoveStoryMutationHookResult = ReturnType<typeof useMoveStoryMutation>;
 export type MoveStoryMutationResult = Apollo.MutationResult<MoveStoryMutation>;
-export type MoveStoryMutationOptions = Apollo.BaseMutationOptions<
-  MoveStoryMutation,
-  MoveStoryMutationVariables
->;
+export type MoveStoryMutationOptions = Apollo.BaseMutationOptions<MoveStoryMutation, MoveStoryMutationVariables>;
 export const AssignUserToTaskDocument = gql`
-  mutation AssignUserToTask($userId: Int!, $taskId: Int!) {
-    assignUserToTask(userId: $userId, taskId: $taskId)
-  }
-`;
-export type AssignUserToTaskMutationFn = Apollo.MutationFunction<
-  AssignUserToTaskMutation,
-  AssignUserToTaskMutationVariables
->;
+    mutation AssignUserToTask($userId: Int!, $taskId: Int!) {
+  assignUserToTask(userId: $userId, taskId: $taskId)
+}
+    `;
+export type AssignUserToTaskMutationFn = Apollo.MutationFunction<AssignUserToTaskMutation, AssignUserToTaskMutationVariables>;
 
 /**
  * __useAssignUserToTaskMutation__
@@ -845,43 +787,27 @@ export type AssignUserToTaskMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useAssignUserToTaskMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    AssignUserToTaskMutation,
-    AssignUserToTaskMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    AssignUserToTaskMutation,
-    AssignUserToTaskMutationVariables
-  >(AssignUserToTaskDocument, baseOptions);
-}
-export type AssignUserToTaskMutationHookResult = ReturnType<
-  typeof useAssignUserToTaskMutation
->;
+export function useAssignUserToTaskMutation(baseOptions?: Apollo.MutationHookOptions<AssignUserToTaskMutation, AssignUserToTaskMutationVariables>) {
+        return Apollo.useMutation<AssignUserToTaskMutation, AssignUserToTaskMutationVariables>(AssignUserToTaskDocument, baseOptions);
+      }
+export type AssignUserToTaskMutationHookResult = ReturnType<typeof useAssignUserToTaskMutation>;
 export type AssignUserToTaskMutationResult = Apollo.MutationResult<AssignUserToTaskMutation>;
-export type AssignUserToTaskMutationOptions = Apollo.BaseMutationOptions<
-  AssignUserToTaskMutation,
-  AssignUserToTaskMutationVariables
->;
+export type AssignUserToTaskMutationOptions = Apollo.BaseMutationOptions<AssignUserToTaskMutation, AssignUserToTaskMutationVariables>;
 export const CreateTaskDocument = gql`
-  mutation CreateTask($title: String!, $storyId: Int!) {
-    createTask(data: { title: $title, storyId: $storyId }) {
-      task {
-        id
-        title
-      }
-      errors {
-        field
-        message
-      }
+    mutation CreateTask($title: String!, $storyId: Int!) {
+  createTask(data: {title: $title, storyId: $storyId}) {
+    task {
+      id
+      title
+    }
+    errors {
+      field
+      message
     }
   }
-`;
-export type CreateTaskMutationFn = Apollo.MutationFunction<
-  CreateTaskMutation,
-  CreateTaskMutationVariables
->;
+}
+    `;
+export type CreateTaskMutationFn = Apollo.MutationFunction<CreateTaskMutation, CreateTaskMutationVariables>;
 
 /**
  * __useCreateTaskMutation__
@@ -901,34 +827,18 @@ export type CreateTaskMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useCreateTaskMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateTaskMutation,
-    CreateTaskMutationVariables
-  >
-) {
-  return Apollo.useMutation<CreateTaskMutation, CreateTaskMutationVariables>(
-    CreateTaskDocument,
-    baseOptions
-  );
-}
-export type CreateTaskMutationHookResult = ReturnType<
-  typeof useCreateTaskMutation
->;
+export function useCreateTaskMutation(baseOptions?: Apollo.MutationHookOptions<CreateTaskMutation, CreateTaskMutationVariables>) {
+        return Apollo.useMutation<CreateTaskMutation, CreateTaskMutationVariables>(CreateTaskDocument, baseOptions);
+      }
+export type CreateTaskMutationHookResult = ReturnType<typeof useCreateTaskMutation>;
 export type CreateTaskMutationResult = Apollo.MutationResult<CreateTaskMutation>;
-export type CreateTaskMutationOptions = Apollo.BaseMutationOptions<
-  CreateTaskMutation,
-  CreateTaskMutationVariables
->;
+export type CreateTaskMutationOptions = Apollo.BaseMutationOptions<CreateTaskMutation, CreateTaskMutationVariables>;
 export const DeleteTaskDocument = gql`
-  mutation DeleteTask($taskId: Int!) {
-    deleteTask(taskId: $taskId)
-  }
-`;
-export type DeleteTaskMutationFn = Apollo.MutationFunction<
-  DeleteTaskMutation,
-  DeleteTaskMutationVariables
->;
+    mutation DeleteTask($taskId: Int!) {
+  deleteTask(taskId: $taskId)
+}
+    `;
+export type DeleteTaskMutationFn = Apollo.MutationFunction<DeleteTaskMutation, DeleteTaskMutationVariables>;
 
 /**
  * __useDeleteTaskMutation__
@@ -947,46 +857,24 @@ export type DeleteTaskMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useDeleteTaskMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    DeleteTaskMutation,
-    DeleteTaskMutationVariables
-  >
-) {
-  return Apollo.useMutation<DeleteTaskMutation, DeleteTaskMutationVariables>(
-    DeleteTaskDocument,
-    baseOptions
-  );
-}
-export type DeleteTaskMutationHookResult = ReturnType<
-  typeof useDeleteTaskMutation
->;
+export function useDeleteTaskMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTaskMutation, DeleteTaskMutationVariables>) {
+        return Apollo.useMutation<DeleteTaskMutation, DeleteTaskMutationVariables>(DeleteTaskDocument, baseOptions);
+      }
+export type DeleteTaskMutationHookResult = ReturnType<typeof useDeleteTaskMutation>;
 export type DeleteTaskMutationResult = Apollo.MutationResult<DeleteTaskMutation>;
-export type DeleteTaskMutationOptions = Apollo.BaseMutationOptions<
-  DeleteTaskMutation,
-  DeleteTaskMutationVariables
->;
+export type DeleteTaskMutationOptions = Apollo.BaseMutationOptions<DeleteTaskMutation, DeleteTaskMutationVariables>;
 export const MoveTaskDocument = gql`
-  mutation MoveTask(
-    $id: Int!
-    $sourceIndex: Int!
-    $destinationIndex: Int!
-    $sourceStoryId: Int!
-    $destinationStoryId: Int!
-  ) {
-    moveTask(
-      id: $id
-      sourceIndex: $sourceIndex
-      destinationIndex: $destinationIndex
-      sourceStoryId: $sourceStoryId
-      destinationStoryId: $destinationStoryId
-    )
-  }
-`;
-export type MoveTaskMutationFn = Apollo.MutationFunction<
-  MoveTaskMutation,
-  MoveTaskMutationVariables
->;
+    mutation MoveTask($id: Int!, $sourceIndex: Int!, $destinationIndex: Int!, $sourceStoryId: Int!, $destinationStoryId: Int!) {
+  moveTask(
+    id: $id
+    sourceIndex: $sourceIndex
+    destinationIndex: $destinationIndex
+    sourceStoryId: $sourceStoryId
+    destinationStoryId: $destinationStoryId
+  )
+}
+    `;
+export type MoveTaskMutationFn = Apollo.MutationFunction<MoveTaskMutation, MoveTaskMutationVariables>;
 
 /**
  * __useMoveTaskMutation__
@@ -1009,32 +897,18 @@ export type MoveTaskMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useMoveTaskMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    MoveTaskMutation,
-    MoveTaskMutationVariables
-  >
-) {
-  return Apollo.useMutation<MoveTaskMutation, MoveTaskMutationVariables>(
-    MoveTaskDocument,
-    baseOptions
-  );
-}
+export function useMoveTaskMutation(baseOptions?: Apollo.MutationHookOptions<MoveTaskMutation, MoveTaskMutationVariables>) {
+        return Apollo.useMutation<MoveTaskMutation, MoveTaskMutationVariables>(MoveTaskDocument, baseOptions);
+      }
 export type MoveTaskMutationHookResult = ReturnType<typeof useMoveTaskMutation>;
 export type MoveTaskMutationResult = Apollo.MutationResult<MoveTaskMutation>;
-export type MoveTaskMutationOptions = Apollo.BaseMutationOptions<
-  MoveTaskMutation,
-  MoveTaskMutationVariables
->;
+export type MoveTaskMutationOptions = Apollo.BaseMutationOptions<MoveTaskMutation, MoveTaskMutationVariables>;
 export const RemoveUserFromTaskDocument = gql`
-  mutation RemoveUserFromTask($userId: Int!, $taskId: Int!) {
-    removeUserFromTask(userId: $userId, taskId: $taskId)
-  }
-`;
-export type RemoveUserFromTaskMutationFn = Apollo.MutationFunction<
-  RemoveUserFromTaskMutation,
-  RemoveUserFromTaskMutationVariables
->;
+    mutation RemoveUserFromTask($userId: Int!, $taskId: Int!) {
+  removeUserFromTask(userId: $userId, taskId: $taskId)
+}
+    `;
+export type RemoveUserFromTaskMutationFn = Apollo.MutationFunction<RemoveUserFromTaskMutation, RemoveUserFromTaskMutationVariables>;
 
 /**
  * __useRemoveUserFromTaskMutation__
@@ -1054,43 +928,27 @@ export type RemoveUserFromTaskMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useRemoveUserFromTaskMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    RemoveUserFromTaskMutation,
-    RemoveUserFromTaskMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    RemoveUserFromTaskMutation,
-    RemoveUserFromTaskMutationVariables
-  >(RemoveUserFromTaskDocument, baseOptions);
-}
-export type RemoveUserFromTaskMutationHookResult = ReturnType<
-  typeof useRemoveUserFromTaskMutation
->;
+export function useRemoveUserFromTaskMutation(baseOptions?: Apollo.MutationHookOptions<RemoveUserFromTaskMutation, RemoveUserFromTaskMutationVariables>) {
+        return Apollo.useMutation<RemoveUserFromTaskMutation, RemoveUserFromTaskMutationVariables>(RemoveUserFromTaskDocument, baseOptions);
+      }
+export type RemoveUserFromTaskMutationHookResult = ReturnType<typeof useRemoveUserFromTaskMutation>;
 export type RemoveUserFromTaskMutationResult = Apollo.MutationResult<RemoveUserFromTaskMutation>;
-export type RemoveUserFromTaskMutationOptions = Apollo.BaseMutationOptions<
-  RemoveUserFromTaskMutation,
-  RemoveUserFromTaskMutationVariables
->;
+export type RemoveUserFromTaskMutationOptions = Apollo.BaseMutationOptions<RemoveUserFromTaskMutation, RemoveUserFromTaskMutationVariables>;
 export const ChangePasswordDocument = gql`
-  mutation ChangePassword($newPassword: String!, $token: String!) {
-    changePassword(newPassword: $newPassword, token: $token) {
-      user {
-        id
-        username
-      }
-      errors {
-        field
-        message
-      }
+    mutation ChangePassword($newPassword: String!, $token: String!) {
+  changePassword(newPassword: $newPassword, token: $token) {
+    user {
+      id
+      username
+    }
+    errors {
+      field
+      message
     }
   }
-`;
-export type ChangePasswordMutationFn = Apollo.MutationFunction<
-  ChangePasswordMutation,
-  ChangePasswordMutationVariables
->;
+}
+    `;
+export type ChangePasswordMutationFn = Apollo.MutationFunction<ChangePasswordMutation, ChangePasswordMutationVariables>;
 
 /**
  * __useChangePasswordMutation__
@@ -1110,34 +968,18 @@ export type ChangePasswordMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useChangePasswordMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    ChangePasswordMutation,
-    ChangePasswordMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    ChangePasswordMutation,
-    ChangePasswordMutationVariables
-  >(ChangePasswordDocument, baseOptions);
-}
-export type ChangePasswordMutationHookResult = ReturnType<
-  typeof useChangePasswordMutation
->;
+export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptions<ChangePasswordMutation, ChangePasswordMutationVariables>) {
+        return Apollo.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument, baseOptions);
+      }
+export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
 export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
-export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<
-  ChangePasswordMutation,
-  ChangePasswordMutationVariables
->;
+export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
 export const ForgotPasswordDocument = gql`
-  mutation ForgotPassword($email: String!) {
-    forgotPassword(email: $email)
-  }
-`;
-export type ForgotPasswordMutationFn = Apollo.MutationFunction<
-  ForgotPasswordMutation,
-  ForgotPasswordMutationVariables
->;
+    mutation ForgotPassword($email: String!) {
+  forgotPassword(email: $email)
+}
+    `;
+export type ForgotPasswordMutationFn = Apollo.MutationFunction<ForgotPasswordMutation, ForgotPasswordMutationVariables>;
 
 /**
  * __useForgotPasswordMutation__
@@ -1156,49 +998,33 @@ export type ForgotPasswordMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useForgotPasswordMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    ForgotPasswordMutation,
-    ForgotPasswordMutationVariables
-  >
-) {
-  return Apollo.useMutation<
-    ForgotPasswordMutation,
-    ForgotPasswordMutationVariables
-  >(ForgotPasswordDocument, baseOptions);
-}
-export type ForgotPasswordMutationHookResult = ReturnType<
-  typeof useForgotPasswordMutation
->;
-export type ForgotPasswordMutationResult = Apollo.MutationResult<ForgotPasswordMutation>;
-export type ForgotPasswordMutationOptions = Apollo.BaseMutationOptions<
-  ForgotPasswordMutation,
-  ForgotPasswordMutationVariables
->;
-export const LoginDocument = gql`
-  mutation Login($usernameOrEmail: String!, $password: String!) {
-    login(usernameOrEmail: $usernameOrEmail, password: $password) {
-      user {
-        id
-        email
-        username
-        pods {
-          id
-          name
-          createdAt
-        }
+export function useForgotPasswordMutation(baseOptions?: Apollo.MutationHookOptions<ForgotPasswordMutation, ForgotPasswordMutationVariables>) {
+        return Apollo.useMutation<ForgotPasswordMutation, ForgotPasswordMutationVariables>(ForgotPasswordDocument, baseOptions);
       }
-      errors {
-        field
-        message
+export type ForgotPasswordMutationHookResult = ReturnType<typeof useForgotPasswordMutation>;
+export type ForgotPasswordMutationResult = Apollo.MutationResult<ForgotPasswordMutation>;
+export type ForgotPasswordMutationOptions = Apollo.BaseMutationOptions<ForgotPasswordMutation, ForgotPasswordMutationVariables>;
+export const LoginDocument = gql`
+    mutation Login($usernameOrEmail: String!, $password: String!) {
+  login(usernameOrEmail: $usernameOrEmail, password: $password) {
+    user {
+      id
+      email
+      username
+      pods {
+        id
+        name
+        createdAt
       }
     }
+    errors {
+      field
+      message
+    }
   }
-`;
-export type LoginMutationFn = Apollo.MutationFunction<
-  LoginMutation,
-  LoginMutationVariables
->;
+}
+    `;
+export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
 
 /**
  * __useLoginMutation__
@@ -1218,32 +1044,18 @@ export type LoginMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useLoginMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    LoginMutation,
-    LoginMutationVariables
-  >
-) {
-  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(
-    LoginDocument,
-    baseOptions
-  );
-}
+export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
+        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, baseOptions);
+      }
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
-export type LoginMutationOptions = Apollo.BaseMutationOptions<
-  LoginMutation,
-  LoginMutationVariables
->;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const LogoutDocument = gql`
-  mutation Logout {
-    logout
-  }
-`;
-export type LogoutMutationFn = Apollo.MutationFunction<
-  LogoutMutation,
-  LogoutMutationVariables
->;
+    mutation Logout {
+  logout
+}
+    `;
+export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMutationVariables>;
 
 /**
  * __useLogoutMutation__
@@ -1261,49 +1073,33 @@ export type LogoutMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useLogoutMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    LogoutMutation,
-    LogoutMutationVariables
-  >
-) {
-  return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(
-    LogoutDocument,
-    baseOptions
-  );
-}
+export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
+        return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, baseOptions);
+      }
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
-export type LogoutMutationOptions = Apollo.BaseMutationOptions<
-  LogoutMutation,
-  LogoutMutationVariables
->;
+export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const RegisterDocument = gql`
-  mutation Register($username: String!, $password: String!, $email: String!) {
-    register(
-      data: { username: $username, email: $email, password: $password }
-    ) {
-      user {
+    mutation Register($username: String!, $password: String!, $email: String!) {
+  register(data: {username: $username, email: $email, password: $password}) {
+    user {
+      id
+      email
+      username
+      pods {
         id
-        email
-        username
-        pods {
-          id
-          name
-          createdAt
-        }
-      }
-      errors {
-        field
-        message
+        name
+        createdAt
       }
     }
+    errors {
+      field
+      message
+    }
   }
-`;
-export type RegisterMutationFn = Apollo.MutationFunction<
-  RegisterMutation,
-  RegisterMutationVariables
->;
+}
+    `;
+export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
 
 /**
  * __useRegisterMutation__
@@ -1324,39 +1120,28 @@ export type RegisterMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useRegisterMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    RegisterMutation,
-    RegisterMutationVariables
-  >
-) {
-  return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(
-    RegisterDocument,
-    baseOptions
-  );
-}
+export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
+        return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, baseOptions);
+      }
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
-export type RegisterMutationOptions = Apollo.BaseMutationOptions<
-  RegisterMutation,
-  RegisterMutationVariables
->;
+export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const PodDocument = gql`
-  query Pod($id: Int!) {
-    pod(id: $id) {
+    query Pod($id: Int!) {
+  pod(id: $id) {
+    id
+    name
+    stories {
       id
-      name
-      stories {
+      title
+      tasks {
         id
         title
-        tasks {
-          id
-          title
-        }
       }
     }
   }
-`;
+}
+    `;
 
 /**
  * __usePodQuery__
@@ -1374,36 +1159,29 @@ export const PodDocument = gql`
  *   },
  * });
  */
-export function usePodQuery(
-  baseOptions: Apollo.QueryHookOptions<PodQuery, PodQueryVariables>
-) {
-  return Apollo.useQuery<PodQuery, PodQueryVariables>(PodDocument, baseOptions);
-}
-export function usePodLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<PodQuery, PodQueryVariables>
-) {
-  return Apollo.useLazyQuery<PodQuery, PodQueryVariables>(
-    PodDocument,
-    baseOptions
-  );
-}
+export function usePodQuery(baseOptions: Apollo.QueryHookOptions<PodQuery, PodQueryVariables>) {
+        return Apollo.useQuery<PodQuery, PodQueryVariables>(PodDocument, baseOptions);
+      }
+export function usePodLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PodQuery, PodQueryVariables>) {
+          return Apollo.useLazyQuery<PodQuery, PodQueryVariables>(PodDocument, baseOptions);
+        }
 export type PodQueryHookResult = ReturnType<typeof usePodQuery>;
 export type PodLazyQueryHookResult = ReturnType<typeof usePodLazyQuery>;
 export type PodQueryResult = Apollo.QueryResult<PodQuery, PodQueryVariables>;
 export const MeDocument = gql`
-  query Me {
-    me {
+    query Me {
+  me {
+    id
+    email
+    username
+    pods {
       id
-      email
-      username
-      pods {
-        id
-        name
-        createdAt
-      }
+      name
+      createdAt
     }
   }
-`;
+}
+    `;
 
 /**
  * __useMeQuery__
@@ -1420,19 +1198,12 @@ export const MeDocument = gql`
  *   },
  * });
  */
-export function useMeQuery(
-  baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>
-) {
-  return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
-}
-export function useMeLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>
-) {
-  return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(
-    MeDocument,
-    baseOptions
-  );
-}
+export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
+        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
+      }
+export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
+        }
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
