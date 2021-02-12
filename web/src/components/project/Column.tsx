@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { FiPlus, FiMoreHorizontal } from "react-icons/fi";
 
 // Graphql
-import { Story, Task } from "../../generated/graphql";
+import { Story, Task, useCreateTaskMutation } from "../../generated/graphql";
 
 // Components
 import Card from "./Card";
@@ -20,8 +20,22 @@ interface ColumnProps {
 }
 
 const Column: React.FC<ColumnProps> = ({ story, index }) => {
+  const [createTaskMutation] = useCreateTaskMutation();
   const [toggleAdd, setToggleAdd] = useState(false);
   const [text, setText] = useState("");
+
+  const handleCreateTask = async () => {
+    await createTaskMutation({
+      variables: { storyId: story.id, title: text },
+    });
+    setToggleAdd(false);
+    setText("");
+  };
+
+  const handleCancel = () => {
+    setToggleAdd(false);
+    setText("");
+  };
 
   return (
     <Draggable key={story.id} draggableId={"S" + story.id} index={index}>
@@ -62,13 +76,14 @@ const Column: React.FC<ColumnProps> = ({ story, index }) => {
               <div className="flex gap-2 h-8 text-sm">
                 <button
                   className="flex-1 text-white bg-green-500 border border-green-600 rounded-md font-medium shadow-sm hover:bg-green-600  focus:ring focus:ring-green-500 focus:ring-opacity-40 focus:outline-none disabled:opacity-50 disabled:cursor-default"
+                  onClick={handleCreateTask}
                   disabled={text === ""}
                 >
                   Add
                 </button>
                 <button
                   className="flex-1 text-gray-900 bg-white border border-gray-300 rounded-md font-medium shadow-sm hover:bg-gray-50 focus:ring focus:border-blue-500 focus:outline-none"
-                  onClick={() => setToggleAdd(false)}
+                  onClick={handleCancel}
                 >
                   Cancel
                 </button>

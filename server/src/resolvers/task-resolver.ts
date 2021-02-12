@@ -139,8 +139,8 @@ export class TaskResolver {
 
     let task;
     try {
-      // Appending assigning the last rank
-      const lastTask = await Task.findOne({
+      // Appending assigning the first rank
+      const firstTask = await Task.findOne({
         where: {
           story: {
             id: storyId,
@@ -148,7 +148,7 @@ export class TaskResolver {
         },
         select: ["rank"],
         order: {
-          rank: "DESC",
+          rank: "ASC",
         },
       });
 
@@ -160,7 +160,7 @@ export class TaskResolver {
         .values({
           title,
           description,
-          rank: lastTask ? midString(lastTask.rank, "") : midString("", ""), // generates non-identical ranks using lexorank algorithm
+          rank: firstTask ? midString("", firstTask.rank) : midString("", ""), // generates non-identical ranks using lexorank algorithm
         })
         .returning("*")
         .execute();
