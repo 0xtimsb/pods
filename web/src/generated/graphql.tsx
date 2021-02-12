@@ -53,8 +53,8 @@ export type Pod = {
   name: Scalars['String'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
-  users: Array<User>;
   stories: Array<Story>;
+  users: Array<User>;
 };
 
 export type Story = {

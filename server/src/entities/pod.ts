@@ -35,6 +35,7 @@ export class Pod extends BaseEntity {
   @ManyToMany(() => User, (user) => user.pods)
   users: User[];
 
+  @Field(() => [Story], { nullable: false })
   @OneToMany(() => Story, (story) => story.pod)
   stories: Story[];
 }

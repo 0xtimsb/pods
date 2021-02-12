@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
 
   return (
     <div className="sticky top-0 flex justify-center border-b border-gray-200">
-      <div className="w-full max-w-6xl px-2 space-y-1">
+      <div className="w-full max-w-6xl space-y-1">
         <div className="h-16 flex items-center justify-between">
           <div className="flex items-center space-x-5">
             <Link to="/" className="text-gray-900 text-3xl font-extrabold">
