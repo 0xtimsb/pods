@@ -1,14 +1,14 @@
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-
-// Components
-import Layout from "../../components/Layout";
-import TaskX from "../../components/board/TaskX";
+import { DragDropContext } from "react-beautiful-dnd";
 
 // Graphql
 import { usePodQuery } from "../../generated/graphql";
 
 // Hooks
 import useProject from "../../hooks/useProject";
+
+// Components
+import Layout from "../../components/Layout";
+import Board from "../../components/project/Board";
 
 const Project: React.FC = () => {
   const { data, loading, error } = usePodQuery({
@@ -29,44 +29,7 @@ const Project: React.FC = () => {
       <div className="flex-grow flex flex-col items-center">
         <div className="max-w-6xl w-full pt-4">
           <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="droppable" type="stories">
-              {(provided, snapshot) => (
-                <div
-                  ref={provided.innerRef}
-                  className={snapshot.isDraggingOver ? "" : ""}
-                >
-                  {stories.map((story, index) => (
-                    <Draggable
-                      key={story.id}
-                      draggableId={"S" + story.id}
-                      index={index}
-                    >
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          className={snapshot.isDragging ? "" : ""}
-                        >
-                          {story.title}
-                          <span
-                            {...provided.dragHandleProps}
-                            style={{
-                              display: "inline-block",
-                              margin: "0 10px",
-                              border: "1px solid #000",
-                            }}
-                          >
-                            Drag
-                          </span>
-                          <TaskX subItems={story.tasks} type={"S" + story.id} />
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
+            <Board stories={stories} />
           </DragDropContext>
         </div>
       </div>
