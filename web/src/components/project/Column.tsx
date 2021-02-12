@@ -25,12 +25,14 @@ const Column: React.FC<ColumnProps> = ({ story, index }) => {
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          className={`w-80 mr-3 bg-gray-50 border rounded-md ${
+          className={`flex flex-col w-80 mr-3 bg-gray-50 border rounded-md ${
             snapshot.isDragging && "ring border-blue-500"
           }`}
         >
-          <div className="p-3 flex justify-between">
+          <div
+            className="p-3 flex justify-between"
+            {...provided.dragHandleProps}
+          >
             <div className="flex gap-2 items-center font-semibold">
               <div className="text-xs text-gray-800 w-6 h-6 flex justify-center items-center bg-gray-200 rounded-full">
                 {story.tasks.length}
@@ -44,7 +46,10 @@ const Column: React.FC<ColumnProps> = ({ story, index }) => {
           </div>
           <Droppable droppableId={"S" + story.id} type="tasks">
             {(provided, snapshot) => (
-              <div ref={provided.innerRef} className="flex flex-col px-3">
+              <div
+                ref={provided.innerRef}
+                className="flex-1 flex flex-col px-3"
+              >
                 {story.tasks.map((task, index) => (
                   <Card key={task.id} task={task} index={index} />
                 ))}
