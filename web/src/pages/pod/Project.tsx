@@ -26,12 +26,10 @@ const Project: React.FC = () => {
 
   return (
     <Layout>
-      <div className="flex-grow flex flex-col items-center">
-        <div className="max-w-6xl w-full pt-4">
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Board stories={stories} />
-          </DragDropContext>
-        </div>
+      <div className="flex-1 flex overflow-x-scroll">
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Board stories={stories} />
+        </DragDropContext>
       </div>
     </Layout>
   );

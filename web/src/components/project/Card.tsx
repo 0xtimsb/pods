@@ -1,4 +1,6 @@
 import { Draggable } from "react-beautiful-dnd";
+import { FiMoreHorizontal } from "react-icons/fi";
+import { BsCardText } from "react-icons/bs";
 
 // Graphql
 import { Task } from "../../generated/graphql";
@@ -17,10 +19,21 @@ const Card: React.FC<CardProps> = ({ task, index }) => {
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className={snapshot.isDragging ? "" : ""}
+          {...provided.dragHandleProps}
+          className={`mb-2 p-2 gap-1 flex flex-col bg-white border shadow-sm rounded-md hover:shadow hover:border-gray-300 ${
+            snapshot.isDragging && "ring border-blue-500"
+          }`}
         >
-          {task.title}
-          <span {...provided.dragHandleProps}>Drag</span>
+          <div className="flex justify-between">
+            <div className="flex gap-2 items-center">
+              <BsCardText className="text-base text-gray-500" />
+              <div className="text-sm font-medium text-gray-900">
+                {task.title}
+              </div>
+            </div>
+            <FiMoreHorizontal className="text-lg text-gray-500 cursor-pointer" />
+          </div>
+          <div className="text-sm font-light pl-6">Something here</div>
         </div>
       )}
     </Draggable>

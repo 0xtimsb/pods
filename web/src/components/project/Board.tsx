@@ -18,14 +18,11 @@ interface BoardProps {
 
 const Board: React.FC<BoardProps> = ({ stories }) => {
   return (
-    <Droppable droppableId="droppable" type="stories">
+    <Droppable droppableId="droppable" type="stories" direction="horizontal">
       {(provided, snapshot) => (
-        <div
-          ref={provided.innerRef}
-          className={snapshot.isDraggingOver ? "" : ""}
-        >
+        <div ref={provided.innerRef} className="p-4 flex">
           {stories.map((story, index) => (
-            <Column story={story} index={index} />
+            <Column key={story.id} story={story} index={index} />
           ))}
           {provided.placeholder}
         </div>
