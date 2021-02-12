@@ -1,27 +1,21 @@
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  OnDragEndResponder,
-} from "react-beautiful-dnd";
-import cloneDeep from "lodash.clonedeep";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
+// Components
 import Layout from "../../components/Layout";
 import TaskX from "../../components/board/TaskX";
-import {
-  Task,
-  useMoveStoryMutation,
-  useMoveTaskMutation,
-  usePodQuery,
-} from "../../generated/graphql";
-import useBoard from "../../hooks/useBoard";
 
-const Board: React.FC = () => {
+// Graphql
+import { usePodQuery } from "../../generated/graphql";
+
+// Hooks
+import useProject from "../../hooks/useProject";
+
+const Project: React.FC = () => {
   const { data, loading, error } = usePodQuery({
     variables: { id: 1 },
   });
 
-  const [onDragEnd] = useBoard(data);
+  const [onDragEnd] = useProject(data);
 
   if (loading) return <p>Loading...</p>;
 
@@ -80,4 +74,4 @@ const Board: React.FC = () => {
   );
 };
 
-export default Board;
+export default Project;

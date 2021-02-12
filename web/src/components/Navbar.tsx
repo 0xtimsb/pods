@@ -15,13 +15,7 @@ import { MeQuery } from "../generated/graphql";
 import Home from "../pages/user/Home";
 
 // Routes
-import {
-  HOME,
-  POD,
-  POD_BOARD,
-  POD_DISCUSSION,
-  POD_SETTINGS,
-} from "../constants/routes";
+import { POD } from "../constants/routes";
 
 // Constants
 import podOptions from "../constants/podOptions";

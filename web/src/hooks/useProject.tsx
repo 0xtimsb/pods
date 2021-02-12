@@ -1,9 +1,7 @@
 import cloneDeep from "lodash.clonedeep";
 import { OnDragEndResponder } from "react-beautiful-dnd";
 import {
-  Pod,
   PodQuery,
-  Story,
   Task,
   useMoveStoryMutation,
   useMoveTaskMutation,
@@ -17,7 +15,7 @@ const reorder = (list: any[], startIndex: number, endIndex: number) => {
   return result;
 };
 
-const useBoard = (data?: PodQuery) => {
+const useProject = (data?: PodQuery) => {
   const [moveStoryMutation] = useMoveStoryMutation();
   const [moveTaskMutation] = useMoveTaskMutation();
 
@@ -171,4 +169,4 @@ const useBoard = (data?: PodQuery) => {
   return [onDragEnd];
 };
 
-export default useBoard;
+export default useProject;
