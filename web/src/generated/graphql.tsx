@@ -15,10 +15,10 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
-  me?: Maybe<User>;
-  pod?: Maybe<Pod>;
-  story?: Maybe<Story>;
-  task?: Maybe<Task>;
+  me: Maybe<User>;
+  pod: Maybe<Pod>;
+  story: Maybe<Story>;
+  task: Maybe<Task>;
 };
 
 
@@ -71,7 +71,7 @@ export type Task = {
   __typename?: 'Task';
   id: Scalars['Int'];
   title: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
+  description: Maybe<Scalars['String']>;
   rank: Scalars['String'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
@@ -193,8 +193,8 @@ export type MutationDeleteTaskArgs = {
 
 export type UserResponse = {
   __typename?: 'UserResponse';
-  errors?: Maybe<Array<FieldError>>;
-  user?: Maybe<User>;
+  errors: Maybe<Array<FieldError>>;
+  user: Maybe<User>;
 };
 
 export type FieldError = {
@@ -211,8 +211,8 @@ export type UserInput = {
 
 export type PodResponse = {
   __typename?: 'PodResponse';
-  errors?: Maybe<Array<FieldError>>;
-  pod?: Maybe<Pod>;
+  errors: Maybe<Array<FieldError>>;
+  pod: Maybe<Pod>;
 };
 
 export type PodInput = {
@@ -221,8 +221,8 @@ export type PodInput = {
 
 export type StoryResponse = {
   __typename?: 'StoryResponse';
-  errors?: Maybe<Array<FieldError>>;
-  story?: Maybe<Story>;
+  errors: Maybe<Array<FieldError>>;
+  story: Maybe<Story>;
 };
 
 export type StoryInput = {
@@ -232,13 +232,13 @@ export type StoryInput = {
 
 export type TaskResponse = {
   __typename?: 'TaskResponse';
-  errors?: Maybe<Array<FieldError>>;
-  task?: Maybe<Task>;
+  errors: Maybe<Array<FieldError>>;
+  task: Maybe<Task>;
 };
 
 export type TaskInput = {
   title: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
+  description: Maybe<Scalars['String']>;
   storyId: Scalars['Int'];
 };
 
@@ -251,10 +251,10 @@ export type CreatePodMutation = (
   { __typename?: 'Mutation' }
   & { createPod: (
     { __typename?: 'PodResponse' }
-    & { pod?: Maybe<(
+    & { pod: Maybe<(
       { __typename?: 'Pod' }
       & Pick<Pod, 'id' | 'name'>
-    )>, errors?: Maybe<Array<(
+    )>, errors: Maybe<Array<(
       { __typename?: 'FieldError' }
       & Pick<FieldError, 'field' | 'message'>
     )>> }
@@ -303,10 +303,10 @@ export type CreateStoryMutation = (
   { __typename?: 'Mutation' }
   & { createStory: (
     { __typename?: 'StoryResponse' }
-    & { story?: Maybe<(
+    & { story: Maybe<(
       { __typename?: 'Story' }
       & Pick<Story, 'id' | 'title'>
-    )>, errors?: Maybe<Array<(
+    )>, errors: Maybe<Array<(
       { __typename?: 'FieldError' }
       & Pick<FieldError, 'field' | 'message'>
     )>> }
@@ -356,10 +356,10 @@ export type CreateTaskMutation = (
   { __typename?: 'Mutation' }
   & { createTask: (
     { __typename?: 'TaskResponse' }
-    & { task?: Maybe<(
+    & { task: Maybe<(
       { __typename?: 'Task' }
       & Pick<Task, 'id' | 'title'>
-    )>, errors?: Maybe<Array<(
+    )>, errors: Maybe<Array<(
       { __typename?: 'FieldError' }
       & Pick<FieldError, 'field' | 'message'>
     )>> }
@@ -411,10 +411,10 @@ export type ChangePasswordMutation = (
   { __typename?: 'Mutation' }
   & { changePassword: (
     { __typename?: 'UserResponse' }
-    & { user?: Maybe<(
+    & { user: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
-    )>, errors?: Maybe<Array<(
+    )>, errors: Maybe<Array<(
       { __typename?: 'FieldError' }
       & Pick<FieldError, 'field' | 'message'>
     )>> }
@@ -441,14 +441,14 @@ export type LoginMutation = (
   { __typename?: 'Mutation' }
   & { login: (
     { __typename?: 'UserResponse' }
-    & { user?: Maybe<(
+    & { user: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'email' | 'username'>
       & { pods: Array<(
         { __typename?: 'Pod' }
         & Pick<Pod, 'id' | 'name' | 'createdAt'>
       )> }
-    )>, errors?: Maybe<Array<(
+    )>, errors: Maybe<Array<(
       { __typename?: 'FieldError' }
       & Pick<FieldError, 'field' | 'message'>
     )>> }
@@ -474,14 +474,14 @@ export type RegisterMutation = (
   { __typename?: 'Mutation' }
   & { register: (
     { __typename?: 'UserResponse' }
-    & { user?: Maybe<(
+    & { user: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'email' | 'username'>
       & { pods: Array<(
         { __typename?: 'Pod' }
         & Pick<Pod, 'id' | 'name' | 'createdAt'>
       )> }
-    )>, errors?: Maybe<Array<(
+    )>, errors: Maybe<Array<(
       { __typename?: 'FieldError' }
       & Pick<FieldError, 'field' | 'message'>
     )>> }
@@ -495,7 +495,7 @@ export type PodQueryVariables = Exact<{
 
 export type PodQuery = (
   { __typename?: 'Query' }
-  & { pod?: Maybe<(
+  & { pod: Maybe<(
     { __typename?: 'Pod' }
     & Pick<Pod, 'id' | 'name'>
     & { stories: Array<(
@@ -514,7 +514,7 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = (
   { __typename?: 'Query' }
-  & { me?: Maybe<(
+  & { me: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'email' | 'username'>
     & { pods: Array<(

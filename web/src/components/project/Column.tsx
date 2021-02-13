@@ -1,3 +1,4 @@
+import { gql } from "@apollo/client";
 import { useEffect, useRef, useState } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { FiPlus, FiMoreHorizontal } from "react-icons/fi";
@@ -27,6 +28,27 @@ const Column: React.FC<ColumnProps> = ({ story, index }) => {
   const handleCreateTask = async () => {
     await createTaskMutation({
       variables: { storyId: story.id, title: text },
+      update: (cache, { data }) => {
+        if (data && data.createTask.task) {
+          cache.modify({
+            id: cache.identify(story),
+            fields: {
+              tasks(existingTaskRefs) {
+                const newTaskRef = cache.writeFragment({
+                  data: data.createTask.task,
+                  fragment: gql`
+                    fragment NewTask on Task {
+                      id
+                      title
+                    }
+                  `,
+                });
+                return [newTaskRef, ...existingTaskRefs];
+              },
+            },
+          });
+        }
+      },
     });
     setToggleAdd(false);
     setText("");
@@ -43,14 +65,12 @@ const Column: React.FC<ColumnProps> = ({ story, index }) => {
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className={`flex flex-col w-80 mr-3 bg-gray-50 border rounded-md ${
+          {...provided.dragHandleProps}
+          className={`flex flex-col flex-1 bg-gray-50 border rounded-md mr-3 ${
             snapshot.isDragging && "ring border-blue-500"
           }`}
         >
-          <div
-            className="p-3 flex justify-between"
-            {...provided.dragHandleProps}
-          >
+          <div className="p-3 flex justify-between">
             <div className="flex gap-2 items-center font-semibold">
               <div className="text-xs text-gray-800 w-6 h-6 flex justify-center items-center bg-gray-200 rounded-full">
                 {story.tasks.length}
@@ -94,7 +114,7 @@ const Column: React.FC<ColumnProps> = ({ story, index }) => {
             {(provided, snapshot) => (
               <div
                 ref={provided.innerRef}
-                className="flex-1 flex flex-col px-3 overflow-y-auto"
+                className="pb-1 flex-1 flex flex-col px-3 overflow-y-auto overflow-x-hidden"
               >
                 {story.tasks.map((task, index) => (
                   <Card key={task.id} task={task} index={index} />

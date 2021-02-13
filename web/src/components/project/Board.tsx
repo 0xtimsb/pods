@@ -1,4 +1,8 @@
-import { Droppable } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Droppable,
+  OnDragEndResponder,
+} from "react-beautiful-dnd";
 
 // Graphql
 import { Story, Task } from "../../generated/graphql";
@@ -14,20 +18,26 @@ interface BoardProps {
         __typename?: "Task" | undefined;
       } & Pick<Task, "title" | "id">)[];
     })[];
+  onDragEnd: OnDragEndResponder;
 }
 
-const Board: React.FC<BoardProps> = ({ stories }) => {
+const Board: React.FC<BoardProps> = ({ stories, onDragEnd }) => {
   return (
-    <Droppable droppableId="droppable" type="stories" direction="horizontal">
-      {(provided, snapshot) => (
-        <div ref={provided.innerRef} className="p-4 flex">
-          {stories.map((story, index) => (
-            <Column key={story.id} story={story} index={index} />
-          ))}
-          {provided.placeholder}
-        </div>
-      )}
-    </Droppable>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="droppable" type="stories" direction="horizontal">
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            className="py-3 flex-1 max-w-7xl flex justify-start"
+          >
+            {stories.map((story, index) => (
+              <Column key={story.id} story={story} index={index} />
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
   );
 };
 

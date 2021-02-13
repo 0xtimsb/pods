@@ -33,7 +33,10 @@ const Card: React.FC<CardProps> = ({ task, index }) => {
             </div>
             <FiMoreHorizontal className="text-lg text-gray-500 cursor-pointer" />
           </div>
-          <div className="text-sm font-light pl-6">Something here</div>
+          <div className="text-xs pl-6">
+            <span className="text-gray-500">Added by </span>
+            <span className="text-gray-900">fdsgds</span>
+          </div>
         </div>
       )}
     </Draggable>
