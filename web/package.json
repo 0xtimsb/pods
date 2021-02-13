@@ -1,8 +1,8 @@
 {
   "name": "web",
   "version": "0.1.0",
-  "homepage": "https://smitbarmase.github.io/pods",
   "private": true,
+  "main": "server.js",
   "dependencies": {
     "@apollo/client": "^3.3.8",
     "@craco/craco": "^6.1.1",
@@ -37,12 +37,12 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "craco start",
+    "start": "node server.js",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
     "generate": "graphql-codegen --config codegen.yml",
-    "heroku-postbuild": "yarn build"
+    "heroku-postbuild": "yarn install"
   },
   "eslintConfig": {
     "extends": [
