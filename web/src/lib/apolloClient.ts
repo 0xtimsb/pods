@@ -3,7 +3,7 @@ import { __prod__ } from "../constants/constant";
 
 const client = new ApolloClient({
   uri: __prod__
-    ? process.env.REACT_APP_SERVER
+    ? "https://pod-backend.herokuapp.com/graphql"
     : "http://localhost:4000/graphql",
   cache: new InMemoryCache(),
   credentials: "include",
