@@ -12,7 +12,7 @@ function App() {
 
   if (loading) return <div>Loading...</div>;
 
-  if (error) return <div>Error occured...</div>;
+  if (error) return <div>Error occured....</div>;
 
   return (
     <BrowserRouter>
