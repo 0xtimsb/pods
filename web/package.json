@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "main": "server.js",
+  "homepage": "https://zenmode.herokuapp.com/",
   "dependencies": {
     "@apollo/client": "^3.3.8",
     "@craco/craco": "^6.1.1",
@@ -22,6 +23,7 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "^5.1.7",
     "autoprefixer": "^9",
+    "express": "^4.17.1",
     "graphql": "^15.5.0",
     "lodash.clonedeep": "^4.5.0",
     "postcss": "^7",
