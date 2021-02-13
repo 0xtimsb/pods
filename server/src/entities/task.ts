@@ -43,6 +43,6 @@ export class Task extends BaseEntity {
   @ManyToMany(() => User, (user) => user.pods)
   users: User[];
 
-  @ManyToOne(() => Story, (story) => story.tasks)
+  @ManyToOne(() => Story, (story) => story.tasks, { onDelete: "CASCADE" })
   story: Story;
 }

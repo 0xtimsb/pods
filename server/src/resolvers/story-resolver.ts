@@ -146,6 +146,7 @@ export class StoryResolver {
         .where({ id: storyId })
         .execute();
     } catch (e) {
+      console.log(e);
       return false;
     }
     return true;

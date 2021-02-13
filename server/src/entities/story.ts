@@ -36,7 +36,7 @@ export class Story extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Pod, (pod) => pod.stories)
+  @ManyToOne(() => Pod, (pod) => pod.stories, { onDelete: "CASCADE" })
   pod: Pod;
 
   @OneToMany(() => Task, (task) => task.story)
