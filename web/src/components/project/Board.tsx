@@ -26,10 +26,7 @@ const Board: React.FC<BoardProps> = ({ stories, onDragEnd }) => {
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable" type="stories" direction="horizontal">
         {(provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            className="py-3 flex-1 max-w-7xl flex justify-start"
-          >
+          <div ref={provided.innerRef} className="py-3 max-w-7xl flex-1 flex">
             {stories.map((story, index) => (
               <Column key={story.id} story={story} index={index} />
             ))}

@@ -66,7 +66,7 @@ const Column: React.FC<ColumnProps> = ({ story, index }) => {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={`flex flex-col flex-1 bg-gray-50 border rounded-md mr-3 ${
+          className={`flex flex-col w-72 bg-gray-50 border rounded-md mr-3 ${
             snapshot.isDragging && "ring border-blue-500"
           }`}
         >
