@@ -27,7 +27,7 @@ const Project: React.FC = () => {
   return (
     <Layout>
       <div className="flex justify-center overflow-y-hidden">
-        <Board stories={stories} onDragEnd={onDragEnd} />
+        <Board pod={pod} stories={stories} onDragEnd={onDragEnd} />
       </div>
     </Layout>
   );

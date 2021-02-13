@@ -6,6 +6,7 @@ import { RiCloseLine } from "react-icons/ri";
 
 // Graphql
 import {
+  Pod,
   Story,
   Task,
   useCreateTaskMutation,
@@ -17,6 +18,17 @@ import useOutsideClick from "../../hooks/useOutsideClick";
 import Card from "./Card";
 
 interface ColumnProps {
+  pod: {
+    __typename?: "Pod" | undefined;
+  } & Pick<Pod, "id" | "name"> & {
+      stories: ({
+        __typename?: "Story" | undefined;
+      } & Pick<Story, "title" | "id"> & {
+          tasks: ({
+            __typename?: "Task" | undefined;
+          } & Pick<Task, "title" | "id">)[];
+        })[];
+    };
   story: {
     __typename?: "Story" | undefined;
   } & Pick<Story, "title" | "id"> & {
@@ -27,7 +39,7 @@ interface ColumnProps {
   index: number;
 }
 
-const Column: React.FC<ColumnProps> = ({ story, index }) => {
+const Column: React.FC<ColumnProps> = ({ pod, story, index }) => {
   // Add Task
   const [createTaskMutation] = useCreateTaskMutation();
   const [toggleAdd, setToggleAdd] = useState(false);
@@ -90,7 +102,7 @@ const Column: React.FC<ColumnProps> = ({ story, index }) => {
       update: (cache, { data }) => {
         if (data && data.deleteStory) {
           cache.modify({
-            id: "Pod:1",
+            id: cache.identify(pod),
             fields: {
               stories(existingStoriesRefs: any[], { readField }) {
                 return existingStoriesRefs.filter(
@@ -220,7 +232,7 @@ const Column: React.FC<ColumnProps> = ({ story, index }) => {
                 className="pb-1 flex-1 flex flex-col px-3 overflow-y-auto overflow-x-hidden"
               >
                 {story.tasks.map((task, index) => (
-                  <Card key={task.id} task={task} index={index} />
+                  <Card key={task.id} task={task} story={story} index={index} />
                 ))}
                 {provided.placeholder}
               </div>
