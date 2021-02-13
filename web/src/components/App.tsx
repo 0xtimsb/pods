@@ -17,7 +17,7 @@ function App() {
   if (error) return <div>Error occured...</div>;
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Switch>
         {data && data.me ? (
           <Route exact render={() => <AppLayout />} />
