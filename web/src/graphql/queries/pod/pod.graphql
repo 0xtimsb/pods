@@ -10,5 +10,9 @@ query Pod($id: Int!) {
         title
       }
     }
+    users {
+      id
+      username
+    }
   }
 }

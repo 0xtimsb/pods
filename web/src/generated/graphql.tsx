@@ -505,6 +505,9 @@ export type PodQuery = (
         { __typename?: 'Task' }
         & Pick<Task, 'id' | 'title'>
       )> }
+    )>, users: Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username'>
     )> }
   )> }
 );
@@ -1138,6 +1141,10 @@ export const PodDocument = gql`
         id
         title
       }
+    }
+    users {
+      id
+      username
     }
   }
 }

@@ -125,6 +125,9 @@ const Card: React.FC<CardProps> = ({ task, story, index }) => {
                 ref={menuRef}
               >
                 <div className="px-3 py-1.5 cursor-pointer hover:bg-gray-100">
+                  Assign User
+                </div>
+                <div className="px-3 py-1.5 cursor-pointer hover:bg-gray-100">
                   Rename Task
                 </div>
                 <div
