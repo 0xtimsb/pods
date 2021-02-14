@@ -62,8 +62,7 @@ const main = async () => {
       cookie: {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
-        sameSite: "lax", // csrf (cross-site request forgery)
-        domain: process.env.CLIENT_DOMAIN,
+        sameSite: "none", // "none" works with heroku domain. If you want to use "lax", you need custom domain.
         secure: __prod__, // Cookie only works in https.
       },
       saveUninitialized: false,
