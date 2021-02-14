@@ -1,1 +1,1 @@
-server: node dist/index.js
+server: yarn workspace server start

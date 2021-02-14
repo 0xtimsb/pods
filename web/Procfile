@@ -1,1 +1,1 @@
-web: node web/server.js
+web: yarn workspace web start
