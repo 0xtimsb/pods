@@ -15,8 +15,10 @@ fi
   cd $PROJECT_ROOT
 
   if [ "$BUILD_ENV" = "web" ]; then
+    echo "> yarn workspace web build"
     yarn workspace web build
   elif [ "$BUILD_ENV" = "server" ]; then
+    echo "> yarn workspace server build"
     yarn workspace server build
   else
     echo "Error: no build config for INATO_BUILD_ENV value '$INATO_BUILD_ENV'"
