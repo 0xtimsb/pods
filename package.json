@@ -13,7 +13,7 @@
     "dev": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web start\"",
     "deploy-web": "git push https://git.heroku.com/zenmode.git HEAD:main",
     "deploy-server": "git push https://git.heroku.com/zenmode-server.git HEAD:main",
-    "heroku-postbuild": "./scripts/heroku.sh"
+    "heroku-postbuild": "chmod +x ./scripts/heroku.sh"
   },
   "dependencies": {
     "concurrently": "^5.3.0"
