@@ -1,1 +1,0 @@
-web: yarn workspace web build && yarn workspace web start

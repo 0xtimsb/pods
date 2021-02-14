@@ -43,8 +43,7 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "generate": "graphql-codegen --config codegen.yml",
-    "heroku-postbuild": "yarn install && yarn build"
+    "generate": "graphql-codegen --config codegen.yml"
   },
   "eslintConfig": {
     "extends": [
