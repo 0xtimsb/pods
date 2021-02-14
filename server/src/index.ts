@@ -63,7 +63,7 @@ const main = async () => {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
         sameSite: "lax", // csrf (cross-site request forgery)
-        domain: __prod__ ? process.env.CLIENT_DOMAIN : undefined,
+        domain: process.env.CLIENT_DOMAIN,
         secure: __prod__, // Cookie only works in https.
       },
       saveUninitialized: false,
