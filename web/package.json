@@ -39,12 +39,12 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
     "generate": "graphql-codegen --config codegen.yml",
-    "heroku-postbuild": "yarn install"
+    "heroku-postbuild": "yarn install && yarn build"
   },
   "eslintConfig": {
     "extends": [
