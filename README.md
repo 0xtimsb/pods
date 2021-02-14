@@ -1,6 +1,3 @@
-<p align="center">
-    <img src="assets/banner.png" alt="Pods banner" />
-</p>
 <h3 align="center">Working with team made simple, secure and fast.</h3>
 <p align="center">The most advanced open-source project management and communication tool for teams.</p>
 <br />
