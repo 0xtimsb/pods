@@ -12,7 +12,8 @@
     "generate": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web generate\"",
     "dev": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web start\"",
     "deploy-web": "git push https://git.heroku.com/zenmode.git HEAD:main",
-    "deploy-server": "git push https://git.heroku.com/zenmode-server.git HEAD:main"
+    "deploy-server": "git push https://git.heroku.com/zenmode-server.git HEAD:main",
+    "heroku-postbuild": "bin/compile"
   },
   "dependencies": {
     "concurrently": "^5.3.0"
