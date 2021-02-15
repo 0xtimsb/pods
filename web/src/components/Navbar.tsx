@@ -34,6 +34,7 @@ const Navbar: React.FC = () => {
       query Me {
         me {
           id
+          username
         }
       }
     `,
@@ -59,7 +60,7 @@ const Navbar: React.FC = () => {
             </Link>
           </div>
           {isAuth ? (
-            <div>Heee</div>
+            <div className="font-bold">{data?.me?.username}</div>
           ) : (
             <div className="flex items-center space-x-5">
               <Link to="/login" className="text-gray-900 text-sm">

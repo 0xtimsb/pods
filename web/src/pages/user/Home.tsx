@@ -55,9 +55,6 @@ const Home: React.FC<HomeProps> = () => {
                   <button className="px-4 text-gray-900 bg-white border border-gray-300 rounded-md font-medium shadow-sm hover:bg-gray-50 focus:ring focus:border-blue-500 focus:outline-none">
                     Create Pod
                   </button>
-                  <button className="px-4 text-gray-900 bg-white border border-gray-300 rounded-md font-medium shadow-sm hover:bg-gray-50 focus:ring focus:border-blue-500 focus:outline-none">
-                    Join Pod
-                  </button>
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-3">
@@ -78,6 +75,17 @@ const Home: React.FC<HomeProps> = () => {
                   </div>
                 ))}
               </div>
+            </div>
+            <div className="flex flex-col bg-gray-50 border rounded-md gap-3 p-3">
+              <div className="flex justify-between">
+                <div className="flex gap-3 items-center font-bold">
+                  <div className="text-xs text-gray-800 w-6 h-6 flex justify-center items-center bg-gray-200 rounded-full">
+                    0
+                  </div>
+                  <div className="text-lg text-gray-900">Invites</div>
+                </div>
+              </div>
+              <div className="grid grid-cols-3">You don't any invites</div>
             </div>
           </div>
         </div>

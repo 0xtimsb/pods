@@ -6,7 +6,7 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     fontFamily: {
-      sans: ["Lato", ...defaultTheme.fontFamily.sans],
+      sans: ["Nunito Sans", ...defaultTheme.fontFamily.sans],
     },
     extend: {
       colors: {
