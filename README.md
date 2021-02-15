@@ -1,20 +1,15 @@
-<h3 align="center">Working with team made simple, secure and fast.</h3>
-<p align="center">The most advanced open-source project management and communication tool for teams.</p>
-<br />
+<h1 align="center">Zenmode</h1>
+<h3 align="center">The open-source team management and communication tool.</h3>
 
-<p align="center">
-    <img src="assets/schema.png" alt="Schema Design" />
-</p>
-
-<br>
-
-Pods is a free and open-source project management and communication tool for your team projects.
 
 - **Kanban Project Board**. Keep track of your todos and status, in your kanban board.
 - **Auto Sync**. No matter what changes you make, even drag-n-drop tasks positions, get synced with all other pod members.
 - **Real-time Communication**. Chat with pod members in real-time. No need for refresh. You send, they receive. It is that simple.
 - **Assign Tasks**. You can quickly assign tasks to pod members
 - **Secure Authetication**. Uses Redis store to keep track of sessions you are logged in. Your data in your hands.
+
+## Preview
+<img src="assets/preview-1.png" alt="Preview" width="75%" align="center" />
 
 ## Getting Started
 
