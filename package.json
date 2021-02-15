@@ -10,7 +10,7 @@
   },
   "scripts": {
     "generate": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web generate\"",
-    "dev": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web start\"",
+    "dev": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web dev\"",
     "deploy-web": "git push https://git.heroku.com/zenmode.git HEAD:main",
     "deploy-server": "git push https://git.heroku.com/zenmode-server.git HEAD:main",
     "heroku-postbuild": "bash bin/heroku-postbuild.sh"
