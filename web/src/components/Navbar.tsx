@@ -54,8 +54,8 @@ const Navbar: React.FC = () => {
       <div className="w-full max-w-screen-xl space-y-1">
         <div className="h-16 flex items-center justify-between">
           <div className="flex items-center space-x-5">
-            <Link to="/" className="text-gray-900 text-3xl font-extrabold">
-              Pods
+            <Link to="/" className="text-gray-900 text-3xl font-black">
+              Zenmode
             </Link>
           </div>
           {isAuth ? (
