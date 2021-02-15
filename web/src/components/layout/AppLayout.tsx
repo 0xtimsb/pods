@@ -13,6 +13,7 @@ const AppLayout: React.FC = () => {
   return (
     <Switch>
       <Route exact path={HOME} component={Home} />
+
       <Route exact path={POD} component={Discussion} />
       <Route exact path={POD_PROJECT} component={Project} />
       <Route exact path={POD_SETTINGS} component={Settings} />
