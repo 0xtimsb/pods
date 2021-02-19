@@ -8,7 +8,9 @@ import {
   UpdateDateColumn,
   ManyToMany,
   JoinTable,
+  OneToMany,
 } from "typeorm";
+import { UserPods } from "./user-pods";
 import { Pod } from "./pod";
 import { Task } from "./task";
 
@@ -38,20 +40,9 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Field(() => [Pod])
-  @ManyToMany(() => Pod, (pod) => pod.users)
-  @JoinTable({
-    name: "member",
-    joinColumn: {
-      name: "user",
-      referencedColumnName: "id",
-    },
-    inverseJoinColumn: {
-      name: "pod",
-      referencedColumnName: "id",
-    },
-  })
-  pods: Pod[];
+  @Field(() => [UserPods])
+  @OneToMany(() => UserPods, (userPods) => userPods.user)
+  pods: UserPods[];
 
   @Field(() => [Task])
   @ManyToMany(() => Task, (task) => task.users)

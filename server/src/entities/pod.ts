@@ -8,10 +8,12 @@ import {
   UpdateDateColumn,
   ManyToMany,
   OneToMany,
+  ManyToOne,
 } from "typeorm";
 
 import { Story } from "./story";
 import { User } from "./user";
+import { UserPods } from "./user-pods";
 
 @Entity()
 @ObjectType()
@@ -32,10 +34,15 @@ export class Pod extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToMany(() => User, (user) => user.pods)
-  users: User[];
+  @Field(() => User)
+  @ManyToOne(() => User, (user) => user.pods)
+  leader: User;
 
-  @Field(() => [Story], { nullable: false })
+  @Field(() => [UserPods])
+  @OneToMany(() => UserPods, (userPods) => userPods.pod)
+  members: UserPods[];
+
+  @Field(() => [Story])
   @OneToMany(() => Story, (story) => story.pod)
   stories: Story[];
 }
