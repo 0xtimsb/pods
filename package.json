@@ -4,10 +4,6 @@
     "web",
     "server"
   ],
-  "engines": {
-    "node": "14.15.4",
-    "yarn": "1.22.10"
-  },
   "scripts": {
     "generate": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web generate\"",
     "dev": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web dev\"",

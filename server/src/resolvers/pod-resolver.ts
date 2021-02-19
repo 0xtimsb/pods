@@ -25,8 +25,13 @@ import { Story } from "../entities/story";
 @Resolver(Pod)
 export class PodResolver {
   @Query(() => Pod, { nullable: true })
-  pod(@Arg("id", () => Int) id: number) {
-    return Pod.findOne(id);
+  pod(@Arg("id", () => Int) id: number, @Ctx() { req }: Context) {
+    return getConnection()
+      .createQueryBuilder(Pod, "pod")
+      .innerJoin("pod.members", "user")
+      .where("pod.id = :podId", { podId: id })
+      .andWhere("user.id = :userId", { userId: req.session.userId })
+      .getOne();
   }
 
   @Mutation(() => PodResponse)
@@ -63,10 +68,17 @@ export class PodResolver {
 
       pod = result.raw[0];
 
-      // Adds current user to the pod
+      // Sets current user as leader of the pod
       await getConnection()
         .createQueryBuilder()
-        .relation(Pod, "users")
+        .relation(Pod, "leader")
+        .of(pod.id)
+        .set(req.session.userId);
+
+      // Adds current user in member list of the pod
+      await getConnection()
+        .createQueryBuilder()
+        .relation(Pod, "members")
         .of(pod.id)
         .add(req.session.userId);
     } catch (err) {
@@ -84,20 +96,30 @@ export class PodResolver {
   }
 
   @Mutation(() => Boolean)
-  async joinPod(
+  async inviteUserToPod(
     @Arg("podId", () => Int) podId: number,
-    @Arg("userId", () => Int) userId: number
+    @Arg("userId", () => Int) userId: number,
+    @Ctx() { req }: Context
   ): Promise<Boolean> {
-    // Need to check if leader is doing this or not. TODO
+    // Need to check if leader inviting.
+    const pod = await getConnection()
+      .createQueryBuilder(Pod, "pod")
+      .innerJoin("pod.leader", "leader")
+      .where("pod.id = :podId", { podId })
+      .andWhere("leader.id = :leaderId", { leaderId: req.session.userId })
+      .getOne();
+
+    if (!pod) return false; // Not a leader for that pod.
 
     // Adds user to the pod
     try {
       await getConnection()
         .createQueryBuilder()
-        .relation(Pod, "users")
+        .relation(Pod, "members")
         .of(podId)
         .add(userId);
     } catch (e) {
+      console.log(e);
       return false;
     }
     return true;
@@ -136,8 +158,18 @@ export class PodResolver {
     return true;
   }
 
+  @FieldResolver(() => User)
+  leader(@Root() pod: Pod) {
+    // Returns leader of the pod.
+    return createQueryBuilder(User, "user")
+      .innerJoin("user.pods", "pod")
+      .where("pod.id = :id", { id: pod.id })
+      .andWhere("pod.leader.id = user.id")
+      .getOne();
+  }
+
   @FieldResolver(() => [User])
-  users(@Root() pod: Pod) {
+  members(@Root() pod: Pod) {
     // Returns all the users, but not pod, having pod.id
     return createQueryBuilder(User, "user")
       .innerJoin("user.pods", "pod")
