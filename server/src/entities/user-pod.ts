@@ -1,4 +1,3 @@
-import { Field, ObjectType } from "type-graphql";
 import {
   Entity,
   Column,
@@ -11,9 +10,7 @@ import { Pod } from "./pod";
 import { User } from "./user";
 
 @Entity()
-@ObjectType()
 export class UserPod extends BaseEntity {
-  @Field(() => String)
   @CreateDateColumn()
   createdAt: Date;
 

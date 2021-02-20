@@ -184,6 +184,37 @@ export class PodResolver {
   }
 
   @Mutation(() => Boolean)
+  async joinPod(
+    @Arg("podId", () => Int) podId: number,
+    @Ctx() { req }: Context
+  ): Promise<Boolean> {
+    const userPod = await getConnection()
+      .createQueryBuilder(UserPod, "userPod")
+      .where("userPod.pod.id = :podId", { podId })
+      .andWhere("userPod.user.id = :userId", { userId: req.session.userId })
+      .getOne();
+
+    console.log(userPod);
+
+    if (!userPod) return false;
+
+    try {
+      await getConnection()
+        .createQueryBuilder(UserPod, "userPod")
+        .innerJoin("userPod.user", "user")
+        .innerJoin("userPod.pod", "pod")
+        .where("pod.id = :podId", { podId })
+        .andWhere("user.id = :userId", { userId: req.session.userId })
+        .update({ isJoined: true })
+        .execute();
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+    return true;
+  }
+
+  @Mutation(() => Boolean)
   async deletePod(@Arg("podId", () => Int) podId: number): Promise<Boolean> {
     try {
       await getConnection()
@@ -216,6 +247,17 @@ export class PodResolver {
       .andWhere("userPod.isAdmin = :isAdmin", { isAdmin: false })
       .andWhere("userPod.isJoined = :isJoined", { isJoined: true })
       .getMany();
+  }
+
+  @FieldResolver(() => Boolean)
+  async joined(@Root() pod: Pod, @Ctx() { req }: Context) {
+    const userPod = await createQueryBuilder(UserPod, "userPod")
+      .where("userPod.pod.id = :podId", { podId: pod.id })
+      .andWhere("userPod.user.id = :userId", { userId: req.session.userId })
+      .getOne();
+
+    if (userPod) return userPod.isJoined;
+    return false;
   }
 
   @FieldResolver(() => [Story])
