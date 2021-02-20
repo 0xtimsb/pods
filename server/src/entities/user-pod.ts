@@ -12,17 +12,20 @@ import { User } from "./user";
 
 @Entity()
 @ObjectType()
-export class UserPods extends BaseEntity {
+export class UserPod extends BaseEntity {
   @Field(() => String)
   @CreateDateColumn()
   createdAt: Date;
 
   @Column()
+  isAdmin: boolean;
+
+  @Column()
   isJoined: boolean;
 
-  @ManyToOne(() => User, (user) => user.pods, { primary: true })
+  @ManyToOne(() => User, (user) => user.userPods, { primary: true })
   user: User;
 
-  @ManyToOne(() => Pod, (pod) => pod.members, { primary: true })
+  @ManyToOne(() => Pod, (pod) => pod.userPods, { primary: true })
   pod: Pod;
 }

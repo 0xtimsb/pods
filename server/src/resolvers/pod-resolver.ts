@@ -21,6 +21,7 @@ import { PodInput } from "../inputs/pod-input";
 // Types
 import { Context } from "../types/context";
 import { Story } from "../entities/story";
+import { UserPod } from "../entities/user-pod";
 
 @Resolver(Pod)
 export class PodResolver {
@@ -28,9 +29,9 @@ export class PodResolver {
   pod(@Arg("id", () => Int) id: number, @Ctx() { req }: Context) {
     return getConnection()
       .createQueryBuilder(Pod, "pod")
-      .innerJoin("pod.members", "user")
+      .innerJoin("pod.userPods", "userPod")
       .where("pod.id = :podId", { podId: id })
-      .andWhere("user.id = :userId", { userId: req.session.userId })
+      .andWhere("userPod.user.id = :userId", { userId: req.session.userId })
       .getOne();
   }
 
@@ -68,19 +69,18 @@ export class PodResolver {
 
       pod = result.raw[0];
 
-      // Sets current user as leader of the pod
       await getConnection()
         .createQueryBuilder()
-        .relation(Pod, "leader")
-        .of(pod.id)
-        .set(req.session.userId);
-
-      // Adds current user in member list of the pod
-      await getConnection()
-        .createQueryBuilder()
-        .relation(Pod, "members")
-        .of(pod.id)
-        .add(req.session.userId);
+        .insert()
+        .into(UserPod)
+        .values({
+          pod: { id: pod.id },
+          user: { id: req.session.userId },
+          isAdmin: true,
+          isJoined: true,
+        })
+        .returning("*")
+        .execute();
     } catch (err) {
       return {
         errors: [
@@ -96,28 +96,67 @@ export class PodResolver {
   }
 
   @Mutation(() => Boolean)
-  async inviteUserToPod(
+  async inviteToPod(
+    @Arg("podId", () => Int) podId: number,
+    @Arg("userId", () => Int) userId: number,
+    @Arg("asAdmin", () => Boolean) asAdmin: boolean,
+    @Ctx() { req }: Context
+  ): Promise<Boolean> {
+    // Check if request is from  admin of a pod and he hase joined the pod.
+    const userPod = await getConnection()
+      .createQueryBuilder(UserPod, "userPod")
+      .where("userPod.pod.id = :podId", { podId })
+      .andWhere("userPod.user.id = :userId", { userId: req.session.userId })
+      .andWhere("userPod.isAdmin = :isAdmin", { isAdmin: true })
+      .andWhere("userPod.isJoined = :isJoined", { isJoined: true })
+      .getOne();
+
+    if (!userPod) return false;
+
+    try {
+      await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(UserPod)
+        .values({
+          user: { id: userId },
+          pod: { id: podId },
+          isAdmin: asAdmin,
+          isJoined: false,
+        })
+        .execute();
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  async removeFromPod(
     @Arg("podId", () => Int) podId: number,
     @Arg("userId", () => Int) userId: number,
     @Ctx() { req }: Context
   ): Promise<Boolean> {
-    // Need to check if leader inviting.
-    const pod = await getConnection()
-      .createQueryBuilder(Pod, "pod")
-      .innerJoin("pod.leader", "leader")
-      .where("pod.id = :podId", { podId })
-      .andWhere("leader.id = :leaderId", { leaderId: req.session.userId })
+    // Check if request is from  admin of a pod and he hase joined the pod.
+    const userPod = await getConnection()
+      .createQueryBuilder(UserPod, "userPod")
+      .where("userPod.pod.id = :podId", { podId })
+      .andWhere("userPod.user.id = :userId", { userId: req.session.userId })
+      .andWhere("userPod.isAdmin = :isAdmin", { isAdmin: true })
+      .andWhere("userPod.isJoined = :isJoined", { isJoined: true })
       .getOne();
 
-    if (!pod) return false; // Not a leader for that pod.
+    if (!userPod) return false;
 
-    // Adds user to the pod
     try {
       await getConnection()
         .createQueryBuilder()
-        .relation(Pod, "members")
-        .of(podId)
-        .add(userId);
+        .delete()
+        .from(UserPod, "userPod")
+        .where("userPod.pod.id := podId", { podId: podId })
+        .andWhere("userPod.user.id := userId", { userId: userId })
+        .execute();
     } catch (e) {
       console.log(e);
       return false;
@@ -128,15 +167,16 @@ export class PodResolver {
   @Mutation(() => Boolean)
   async leavePod(
     @Arg("podId", () => Int) podId: number,
-    @Arg("userId", () => Int) userId: number
+    @Ctx() { req }: Context
   ): Promise<Boolean> {
-    // Remove user from the pod
     try {
       await getConnection()
         .createQueryBuilder()
-        .relation(Pod, "users")
-        .of(podId)
-        .remove(userId);
+        .from(UserPod, "userPod")
+        .delete()
+        .where("userPod.user.id := userId", { userId: req.session.userId })
+        .andWhere("userPod.pod.id := podId", { podId: podId })
+        .execute();
     } catch (e) {
       return false;
     }
@@ -158,22 +198,23 @@ export class PodResolver {
     return true;
   }
 
-  @FieldResolver(() => User)
-  leader(@Root() pod: Pod) {
-    // Returns leader of the pod.
+  @FieldResolver(() => [User])
+  admins(@Root() pod: Pod) {
     return createQueryBuilder(User, "user")
-      .innerJoin("user.pods", "pod")
-      .where("pod.id = :id", { id: pod.id })
-      .andWhere("pod.leader.id = user.id")
-      .getOne();
+      .innerJoin("user.userPods", "userPod")
+      .where("userPod.pod.id = :id", { id: pod.id })
+      .andWhere("userPod.isAdmin = :isAdmin", { isAdmin: true })
+      .andWhere("userPod.isJoined = :isJoined", { isJoined: true })
+      .getMany();
   }
 
   @FieldResolver(() => [User])
   members(@Root() pod: Pod) {
-    // Returns all the users, but not pod, having pod.id
     return createQueryBuilder(User, "user")
-      .innerJoin("user.pods", "pod")
-      .where("pod.id = :id", { id: pod.id })
+      .innerJoin("user.userPods", "userPod")
+      .where("userPod.pod.id = :id", { id: pod.id })
+      .andWhere("userPod.isAdmin = :isAdmin", { isAdmin: false })
+      .andWhere("userPod.isJoined = :isJoined", { isJoined: true })
       .getMany();
   }
 

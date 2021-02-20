@@ -6,13 +6,11 @@ import {
   BaseEntity,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToMany,
-  JoinTable,
   OneToMany,
 } from "typeorm";
-import { UserPods } from "./user-pods";
+
 import { Pod } from "./pod";
-import { Task } from "./task";
+import { UserPod } from "./user-pod";
 
 @Entity()
 @ObjectType()
@@ -30,7 +28,7 @@ export class User extends BaseEntity {
   email: string;
 
   @Column()
-  password!: string;
+  password: string;
 
   @Field(() => String)
   @CreateDateColumn()
@@ -40,22 +38,9 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Field(() => [UserPods])
-  @OneToMany(() => UserPods, (userPods) => userPods.user)
-  pods: UserPods[];
+  @OneToMany(() => UserPod, (userPod) => userPod.user)
+  userPods: UserPod[];
 
-  @Field(() => [Task])
-  @ManyToMany(() => Task, (task) => task.users)
-  @JoinTable({
-    name: "assign",
-    joinColumn: {
-      name: "user",
-      referencedColumnName: "id",
-    },
-    inverseJoinColumn: {
-      name: "task",
-      referencedColumnName: "id",
-    },
-  })
-  tasks: Task[];
+  @Field(() => [Pod])
+  pods: Pod[];
 }

@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
   ManyToMany,
   ManyToOne,
+  JoinTable,
 } from "typeorm";
 
 import { Story } from "./story";
@@ -40,7 +41,9 @@ export class Task extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToMany(() => User, (user) => user.pods)
+  @Field(() => [User])
+  @ManyToMany(() => User)
+  @JoinTable()
   users: User[];
 
   @ManyToOne(() => Story, (story) => story.tasks, { onDelete: "CASCADE" })

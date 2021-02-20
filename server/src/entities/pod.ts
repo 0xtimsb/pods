@@ -6,14 +6,12 @@ import {
   BaseEntity,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToMany,
   OneToMany,
-  ManyToOne,
 } from "typeorm";
 
 import { Story } from "./story";
 import { User } from "./user";
-import { UserPods } from "./user-pods";
+import { UserPod } from "./user-pod";
 
 @Entity()
 @ObjectType()
@@ -34,13 +32,17 @@ export class Pod extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Field(() => User)
-  @ManyToOne(() => User, (user) => user.pods)
-  leader: User;
+  @OneToMany(() => UserPod, (userPod) => userPod.pod)
+  userPods: UserPod[];
 
-  @Field(() => [UserPods])
-  @OneToMany(() => UserPods, (userPods) => userPods.pod)
-  members: UserPods[];
+  @Field(() => [User])
+  members: User[];
+
+  @Field(() => [User])
+  admins: User[];
+
+  @Field(() => Boolean)
+  joined: boolean;
 
   @Field(() => [Story])
   @OneToMany(() => Story, (story) => story.pod)

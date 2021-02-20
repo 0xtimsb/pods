@@ -232,13 +232,11 @@ export class UserResolver {
     return "";
   }
 
-  // Field Resolver to prevent extra data query to database, when pods are not needed by graphql.
   @FieldResolver(() => [Pod])
   async pods(@Ctx() { req }: Context) {
-    // Returns all the pods, but not user, having user.id as current user id
     return createQueryBuilder(Pod, "pod")
-      .innerJoin("pod.members", "user")
-      .where("user.id = :id", { id: req.session.userId })
+      .innerJoin("pod.userPods", "userPod")
+      .where("userPod.user.id = :id", { id: req.session.userId })
       .getMany();
   }
 }
