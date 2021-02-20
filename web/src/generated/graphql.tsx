@@ -44,7 +44,6 @@ export type User = {
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   pods: Array<Pod>;
-  tasks: Array<Task>;
 };
 
 export type Pod = {
@@ -53,8 +52,10 @@ export type Pod = {
   name: Scalars['String'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
+  members: Array<User>;
+  admins: Array<User>;
+  joined: Scalars['Boolean'];
   stories: Array<Story>;
-  users: Array<User>;
 };
 
 export type Story = {
@@ -86,8 +87,10 @@ export type Mutation = {
   forgotPassword: Scalars['Boolean'];
   changePassword: UserResponse;
   createPod: PodResponse;
-  joinPod: Scalars['Boolean'];
+  inviteToPod: Scalars['Boolean'];
+  removeFromPod: Scalars['Boolean'];
   leavePod: Scalars['Boolean'];
+  joinPod: Scalars['Boolean'];
   deletePod: Scalars['Boolean'];
   moveStory: Scalars['Boolean'];
   createStory: StoryResponse;
@@ -127,14 +130,25 @@ export type MutationCreatePodArgs = {
 };
 
 
-export type MutationJoinPodArgs = {
+export type MutationInviteToPodArgs = {
+  asAdmin: Scalars['Boolean'];
+  userId: Scalars['Int'];
+  podId: Scalars['Int'];
+};
+
+
+export type MutationRemoveFromPodArgs = {
   userId: Scalars['Int'];
   podId: Scalars['Int'];
 };
 
 
 export type MutationLeavePodArgs = {
-  userId: Scalars['Int'];
+  podId: Scalars['Int'];
+};
+
+
+export type MutationJoinPodArgs = {
   podId: Scalars['Int'];
 };
 
@@ -271,8 +285,19 @@ export type DeletePodMutation = (
   & Pick<Mutation, 'deletePod'>
 );
 
-export type JoinPodMutationVariables = Exact<{
+export type InviteToPodMutationVariables = Exact<{
   userId: Scalars['Int'];
+  podId: Scalars['Int'];
+  asAdmin: Scalars['Boolean'];
+}>;
+
+
+export type InviteToPodMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'inviteToPod'>
+);
+
+export type JoinPodMutationVariables = Exact<{
   podId: Scalars['Int'];
 }>;
 
@@ -283,7 +308,6 @@ export type JoinPodMutation = (
 );
 
 export type LeavePodMutationVariables = Exact<{
-  userId: Scalars['Int'];
   podId: Scalars['Int'];
 }>;
 
@@ -291,6 +315,17 @@ export type LeavePodMutationVariables = Exact<{
 export type LeavePodMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'leavePod'>
+);
+
+export type RemoveFromPodMutationVariables = Exact<{
+  podId: Scalars['Int'];
+  userId: Scalars['Int'];
+}>;
+
+
+export type RemoveFromPodMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'removeFromPod'>
 );
 
 export type CreateStoryMutationVariables = Exact<{
@@ -497,7 +532,7 @@ export type PodQuery = (
   { __typename?: 'Query' }
   & { pod: Maybe<(
     { __typename?: 'Pod' }
-    & Pick<Pod, 'id' | 'name'>
+    & Pick<Pod, 'id' | 'name' | 'joined'>
     & { stories: Array<(
       { __typename?: 'Story' }
       & Pick<Story, 'id' | 'title'>
@@ -505,7 +540,10 @@ export type PodQuery = (
         { __typename?: 'Task' }
         & Pick<Task, 'id' | 'title'>
       )> }
-    )>, users: Array<(
+    )>, admins: Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username'>
+    )>, members: Array<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
     )> }
@@ -597,9 +635,41 @@ export function useDeletePodMutation(baseOptions?: Apollo.MutationHookOptions<De
 export type DeletePodMutationHookResult = ReturnType<typeof useDeletePodMutation>;
 export type DeletePodMutationResult = Apollo.MutationResult<DeletePodMutation>;
 export type DeletePodMutationOptions = Apollo.BaseMutationOptions<DeletePodMutation, DeletePodMutationVariables>;
+export const InviteToPodDocument = gql`
+    mutation InviteToPod($userId: Int!, $podId: Int!, $asAdmin: Boolean!) {
+  inviteToPod(podId: $podId, userId: $userId, asAdmin: $asAdmin)
+}
+    `;
+export type InviteToPodMutationFn = Apollo.MutationFunction<InviteToPodMutation, InviteToPodMutationVariables>;
+
+/**
+ * __useInviteToPodMutation__
+ *
+ * To run a mutation, you first call `useInviteToPodMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInviteToPodMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [inviteToPodMutation, { data, loading, error }] = useInviteToPodMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      podId: // value for 'podId'
+ *      asAdmin: // value for 'asAdmin'
+ *   },
+ * });
+ */
+export function useInviteToPodMutation(baseOptions?: Apollo.MutationHookOptions<InviteToPodMutation, InviteToPodMutationVariables>) {
+        return Apollo.useMutation<InviteToPodMutation, InviteToPodMutationVariables>(InviteToPodDocument, baseOptions);
+      }
+export type InviteToPodMutationHookResult = ReturnType<typeof useInviteToPodMutation>;
+export type InviteToPodMutationResult = Apollo.MutationResult<InviteToPodMutation>;
+export type InviteToPodMutationOptions = Apollo.BaseMutationOptions<InviteToPodMutation, InviteToPodMutationVariables>;
 export const JoinPodDocument = gql`
-    mutation JoinPod($userId: Int!, $podId: Int!) {
-  joinPod(userId: $userId, podId: $podId)
+    mutation JoinPod($podId: Int!) {
+  joinPod(podId: $podId)
 }
     `;
 export type JoinPodMutationFn = Apollo.MutationFunction<JoinPodMutation, JoinPodMutationVariables>;
@@ -617,7 +687,6 @@ export type JoinPodMutationFn = Apollo.MutationFunction<JoinPodMutation, JoinPod
  * @example
  * const [joinPodMutation, { data, loading, error }] = useJoinPodMutation({
  *   variables: {
- *      userId: // value for 'userId'
  *      podId: // value for 'podId'
  *   },
  * });
@@ -629,8 +698,8 @@ export type JoinPodMutationHookResult = ReturnType<typeof useJoinPodMutation>;
 export type JoinPodMutationResult = Apollo.MutationResult<JoinPodMutation>;
 export type JoinPodMutationOptions = Apollo.BaseMutationOptions<JoinPodMutation, JoinPodMutationVariables>;
 export const LeavePodDocument = gql`
-    mutation LeavePod($userId: Int!, $podId: Int!) {
-  leavePod(userId: $userId, podId: $podId)
+    mutation LeavePod($podId: Int!) {
+  leavePod(podId: $podId)
 }
     `;
 export type LeavePodMutationFn = Apollo.MutationFunction<LeavePodMutation, LeavePodMutationVariables>;
@@ -648,7 +717,6 @@ export type LeavePodMutationFn = Apollo.MutationFunction<LeavePodMutation, Leave
  * @example
  * const [leavePodMutation, { data, loading, error }] = useLeavePodMutation({
  *   variables: {
- *      userId: // value for 'userId'
  *      podId: // value for 'podId'
  *   },
  * });
@@ -659,6 +727,37 @@ export function useLeavePodMutation(baseOptions?: Apollo.MutationHookOptions<Lea
 export type LeavePodMutationHookResult = ReturnType<typeof useLeavePodMutation>;
 export type LeavePodMutationResult = Apollo.MutationResult<LeavePodMutation>;
 export type LeavePodMutationOptions = Apollo.BaseMutationOptions<LeavePodMutation, LeavePodMutationVariables>;
+export const RemoveFromPodDocument = gql`
+    mutation RemoveFromPod($podId: Int!, $userId: Int!) {
+  removeFromPod(podId: $podId, userId: $userId)
+}
+    `;
+export type RemoveFromPodMutationFn = Apollo.MutationFunction<RemoveFromPodMutation, RemoveFromPodMutationVariables>;
+
+/**
+ * __useRemoveFromPodMutation__
+ *
+ * To run a mutation, you first call `useRemoveFromPodMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveFromPodMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeFromPodMutation, { data, loading, error }] = useRemoveFromPodMutation({
+ *   variables: {
+ *      podId: // value for 'podId'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useRemoveFromPodMutation(baseOptions?: Apollo.MutationHookOptions<RemoveFromPodMutation, RemoveFromPodMutationVariables>) {
+        return Apollo.useMutation<RemoveFromPodMutation, RemoveFromPodMutationVariables>(RemoveFromPodDocument, baseOptions);
+      }
+export type RemoveFromPodMutationHookResult = ReturnType<typeof useRemoveFromPodMutation>;
+export type RemoveFromPodMutationResult = Apollo.MutationResult<RemoveFromPodMutation>;
+export type RemoveFromPodMutationOptions = Apollo.BaseMutationOptions<RemoveFromPodMutation, RemoveFromPodMutationVariables>;
 export const CreateStoryDocument = gql`
     mutation CreateStory($title: String!, $podId: Int!) {
   createStory(data: {title: $title, podId: $podId}) {
@@ -1134,6 +1233,7 @@ export const PodDocument = gql`
   pod(id: $id) {
     id
     name
+    joined
     stories {
       id
       title
@@ -1142,7 +1242,11 @@ export const PodDocument = gql`
         title
       }
     }
-    users {
+    admins {
+      id
+      username
+    }
+    members {
       id
       username
     }
