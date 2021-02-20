@@ -1,0 +1,3 @@
+mutation RemoveFromPod($podId: Int!, $userId: Int!, $asAdmin: Boolean!) {
+  removeFromPod(podId: $podId, userId: $userId, asAdmin: $asAdmin)
+}

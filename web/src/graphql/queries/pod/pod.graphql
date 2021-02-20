@@ -2,6 +2,7 @@ query Pod($id: Int!) {
   pod(id: $id) {
     id
     name
+    joined
     stories {
       id
       title
@@ -10,7 +11,11 @@ query Pod($id: Int!) {
         title
       }
     }
-    users {
+    admins {
+      id
+      username
+    }
+    members {
       id
       username
     }
