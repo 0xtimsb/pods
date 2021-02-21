@@ -2,7 +2,7 @@ import { gql, useApolloClient } from "@apollo/client";
 import { Redirect, Route, Switch } from "react-router-dom";
 
 // Routes
-import { HOME } from "../../constants/routes";
+import { HOME, POD } from "../../constants/routes";
 
 // Pages
 import Home from "../../pages/user/Home";
@@ -33,7 +33,7 @@ const AppLayout: React.FC = () => {
   return (
     <Switch>
       <Route exact path={HOME} render={() => <Home pods={data!.me!.pods} />} />
-      <Route exact component={PodPage} />
+      <Route exact path={POD} render={(props) => <PodPage {...props} />} />
       <Redirect to={HOME} />
     </Switch>
   );

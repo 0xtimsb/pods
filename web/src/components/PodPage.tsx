@@ -1,9 +1,11 @@
 import {
   Redirect,
   Route,
+  RouteComponentProps,
   Switch,
   useLocation,
   useParams,
+  useRouteMatch,
 } from "react-router-dom";
 
 // Routes
@@ -15,11 +17,14 @@ import Discussion from "../pages/pod/Discussion";
 import Settings from "../pages/pod/Settings";
 import Board from "./project/Board";
 
-const PodPage: React.FC = () => {
-  let { id } = useParams<{ id: string }>();
+interface MatchParams {
+  id: string;
+}
+
+const PodPage: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => {
   const { data, loading, error } = usePodQuery({
     variables: {
-      id: parseInt(id),
+      id: parseInt(match.params.id),
     },
   });
 
@@ -29,7 +34,7 @@ const PodPage: React.FC = () => {
 
   return (
     <Switch>
-      <Route exact path={POD} render={() => <Discussion />} />
+      <Route exact render={() => <Discussion />} />
       <Route
         exact
         path={POD_PROJECT}
