@@ -15,10 +15,10 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
-  me: Maybe<User>;
-  pod: Maybe<Pod>;
-  story: Maybe<Story>;
-  task: Maybe<Task>;
+  me?: Maybe<User>;
+  pod?: Maybe<Pod>;
+  story?: Maybe<Story>;
+  task?: Maybe<Task>;
 };
 
 
@@ -72,7 +72,7 @@ export type Task = {
   __typename?: 'Task';
   id: Scalars['Int'];
   title: Scalars['String'];
-  description: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   rank: Scalars['String'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
@@ -207,8 +207,8 @@ export type MutationDeleteTaskArgs = {
 
 export type UserResponse = {
   __typename?: 'UserResponse';
-  errors: Maybe<Array<FieldError>>;
-  user: Maybe<User>;
+  errors?: Maybe<Array<FieldError>>;
+  user?: Maybe<User>;
 };
 
 export type FieldError = {
@@ -225,8 +225,8 @@ export type UserInput = {
 
 export type PodResponse = {
   __typename?: 'PodResponse';
-  errors: Maybe<Array<FieldError>>;
-  pod: Maybe<Pod>;
+  errors?: Maybe<Array<FieldError>>;
+  pod?: Maybe<Pod>;
 };
 
 export type PodInput = {
@@ -235,8 +235,8 @@ export type PodInput = {
 
 export type StoryResponse = {
   __typename?: 'StoryResponse';
-  errors: Maybe<Array<FieldError>>;
-  story: Maybe<Story>;
+  errors?: Maybe<Array<FieldError>>;
+  story?: Maybe<Story>;
 };
 
 export type StoryInput = {
@@ -246,15 +246,41 @@ export type StoryInput = {
 
 export type TaskResponse = {
   __typename?: 'TaskResponse';
-  errors: Maybe<Array<FieldError>>;
-  task: Maybe<Task>;
+  errors?: Maybe<Array<FieldError>>;
+  task?: Maybe<Task>;
 };
 
 export type TaskInput = {
   title: Scalars['String'];
-  description: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   storyId: Scalars['Int'];
 };
+
+export type ErrorFragment = (
+  { __typename?: 'FieldError' }
+  & Pick<FieldError, 'field' | 'message'>
+);
+
+export type PodFragment = (
+  { __typename?: 'Pod' }
+  & Pick<Pod, 'id' | 'name' | 'joined' | 'createdAt'>
+);
+
+export type UserResponseFragment = (
+  { __typename?: 'UserResponse' }
+  & { errors?: Maybe<Array<(
+    { __typename?: 'FieldError' }
+    & ErrorFragment
+  )>>, user?: Maybe<(
+    { __typename?: 'User' }
+    & UserFragment
+  )> }
+);
+
+export type UserFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'username'>
+);
 
 export type CreatePodMutationVariables = Exact<{
   name: Scalars['String'];
@@ -265,10 +291,10 @@ export type CreatePodMutation = (
   { __typename?: 'Mutation' }
   & { createPod: (
     { __typename?: 'PodResponse' }
-    & { pod: Maybe<(
+    & { pod?: Maybe<(
       { __typename?: 'Pod' }
       & Pick<Pod, 'id' | 'name'>
-    )>, errors: Maybe<Array<(
+    )>, errors?: Maybe<Array<(
       { __typename?: 'FieldError' }
       & Pick<FieldError, 'field' | 'message'>
     )>> }
@@ -338,10 +364,10 @@ export type CreateStoryMutation = (
   { __typename?: 'Mutation' }
   & { createStory: (
     { __typename?: 'StoryResponse' }
-    & { story: Maybe<(
+    & { story?: Maybe<(
       { __typename?: 'Story' }
       & Pick<Story, 'id' | 'title'>
-    )>, errors: Maybe<Array<(
+    )>, errors?: Maybe<Array<(
       { __typename?: 'FieldError' }
       & Pick<FieldError, 'field' | 'message'>
     )>> }
@@ -391,10 +417,10 @@ export type CreateTaskMutation = (
   { __typename?: 'Mutation' }
   & { createTask: (
     { __typename?: 'TaskResponse' }
-    & { task: Maybe<(
+    & { task?: Maybe<(
       { __typename?: 'Task' }
       & Pick<Task, 'id' | 'title'>
-    )>, errors: Maybe<Array<(
+    )>, errors?: Maybe<Array<(
       { __typename?: 'FieldError' }
       & Pick<FieldError, 'field' | 'message'>
     )>> }
@@ -446,10 +472,10 @@ export type ChangePasswordMutation = (
   { __typename?: 'Mutation' }
   & { changePassword: (
     { __typename?: 'UserResponse' }
-    & { user: Maybe<(
+    & { user?: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
-    )>, errors: Maybe<Array<(
+    )>, errors?: Maybe<Array<(
       { __typename?: 'FieldError' }
       & Pick<FieldError, 'field' | 'message'>
     )>> }
@@ -476,14 +502,14 @@ export type LoginMutation = (
   { __typename?: 'Mutation' }
   & { login: (
     { __typename?: 'UserResponse' }
-    & { user: Maybe<(
+    & { user?: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'email' | 'username'>
       & { pods: Array<(
         { __typename?: 'Pod' }
         & Pick<Pod, 'id' | 'name' | 'createdAt'>
       )> }
-    )>, errors: Maybe<Array<(
+    )>, errors?: Maybe<Array<(
       { __typename?: 'FieldError' }
       & Pick<FieldError, 'field' | 'message'>
     )>> }
@@ -509,18 +535,33 @@ export type RegisterMutation = (
   { __typename?: 'Mutation' }
   & { register: (
     { __typename?: 'UserResponse' }
-    & { user: Maybe<(
+    & { user?: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'email' | 'username'>
       & { pods: Array<(
         { __typename?: 'Pod' }
         & Pick<Pod, 'id' | 'name' | 'createdAt'>
       )> }
-    )>, errors: Maybe<Array<(
+    )>, errors?: Maybe<Array<(
       { __typename?: 'FieldError' }
       & Pick<FieldError, 'field' | 'message'>
     )>> }
   ) }
+);
+
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = (
+  { __typename?: 'Query' }
+  & { me?: Maybe<(
+    { __typename?: 'User' }
+    & { pods: Array<(
+      { __typename?: 'Pod' }
+      & PodFragment
+    )> }
+    & UserFragment
+  )> }
 );
 
 export type PodQueryVariables = Exact<{
@@ -530,9 +571,8 @@ export type PodQueryVariables = Exact<{
 
 export type PodQuery = (
   { __typename?: 'Query' }
-  & { pod: Maybe<(
+  & { pod?: Maybe<(
     { __typename?: 'Pod' }
-    & Pick<Pod, 'id' | 'name' | 'joined'>
     & { stories: Array<(
       { __typename?: 'Story' }
       & Pick<Story, 'id' | 'title'>
@@ -547,25 +587,41 @@ export type PodQuery = (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
     )> }
+    & PodFragment
   )> }
 );
 
-export type MeQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MeQuery = (
-  { __typename?: 'Query' }
-  & { me: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'email' | 'username'>
-    & { pods: Array<(
-      { __typename?: 'Pod' }
-      & Pick<Pod, 'id' | 'name' | 'createdAt'>
-    )> }
-  )> }
-);
-
-
+export const PodFragmentDoc = gql`
+    fragment Pod on Pod {
+  id
+  name
+  joined
+  createdAt
+}
+    `;
+export const ErrorFragmentDoc = gql`
+    fragment Error on FieldError {
+  field
+  message
+}
+    `;
+export const UserFragmentDoc = gql`
+    fragment User on User {
+  id
+  username
+}
+    `;
+export const UserResponseFragmentDoc = gql`
+    fragment UserResponse on UserResponse {
+  errors {
+    ...Error
+  }
+  user {
+    ...User
+  }
+}
+    ${ErrorFragmentDoc}
+${UserFragmentDoc}`;
 export const CreatePodDocument = gql`
     mutation CreatePod($name: String!) {
   createPod(data: {name: $name}) {
@@ -1228,12 +1284,46 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const MeDocument = gql`
+    query Me {
+  me {
+    ...User
+    pods {
+      ...Pod
+    }
+  }
+}
+    ${UserFragmentDoc}
+${PodFragmentDoc}`;
+
+/**
+ * __useMeQuery__
+ *
+ * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
+        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
+      }
+export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
+        }
+export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
+export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
+export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const PodDocument = gql`
     query Pod($id: Int!) {
   pod(id: $id) {
-    id
-    name
-    joined
+    ...Pod
     stories {
       id
       title
@@ -1252,7 +1342,7 @@ export const PodDocument = gql`
     }
   }
 }
-    `;
+    ${PodFragmentDoc}`;
 
 /**
  * __usePodQuery__
@@ -1279,42 +1369,3 @@ export function usePodLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PodQue
 export type PodQueryHookResult = ReturnType<typeof usePodQuery>;
 export type PodLazyQueryHookResult = ReturnType<typeof usePodLazyQuery>;
 export type PodQueryResult = Apollo.QueryResult<PodQuery, PodQueryVariables>;
-export const MeDocument = gql`
-    query Me {
-  me {
-    id
-    email
-    username
-    pods {
-      id
-      name
-      createdAt
-    }
-  }
-}
-    `;
-
-/**
- * __useMeQuery__
- *
- * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
- * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMeQuery({
- *   variables: {
- *   },
- * });
- */
-export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
-        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
-      }
-export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
-          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
-        }
-export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
-export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
-export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;

@@ -1,22 +1,39 @@
+import { gql, useApolloClient } from "@apollo/client";
 import { Redirect, Route, Switch } from "react-router-dom";
 
 // Routes
-import { HOME, POD, POD_PROJECT, POD_SETTINGS } from "../../constants/routes";
+import { HOME } from "../../constants/routes";
 
 // Pages
 import Home from "../../pages/user/Home";
-import Project from "../../pages/pod/Project";
-import Discussion from "../../pages/pod/Discussion";
-import Settings from "../../pages/pod/Settings";
+
+import { MeQuery } from "../../generated/graphql";
+
+import PodPage from "../PodPage";
 
 const AppLayout: React.FC = () => {
+  const client = useApolloClient();
+
+  const data = client.readQuery<MeQuery>({
+    query: gql`
+      query Me {
+        me {
+          id
+          username
+          pods {
+            id
+            name
+            joined
+          }
+        }
+      }
+    `,
+  });
+
   return (
     <Switch>
-      <Route exact path={HOME} component={Home} />
-
-      <Route exact path={POD} component={Discussion} />
-      <Route exact path={POD_PROJECT} component={Project} />
-      <Route exact path={POD_SETTINGS} component={Settings} />
+      <Route exact path={HOME} render={() => <Home pods={data!.me!.pods} />} />
+      <Route exact component={PodPage} />
       <Redirect to={HOME} />
     </Switch>
   );

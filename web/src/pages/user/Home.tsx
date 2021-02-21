@@ -1,78 +1,51 @@
 import { useState } from "react";
 import { Link, generatePath } from "react-router-dom";
-import { gql, useApolloClient } from "@apollo/client";
-import {
-  RiAddLine,
-  RiBookMarkLine,
-  RiCloseLine,
-  RiFileAddLine,
-} from "react-icons/ri";
+import { gql } from "@apollo/client";
+import { RiBookMarkLine, RiCloseLine } from "react-icons/ri";
 import { FiSmile } from "react-icons/fi";
 
 // Graphql
-import { MeQuery, useCreatePodMutation } from "../../generated/graphql";
+import { PodFragment, useCreatePodMutation } from "../../generated/graphql";
 
 // Routes
 import { POD } from "../../constants/routes";
 
 // Components
 import Layout from "../../components/Layout";
-import { convertToObject } from "typescript";
 
-interface HomeProps {}
+interface HomeProps {
+  pods: PodFragment[];
+}
 
-const Home: React.FC<HomeProps> = () => {
-  const client = useApolloClient();
-
+const Home: React.FC<HomeProps> = ({ pods }) => {
   // Modal
   const [modal, setModal] = useState(false);
   const [text, setText] = useState("");
   const [createPodMutation] = useCreatePodMutation();
 
-  const data = client.readQuery<MeQuery>({
-    query: gql`
-      query Me {
-        me {
-          id
-          username
-          pods {
-            id
-            name
-          }
-        }
-      }
-    `,
-  });
-
-  const me = data?.me;
-  const pods = me?.pods || [];
-
   const handleCreatePod = async () => {
     await createPodMutation({
       variables: { name: text },
       update: (cache, { data }) => {
-        if (data && data.createPod && me) {
-          console.log(data.createPod.pod);
-          cache.modify({
-            id: cache.identify(me),
-            fields: {
-              pods(existingPodsRefs: any[], { readField }) {
-                console.log(existingPodsRefs);
-                const newPodRef = cache.writeFragment({
-                  data: data.createPod.pod,
-                  fragment: gql`
-                    fragment NewPod on Pod {
-                      id
-                      name
-                    }
-                  `,
-                });
-                console.log(newPodRef, existingPodsRefs);
-                return [newPodRef, ...existingPodsRefs];
-              },
+        cache.modify({
+          fields: {
+            pods(existingPodsRefs: any[]) {
+              console.log(existingPodsRefs);
+              const newPodRef = cache.writeFragment({
+                fragment: gql`
+                  fragment NewPod on Pod {
+                    id
+                    name
+                    joined
+                    createdAt
+                  }
+                `,
+                data: data!.createPod.pod,
+              });
+              return [newPodRef, ...existingPodsRefs];
             },
-          });
-        }
+          },
+        });
       },
     });
     setModal(false);
@@ -123,7 +96,6 @@ const Home: React.FC<HomeProps> = () => {
           <div className="w-72 flex flex-col bg-gray-50 border rounded-md gap-3 p-3">
             <div className="flex gap-2 items-center font-bold">
               <FiSmile className="text-2xl" />
-              <div className="text-lg text-gray-900">{data?.me?.username}</div>
             </div>
           </div>
           <div className="flex-1 flex flex-col gap-3">
