@@ -5,7 +5,12 @@ import { RiBookMarkLine, RiCloseLine } from "react-icons/ri";
 import { FiSmile } from "react-icons/fi";
 
 // Graphql
-import { PodFragment, useCreatePodMutation } from "../../generated/graphql";
+import {
+  PodFragment,
+  useCreatePodMutation,
+  User,
+  UserFragment,
+} from "../../generated/graphql";
 
 // Routes
 import { POD } from "../../constants/routes";
@@ -14,10 +19,11 @@ import { POD } from "../../constants/routes";
 import Layout from "../../components/Layout";
 
 interface HomeProps {
+  me: UserFragment;
   pods: PodFragment[];
 }
 
-const Home: React.FC<HomeProps> = ({ pods }) => {
+const Home: React.FC<HomeProps> = ({ me, pods }) => {
   // Modal
   const [modal, setModal] = useState(false);
   const [text, setText] = useState("");
@@ -28,6 +34,7 @@ const Home: React.FC<HomeProps> = ({ pods }) => {
       variables: { name: text },
       update: (cache, { data }) => {
         cache.modify({
+          id: cache.identify(me),
           fields: {
             pods(existingPodsRefs: any[]) {
               console.log(existingPodsRefs);
