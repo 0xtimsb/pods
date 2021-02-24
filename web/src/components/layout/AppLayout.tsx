@@ -37,7 +37,7 @@ const AppLayout: React.FC = () => {
         path={HOME}
         render={() => <Home me={data!.me!} pods={data!.me!.pods} />}
       />
-      <Route exact path={POD} render={(props) => <PodPage {...props} />} />
+      <Route path={POD} render={(props) => <PodPage {...props} />} />
       <Redirect to={HOME} />
     </Switch>
   );
