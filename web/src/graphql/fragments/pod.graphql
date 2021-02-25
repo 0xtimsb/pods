@@ -3,4 +3,8 @@ fragment Pod on Pod {
   name
   joined
   createdAt
+  admins {
+    id
+    username
+  }
 }

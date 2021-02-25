@@ -20,6 +20,9 @@ import {
   ButtonInvisible,
   Button,
   Dialog,
+  Dropdown,
+  Pagination,
+  Heading,
 } from "@primer/components";
 import { gql } from "@apollo/client";
 
@@ -62,6 +65,9 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
   const [isOpen, setIsOpen] = useState(false);
   const returnFocusRef = useRef(null);
 
+  // Section
+  const [section, setSection] = useState<"first" | "second">("first");
+
   const handleCreatePod = () => {
     createPodMutation({
       variables: { name: newPodText },
@@ -97,7 +103,10 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
   };
 
   const filteredList = pods
-    .filter(({ name }) => name.toLowerCase().includes(filterText.toLowerCase()))
+    .filter(
+      ({ name, joined }) =>
+        joined && name.toLowerCase().includes(filterText.toLowerCase())
+    )
     .map(({ id, name }) => (
       <BorderBox key={id} padding={3} height={92}>
         <Flex mb={2} alignItems="center">
@@ -167,39 +176,65 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
       <Container flexDirection="row">
         <Box width={350}></Box>
         <Box flex={1} pt={3}>
-          <TabNav>
-            <TabNav.Link selected>Pods</TabNav.Link>
-            <TabNav.Link>Invites</TabNav.Link>
-          </TabNav>
-          <Flex py={3}>
-            <TextInput
-              icon={SearchIcon}
-              placeholder="Find a pod..."
-              width={1}
-              mr={3}
-              onChange={(e) => setFilterText(e.target.value)}
-              value={filterText}
-            />
-            <ButtonPrimary ref={returnFocusRef} onClick={() => setIsOpen(true)}>
-              New
-            </ButtonPrimary>
-          </Flex>
-          {pods.length !== filteredList.length && (
-            <Flex mb={3} justifyContent="space-between">
-              <Text fontSize={1}>
-                <Text fontWeight="bold">{filteredList.length}</Text>
-                <Text> result for pods matching </Text>
-                <Text fontWeight="bold">{filterText}</Text>
-              </Text>
-              <ButtonInvisible onClick={() => setFilterText("")} paddingX={0}>
-                <StyledOcticon icon={XIcon} mr={1} />
-                Clear filter
+          <TabNav aria-label="Main" mb={3}>
+            <TabNav.Link selected={section === "first"}>
+              <ButtonInvisible
+                color="black"
+                onClick={() => setSection("first")}
+              >
+                Pods
               </ButtonInvisible>
-            </Flex>
+            </TabNav.Link>
+            <TabNav.Link selected={section === "second"}>
+              <ButtonInvisible
+                color="black"
+                onClick={() => setSection("second")}
+              >
+                Invites
+              </ButtonInvisible>
+            </TabNav.Link>
+          </TabNav>
+          {section === "first" ? (
+            <>
+              <Flex mb={3}>
+                <TextInput
+                  icon={SearchIcon}
+                  placeholder="Find a pod..."
+                  width={1}
+                  mr={3}
+                  onChange={(e) => setFilterText(e.target.value)}
+                  value={filterText}
+                />
+                <ButtonPrimary
+                  ref={returnFocusRef}
+                  onClick={() => setIsOpen(true)}
+                >
+                  New
+                </ButtonPrimary>
+              </Flex>
+              {pods.length !== filteredList.length && (
+                <Flex mb={3} justifyContent="space-between">
+                  <Text fontSize={1}>
+                    <Text fontWeight="bold">{filteredList.length}</Text>
+                    <Text> result for pods matching </Text>
+                    <Text fontWeight="bold">{filterText}</Text>
+                  </Text>
+                  <ButtonInvisible
+                    onClick={() => setFilterText("")}
+                    paddingX={0}
+                  >
+                    <StyledOcticon icon={XIcon} mr={1} />
+                    Clear filter
+                  </ButtonInvisible>
+                </Flex>
+              )}
+              <Grid gridTemplateColumns="1fr 1fr" gridGap={3} mb={3}>
+                {filteredList}
+              </Grid>
+            </>
+          ) : (
+            <>Heyyyy invite</>
           )}
-          <Grid gridTemplateColumns="1fr 1fr" gridGap={3}>
-            {filteredList}
-          </Grid>
         </Box>
       </Container>
     </Box>
