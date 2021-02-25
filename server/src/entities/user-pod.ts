@@ -17,9 +17,6 @@ export class UserPod extends BaseEntity {
   @Column()
   isAdmin: boolean;
 
-  @Column()
-  isJoined: boolean;
-
   @ManyToOne(() => User, (user) => user.userPods, { primary: true })
   user: User;
 

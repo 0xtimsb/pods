@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 
 import { Pod } from "./pod";
+import { Invite } from "./invite";
 import { UserPod } from "./user-pod";
 
 @Entity()
@@ -37,6 +38,14 @@ export class User extends BaseEntity {
   @Field(() => String)
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Field(() => [Invite])
+  @OneToMany(() => Invite, (invite) => invite.inviter)
+  sentInvites: Invite[];
+
+  @Field(() => [Invite])
+  @OneToMany(() => Invite, (invite) => invite.invitee)
+  receivedInvites: Invite[];
 
   @OneToMany(() => UserPod, (userPod) => userPod.user)
   userPods: UserPod[];

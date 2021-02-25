@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from "typeorm";
+import { Invite } from "./invite";
 
 import { Story } from "./story";
 import { User } from "./user";
@@ -47,4 +48,7 @@ export class Pod extends BaseEntity {
   @Field(() => [Story])
   @OneToMany(() => Story, (story) => story.pod)
   stories: Story[];
+
+  @OneToMany(() => Invite, (invite) => invite.pod)
+  invites: Invite[];
 }

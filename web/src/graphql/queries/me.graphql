@@ -1,8 +1,36 @@
 query Me {
   me {
-    ...User
+    id
+    username
     pods {
-      ...Pod
+      id
+      name
+      joined
+      createdAt
+    }
+    sentInvites {
+      asAdmin
+      createdAt
+      pod {
+        id
+        name
+      }
+      invitee {
+        id
+        username
+      }
+    }
+    receivedInvites {
+      asAdmin
+      createdAt
+      inviter {
+        id
+        username
+      }
+      pod {
+        id
+        name
+      }
     }
   }
 }

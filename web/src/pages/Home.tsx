@@ -24,13 +24,7 @@ import {
 import { gql } from "@apollo/client";
 
 // Graphql
-import {
-  MeQuery,
-  PodFragment,
-  useCreatePodMutation,
-  User,
-  UserFragment,
-} from "../generated/graphql";
+import { MeQuery, useCreatePodMutation, User } from "../generated/graphql";
 
 // Routes
 import { POD } from "../constants/routes";
@@ -125,7 +119,7 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
       </BorderBox>
     ));
 
-  const invites = pods
+  const invitesReceived = pods
     .filter(({ joined }) => !joined)
     .map(({ id, name }) => (
       <BorderBox key={id} padding={3} height={92}>
@@ -147,6 +141,30 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
         </Flex>
       </BorderBox>
     ));
+
+  //const sentInvites = pods.filter(pod => pod.members.every(member => member.));
+
+  // .filter(({ joined }) => !joined)
+  // .map(({ id, name }) => (
+  //   <BorderBox key={id} padding={3} height={92}>
+  //     <Flex mb={2} alignItems="center">
+  //       <StyledOcticon icon={MortarBoardIcon} mr={2} />
+  //       <Link
+  //         as={RouterLink}
+  //         to={generatePath(POD, { id })}
+  //         fontWeight="bold"
+  //         fontSize={1}
+  //       >
+  //         {name}
+  //       </Link>
+  //     </Flex>
+  //     <Flex>
+  //       <Text fontSize={1} color="gray.7">
+  //         This is some nice info about pod!
+  //       </Text>
+  //     </Flex>
+  //   </BorderBox>
+  // ));
 
   return (
     <Box>
@@ -255,9 +273,11 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
           ) : (
             <>
               <Heading fontSize={2}>Received</Heading>
-              {invites.length === 0 && <Text>Nope</Text>}
-              <Box>{invites}</Box>
+              {invitesReceived.length === 0 && <Text>Nope</Text>}
+              <Box>{invitesReceived}</Box>
               <Heading fontSize={2}>Sent</Heading>
+              {invitesReceived.length === 0 && <Text>Nope</Text>}
+              <Box>{invitesReceived}</Box>
             </>
           )}
         </Box>

@@ -14,6 +14,7 @@ import { v4 } from "uuid";
 // Entities
 import { User } from "../entities/user";
 import { Pod } from "../entities/pod";
+import { Invite } from "../entities/invite";
 
 // Inputs and Objects
 import { UserInput } from "../inputs/user-input";
@@ -237,6 +238,20 @@ export class UserResolver {
     return createQueryBuilder(Pod, "pod")
       .innerJoin("pod.userPods", "userPod")
       .where("userPod.user.id = :id", { id: req.session.userId })
+      .getMany();
+  }
+
+  @FieldResolver(() => [Invite])
+  async sentInvites(@Ctx() { req }: Context) {
+    return createQueryBuilder(Invite, "invite")
+      .where("invite.inviter.id = :id", { id: req.session.userId })
+      .getMany();
+  }
+
+  @FieldResolver(() => [Invite])
+  async receivedInvites(@Ctx() { req }: Context) {
+    return createQueryBuilder(Invite, "invite")
+      .where("invite.invitee.id = :id", { id: req.session.userId })
       .getMany();
   }
 }

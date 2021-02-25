@@ -43,7 +43,18 @@ export type User = {
   email: Scalars['String'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
+  sentInvites: Array<Invite>;
+  receivedInvites: Array<Invite>;
   pods: Array<Pod>;
+};
+
+export type Invite = {
+  __typename?: 'Invite';
+  createdAt: Scalars['String'];
+  asAdmin: Scalars['Boolean'];
+  inviter: User;
+  invitee: User;
+  pod: Pod;
 };
 
 export type Pod = {
@@ -255,39 +266,6 @@ export type TaskInput = {
   description?: Maybe<Scalars['String']>;
   storyId: Scalars['Int'];
 };
-
-export type ErrorFragment = (
-  { __typename?: 'FieldError' }
-  & Pick<FieldError, 'field' | 'message'>
-);
-
-export type PodFragment = (
-  { __typename?: 'Pod' }
-  & Pick<Pod, 'id' | 'name' | 'joined' | 'createdAt'>
-  & { admins: Array<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'username'>
-  )>, members: Array<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'username'>
-  )> }
-);
-
-export type UserResponseFragment = (
-  { __typename?: 'UserResponse' }
-  & { errors?: Maybe<Array<(
-    { __typename?: 'FieldError' }
-    & ErrorFragment
-  )>>, user?: Maybe<(
-    { __typename?: 'User' }
-    & UserFragment
-  )> }
-);
-
-export type UserFragment = (
-  { __typename?: 'User' }
-  & Pick<User, 'id' | 'username'>
-);
 
 export type CreatePodMutationVariables = Exact<{
   name: Scalars['String'];
@@ -514,7 +492,7 @@ export type LoginMutation = (
       & Pick<User, 'id' | 'email' | 'username'>
       & { pods: Array<(
         { __typename?: 'Pod' }
-        & Pick<Pod, 'id' | 'name' | 'createdAt'>
+        & Pick<Pod, 'id' | 'name' | 'joined' | 'createdAt'>
       )> }
     )>, errors?: Maybe<Array<(
       { __typename?: 'FieldError' }
@@ -547,7 +525,7 @@ export type RegisterMutation = (
       & Pick<User, 'id' | 'email' | 'username'>
       & { pods: Array<(
         { __typename?: 'Pod' }
-        & Pick<Pod, 'id' | 'name' | 'createdAt'>
+        & Pick<Pod, 'id' | 'name' | 'joined' | 'createdAt'>
       )> }
     )>, errors?: Maybe<Array<(
       { __typename?: 'FieldError' }
@@ -563,11 +541,31 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me?: Maybe<(
     { __typename?: 'User' }
+    & Pick<User, 'id' | 'username'>
     & { pods: Array<(
       { __typename?: 'Pod' }
-      & PodFragment
+      & Pick<Pod, 'id' | 'name' | 'joined' | 'createdAt'>
+    )>, sentInvites: Array<(
+      { __typename?: 'Invite' }
+      & Pick<Invite, 'asAdmin' | 'createdAt'>
+      & { pod: (
+        { __typename?: 'Pod' }
+        & Pick<Pod, 'id' | 'name'>
+      ), invitee: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username'>
+      ) }
+    )>, receivedInvites: Array<(
+      { __typename?: 'Invite' }
+      & Pick<Invite, 'asAdmin' | 'createdAt'>
+      & { inviter: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username'>
+      ), pod: (
+        { __typename?: 'Pod' }
+        & Pick<Pod, 'id' | 'name'>
+      ) }
     )> }
-    & UserFragment
   )> }
 );
 
@@ -580,7 +578,14 @@ export type PodQuery = (
   { __typename?: 'Query' }
   & { pod?: Maybe<(
     { __typename?: 'Pod' }
-    & { stories: Array<(
+    & Pick<Pod, 'id' | 'name' | 'joined' | 'createdAt'>
+    & { admins: Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username'>
+    )>, members: Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username'>
+    )>, stories: Array<(
       { __typename?: 'Story' }
       & Pick<Story, 'id' | 'title'>
       & { tasks: Array<(
@@ -588,49 +593,10 @@ export type PodQuery = (
         & Pick<Task, 'id' | 'title'>
       )> }
     )> }
-    & PodFragment
   )> }
 );
 
-export const PodFragmentDoc = gql`
-    fragment Pod on Pod {
-  id
-  name
-  joined
-  createdAt
-  admins {
-    id
-    username
-  }
-  members {
-    id
-    username
-  }
-}
-    `;
-export const ErrorFragmentDoc = gql`
-    fragment Error on FieldError {
-  field
-  message
-}
-    `;
-export const UserFragmentDoc = gql`
-    fragment User on User {
-  id
-  username
-}
-    `;
-export const UserResponseFragmentDoc = gql`
-    fragment UserResponse on UserResponse {
-  errors {
-    ...Error
-  }
-  user {
-    ...User
-  }
-}
-    ${ErrorFragmentDoc}
-${UserFragmentDoc}`;
+
 export const CreatePodDocument = gql`
     mutation CreatePod($name: String!) {
   createPod(data: {name: $name}) {
@@ -1181,6 +1147,7 @@ export const LoginDocument = gql`
       pods {
         id
         name
+        joined
         createdAt
       }
     }
@@ -1256,6 +1223,7 @@ export const RegisterDocument = gql`
       pods {
         id
         name
+        joined
         createdAt
       }
     }
@@ -1296,14 +1264,41 @@ export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutatio
 export const MeDocument = gql`
     query Me {
   me {
-    ...User
+    id
+    username
     pods {
-      ...Pod
+      id
+      name
+      joined
+      createdAt
+    }
+    sentInvites {
+      asAdmin
+      createdAt
+      pod {
+        id
+        name
+      }
+      invitee {
+        id
+        username
+      }
+    }
+    receivedInvites {
+      asAdmin
+      createdAt
+      inviter {
+        id
+        username
+      }
+      pod {
+        id
+        name
+      }
     }
   }
 }
-    ${UserFragmentDoc}
-${PodFragmentDoc}`;
+    `;
 
 /**
  * __useMeQuery__
@@ -1332,7 +1327,18 @@ export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const PodDocument = gql`
     query Pod($id: Int!) {
   pod(id: $id) {
-    ...Pod
+    id
+    name
+    joined
+    createdAt
+    admins {
+      id
+      username
+    }
+    members {
+      id
+      username
+    }
     stories {
       id
       title
@@ -1343,7 +1349,7 @@ export const PodDocument = gql`
     }
   }
 }
-    ${PodFragmentDoc}`;
+    `;
 
 /**
  * __usePodQuery__

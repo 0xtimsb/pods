@@ -13,6 +13,9 @@ import { createQueryBuilder, getConnection } from "typeorm";
 // Entities
 import { User } from "../entities/user";
 import { Pod } from "../entities/pod";
+import { Story } from "../entities/story";
+import { UserPod } from "../entities/user-pod";
+import { Invite } from "../entities/invite";
 
 // Inputs and Objects
 import { PodResponse } from "../objects/pod-response";
@@ -20,8 +23,6 @@ import { PodInput } from "../inputs/pod-input";
 
 // Types
 import { Context } from "../types/context";
-import { Story } from "../entities/story";
-import { UserPod } from "../entities/user-pod";
 
 @Resolver(Pod)
 export class PodResolver {
@@ -77,7 +78,6 @@ export class PodResolver {
           pod: { id: pod.id },
           user: { id: req.session.userId },
           isAdmin: true,
-          isJoined: true,
         })
         .returning("*")
         .execute();
@@ -108,7 +108,6 @@ export class PodResolver {
       .where("userPod.pod.id = :podId", { podId })
       .andWhere("userPod.user.id = :userId", { userId: req.session.userId })
       .andWhere("userPod.isAdmin = :isAdmin", { isAdmin: true })
-      .andWhere("userPod.isJoined = :isJoined", { isJoined: true })
       .getOne();
 
     if (!userPod) return false;
@@ -123,12 +122,12 @@ export class PodResolver {
         await getConnection()
           .createQueryBuilder()
           .insert()
-          .into(UserPod)
+          .into(Invite)
           .values({
-            user: { id: user.id },
+            invitee: { id: user.id },
+            inviter: { id: req.session.userId },
             pod: { id: podId },
-            isAdmin: asAdmin,
-            isJoined: false,
+            asAdmin,
           })
           .execute();
       }
@@ -151,7 +150,6 @@ export class PodResolver {
       .where("userPod.pod.id = :podId", { podId })
       .andWhere("userPod.user.id = :userId", { userId: req.session.userId })
       .andWhere("userPod.isAdmin = :isAdmin", { isAdmin: true })
-      .andWhere("userPod.isJoined = :isJoined", { isJoined: true })
       .getOne();
 
     if (!userPod) return false;
@@ -195,24 +193,24 @@ export class PodResolver {
     @Arg("podId", () => Int) podId: number,
     @Ctx() { req }: Context
   ): Promise<Boolean> {
-    const userPod = await getConnection()
-      .createQueryBuilder(UserPod, "userPod")
-      .where("userPod.pod.id = :podId", { podId })
-      .andWhere("userPod.user.id = :userId", { userId: req.session.userId })
+    const invite = await getConnection()
+      .createQueryBuilder(Invite, "invite")
+      .where("invite.pod.id = :podId", { podId })
+      .andWhere("invite.invitee.id = :userId", { userId: req.session.userId })
       .getOne();
 
-    console.log(userPod);
-
-    if (!userPod) return false;
+    if (!invite) return false;
 
     try {
       await getConnection()
-        .createQueryBuilder(UserPod, "userPod")
-        .innerJoin("userPod.user", "user")
-        .innerJoin("userPod.pod", "pod")
-        .where("pod.id = :podId", { podId })
-        .andWhere("user.id = :userId", { userId: req.session.userId })
-        .update({ isJoined: true })
+        .createQueryBuilder()
+        .insert()
+        .into(UserPod)
+        .values({
+          user: { id: req.session.userId },
+          pod: { id: podId },
+          isAdmin: invite.asAdmin,
+        })
         .execute();
     } catch (e) {
       console.log(e);
@@ -242,7 +240,6 @@ export class PodResolver {
       .innerJoin("user.userPods", "userPod")
       .where("userPod.pod.id = :id", { id: pod.id })
       .andWhere("userPod.isAdmin = :isAdmin", { isAdmin: true })
-      .andWhere("userPod.isJoined = :isJoined", { isJoined: true })
       .getMany();
   }
 
@@ -262,7 +259,7 @@ export class PodResolver {
       .andWhere("userPod.user.id = :userId", { userId: req.session.userId })
       .getOne();
 
-    if (userPod) return userPod.isJoined;
+    if (userPod) return true;
     return false;
   }
 

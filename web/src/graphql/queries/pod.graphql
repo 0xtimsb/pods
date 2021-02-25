@@ -1,6 +1,17 @@
 query Pod($id: Int!) {
   pod(id: $id) {
-    ...Pod
+    id
+    name
+    joined
+    createdAt
+    admins {
+      id
+      username
+    }
+    members {
+      id
+      username
+    }
     stories {
       id
       title
