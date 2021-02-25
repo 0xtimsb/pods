@@ -3,12 +3,12 @@ import { FiLock, FiMail, FiSmile } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 
 // Graphql
-import { useRegisterMutation } from "../../generated/graphql";
+import { useRegisterMutation } from "../generated/graphql";
 
 // Components
-import Container from "../../components/Container";
-import Button from "../../components/common/Button";
-import Input from "../../components/common/Input";
+import Container from "../components/Container";
+import Button from "../components/common/Button";
+import Input from "../components/common/Input";
 
 type FormData = {
   email: string;

@@ -9,9 +9,5 @@ query Pod($id: Int!) {
         title
       }
     }
-    members {
-      id
-      username
-    }
   }
 }

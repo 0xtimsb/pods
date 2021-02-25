@@ -15,13 +15,10 @@ import {
   BorderBox,
   TextInput,
   Grid,
-  SubNav,
   TabNav,
   ButtonInvisible,
   Button,
   Dialog,
-  Dropdown,
-  Pagination,
   Heading,
 } from "@primer/components";
 import { gql } from "@apollo/client";
@@ -33,13 +30,13 @@ import {
   useCreatePodMutation,
   User,
   UserFragment,
-} from "../../generated/graphql";
+} from "../generated/graphql";
 
 // Routes
-import { POD } from "../../constants/routes";
+import { POD } from "../constants/routes";
 
-import Container from "../../components/Container";
-import mainOptions from "../../constants/mainOptions";
+import Container from "../components/Container";
+import mainOptions from "../constants/mainOptions";
 import {
   CrossReferenceIcon,
   MortarBoardIcon,
@@ -107,6 +104,29 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
       ({ name, joined }) =>
         joined && name.toLowerCase().includes(filterText.toLowerCase())
     )
+    .map(({ id, name }) => (
+      <BorderBox key={id} padding={3} height={92}>
+        <Flex mb={2} alignItems="center">
+          <StyledOcticon icon={MortarBoardIcon} mr={2} />
+          <Link
+            as={RouterLink}
+            to={generatePath(POD, { id })}
+            fontWeight="bold"
+            fontSize={1}
+          >
+            {name}
+          </Link>
+        </Flex>
+        <Flex>
+          <Text fontSize={1} color="gray.7">
+            This is some nice info about pod!
+          </Text>
+        </Flex>
+      </BorderBox>
+    ));
+
+  const invites = pods
+    .filter(({ joined }) => !joined)
     .map(({ id, name }) => (
       <BorderBox key={id} padding={3} height={92}>
         <Flex mb={2} alignItems="center">
@@ -233,7 +253,12 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
               </Grid>
             </>
           ) : (
-            <>Heyyyy invite</>
+            <>
+              <Heading fontSize={2}>Received</Heading>
+              {invites.length === 0 && <Text>Nope</Text>}
+              <Box>{invites}</Box>
+              <Heading fontSize={2}>Sent</Heading>
+            </>
           )}
         </Box>
       </Container>

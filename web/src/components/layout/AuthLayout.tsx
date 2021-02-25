@@ -4,8 +4,8 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import { LOGIN, SIGNUP } from "../../constants/routes";
 
 // Components
-import LogIn from "../../pages/auth/LogIn";
-import SignUp from "../../pages/auth/SignUp";
+import LogIn from "../../pages/LogIn";
+import SignUp from "../../pages/SignUp";
 
 const AuthLayout = () => {
   return (

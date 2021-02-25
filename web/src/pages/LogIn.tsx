@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import { FiLock, FiMail, FiSmile } from "react-icons/fi";
 
 // Graphql
-import { useLoginMutation } from "../../generated/graphql";
+import { useLoginMutation } from "../generated/graphql";
 
 // Components
-import Layout from "../../components/Container";
-import Button from "../../components/common/Button";
-import Input from "../../components/common/Input";
-import Container from "../../components/Container";
+import Layout from "../components/Container";
+import Button from "../components/common/Button";
+import Input from "../components/common/Input";
+import Container from "../components/Container";
 
 type FormData = {
   usernameOrEmail: string;

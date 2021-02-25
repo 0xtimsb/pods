@@ -5,7 +5,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import { HOME, POD } from "../../constants/routes";
 
 // Pages
-import Home from "../../pages/user/Home";
+import Home from "../../pages/Home";
 
 import { MeQuery } from "../../generated/graphql";
 

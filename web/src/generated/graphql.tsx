@@ -264,6 +264,13 @@ export type ErrorFragment = (
 export type PodFragment = (
   { __typename?: 'Pod' }
   & Pick<Pod, 'id' | 'name' | 'joined' | 'createdAt'>
+  & { admins: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'username'>
+  )>, members: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'username'>
+  )> }
 );
 
 export type UserResponseFragment = (
@@ -580,12 +587,6 @@ export type PodQuery = (
         { __typename?: 'Task' }
         & Pick<Task, 'id' | 'title'>
       )> }
-    )>, admins: Array<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'username'>
-    )>, members: Array<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'username'>
     )> }
     & PodFragment
   )> }
@@ -597,6 +598,14 @@ export const PodFragmentDoc = gql`
   name
   joined
   createdAt
+  admins {
+    id
+    username
+  }
+  members {
+    id
+    username
+  }
 }
     `;
 export const ErrorFragmentDoc = gql`
@@ -1331,14 +1340,6 @@ export const PodDocument = gql`
         id
         title
       }
-    }
-    admins {
-      id
-      username
-    }
-    members {
-      id
-      username
     }
   }
 }

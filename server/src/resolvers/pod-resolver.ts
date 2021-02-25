@@ -252,7 +252,6 @@ export class PodResolver {
       .innerJoin("user.userPods", "userPod")
       .where("userPod.pod.id = :id", { id: pod.id })
       .andWhere("userPod.isAdmin = :isAdmin", { isAdmin: false })
-      .andWhere("userPod.isJoined = :isJoined", { isJoined: true })
       .getMany();
   }
 
