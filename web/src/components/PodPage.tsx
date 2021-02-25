@@ -49,10 +49,10 @@ const PodPage: React.FC<RouteComponentProps<MatchParams>> = ({
       <UnderlineNav bg="gray.0">
         <Container>
           <Breadcrumb>
-            <Breadcrumb.Item href="#business">Home</Breadcrumb.Item>
-            <Breadcrumb.Item href="#customers" selected>
-              Pod Name
+            <Breadcrumb.Item as={Link} to="/">
+              Home
             </Breadcrumb.Item>
+            <Breadcrumb.Item selected>Pod Name</Breadcrumb.Item>
           </Breadcrumb>
           <Flex>
             {podOptions.map(({ name, route, icon }, index) => (

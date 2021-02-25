@@ -27,11 +27,6 @@ const Navbar: React.FC<NavbarProps> = ({ me }) => {
             <Header.Item>
               <StyledOcticon icon={PlusIcon} />
             </Header.Item>
-            <Header.Item>
-              <Header.Link as={Link} to="/">
-                Home
-              </Header.Link>
-            </Header.Item>
           </Flex>
         ) : (
           <Flex>

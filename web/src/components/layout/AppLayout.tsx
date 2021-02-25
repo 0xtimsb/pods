@@ -18,7 +18,11 @@ interface AppLayoutProps {
 const AppLayout: React.FC<AppLayoutProps> = ({ me }) => {
   return (
     <Switch>
-      <Route exact path={HOME} render={() => <Home me={me} />} />
+      <Route
+        exact
+        path={HOME}
+        render={(props) => <Home me={me} {...props} />}
+      />
       <Route path={POD} render={(props) => <PodPage {...props} />} />
       <Redirect to={HOME} />
     </Switch>

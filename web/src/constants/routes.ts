@@ -1,6 +1,8 @@
 // User
 export const HOME = "/";
 
+export const SETTINGS = "/settings";
+
 // Pod
 export const POD = "/pod/:id";
 
