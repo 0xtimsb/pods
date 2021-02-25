@@ -21,6 +21,7 @@ import {
   Dialog,
   Heading,
 } from "@primer/components";
+import { MortarBoardIcon, SearchIcon, XIcon } from "@primer/octicons-react";
 import { gql } from "@apollo/client";
 
 // Graphql
@@ -31,12 +32,6 @@ import { POD } from "../constants/routes";
 
 import Container from "../components/Container";
 import mainOptions from "../constants/mainOptions";
-import {
-  CrossReferenceIcon,
-  MortarBoardIcon,
-  SearchIcon,
-  XIcon,
-} from "@primer/octicons-react";
 
 interface HomeProps extends RouteComponentProps {
   me: MeQuery["me"];
@@ -94,10 +89,7 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
   };
 
   const filteredList = pods
-    .filter(
-      ({ name, joined }) =>
-        joined && name.toLowerCase().includes(filterText.toLowerCase())
-    )
+    .filter(({ name }) => name.toLowerCase().includes(filterText.toLowerCase()))
     .map(({ id, name }) => (
       <BorderBox key={id} padding={3} height={92}>
         <Flex mb={2} alignItems="center">
