@@ -1,19 +1,22 @@
 import React from "react";
 import { render } from "react-dom";
 import { ApolloProvider } from "@apollo/client";
-
-// Components
-import App from "./components/App";
+import { BaseStyles } from "@primer/components";
 
 // Apollo client
 import client from "./lib/apolloClient";
 
-// Styles
-import "./styles/index.css";
+// Components
+import App from "./components/App";
 
-render(
-  <ApolloProvider client={client}>
-    <App />
-  </ApolloProvider>,
-  document.getElementById("root")
-);
+const Index = () => {
+  return (
+    <ApolloProvider client={client}>
+      <BaseStyles>
+        <App />
+      </BaseStyles>
+    </ApolloProvider>
+  );
+};
+
+render(<Index />, document.getElementById("root"));

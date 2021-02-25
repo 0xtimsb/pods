@@ -14,7 +14,7 @@ import {
   Task,
 } from "../../generated/graphql";
 import useProject from "../../hooks/useProject";
-import Layout from "../Layout";
+import Container from "../Container";
 
 // Components
 import Column from "./Column";
@@ -29,7 +29,7 @@ const Board: React.FC<BoardProps> = ({ pod }) => {
   const { stories } = pod;
 
   return (
-    <Layout>
+    <Container>
       <div className="flex justify-center overflow-y-hidden">
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable
@@ -56,7 +56,7 @@ const Board: React.FC<BoardProps> = ({ pod }) => {
           </Droppable>
         </DragDropContext>
       </div>
-    </Layout>
+    </Container>
   );
 };
 

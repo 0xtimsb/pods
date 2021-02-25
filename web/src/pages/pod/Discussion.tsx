@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 import { useState } from "react";
 import { RiCloseLine } from "react-icons/ri";
-import Layout from "../../components/Layout";
+import Container from "../../components/Container";
 import { Pod, useInviteToPodMutation } from "../../generated/graphql";
 
 const Discussion = ({ pod }: { pod: Pod }) => {
@@ -22,7 +22,7 @@ const Discussion = ({ pod }: { pod: Pod }) => {
   };
 
   return (
-    <Layout>
+    <Container>
       <div className="flex-grow flex flex-col justify-center items-center space-y-8">
         {modal && (
           <>
@@ -67,7 +67,7 @@ const Discussion = ({ pod }: { pod: Pod }) => {
           Invite
         </button>
       </div>
-    </Layout>
+    </Container>
   );
 };
 

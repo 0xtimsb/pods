@@ -11,32 +11,14 @@ import { MeQuery } from "../../generated/graphql";
 
 import PodPage from "../PodPage";
 
-const AppLayout: React.FC = () => {
-  const client = useApolloClient();
+interface AppLayoutProps {
+  me: MeQuery["me"];
+}
 
-  const data = client.readQuery<MeQuery>({
-    query: gql`
-      query Me {
-        me {
-          id
-          username
-          pods {
-            id
-            name
-            joined
-          }
-        }
-      }
-    `,
-  });
-
+const AppLayout: React.FC<AppLayoutProps> = ({ me }) => {
   return (
     <Switch>
-      <Route
-        exact
-        path={HOME}
-        render={() => <Home me={data!.me!} pods={data!.me!.pods} />}
-      />
+      <Route exact path={HOME} render={() => <Home me={me} />} />
       <Route path={POD} render={(props) => <PodPage {...props} />} />
       <Redirect to={HOME} />
     </Switch>

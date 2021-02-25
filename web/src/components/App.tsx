@@ -6,6 +6,7 @@ import { useMeQuery } from "../generated/graphql";
 // Components
 import AuthLayout from "./layout/AuthLayout";
 import AppLayout from "./layout/AppLayout";
+import Navbar from "./Navbar";
 
 function App() {
   const { data, loading, error } = useMeQuery();
@@ -16,9 +17,10 @@ function App() {
 
   return (
     <BrowserRouter>
+      <Navbar me={data?.me} />
       <Switch>
         {data && data.me ? (
-          <Route exact render={() => <AppLayout />} />
+          <Route exact render={() => <AppLayout me={data.me} />} />
         ) : (
           <Route exact render={() => <AuthLayout />} />
         )}

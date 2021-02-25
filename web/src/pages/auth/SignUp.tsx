@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { useRegisterMutation } from "../../generated/graphql";
 
 // Components
-import Layout from "../../components/Layout";
+import Container from "../../components/Container";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
 
@@ -39,7 +39,7 @@ const SignUp = () => {
   });
 
   return (
-    <Layout>
+    <Container>
       <form
         className="flex-grow flex flex-col justify-center items-center space-y-8"
         onSubmit={onSubmit}
@@ -74,7 +74,7 @@ const SignUp = () => {
           Already have an account? Log in
         </Link>
       </div>
-    </Layout>
+    </Container>
   );
 };
 

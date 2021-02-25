@@ -6,9 +6,10 @@ import { FiLock, FiMail, FiSmile } from "react-icons/fi";
 import { useLoginMutation } from "../../generated/graphql";
 
 // Components
-import Layout from "../../components/Layout";
+import Layout from "../../components/Container";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
+import Container from "../../components/Container";
 
 type FormData = {
   usernameOrEmail: string;
@@ -41,7 +42,7 @@ const LogIn = () => {
   const isTypingEmail = usernameOrEmail && usernameOrEmail.includes("@");
 
   return (
-    <Layout>
+    <Container>
       <form
         className="flex-grow flex flex-col justify-center items-center space-y-8"
         onSubmit={onSubmit}
@@ -73,7 +74,7 @@ const LogIn = () => {
           Don't have an account? Sign Up
         </Link>
       </div>
-    </Layout>
+    </Container>
   );
 };
 

@@ -1,7 +1,9 @@
+import { BookIcon, GearIcon, ProjectIcon } from "@primer/octicons-react";
+
 import { POD, POD_PROJECT, POD_SETTINGS } from "./routes";
 
 export default [
-  { name: "Discussion", route: POD },
-  { name: "Project", route: POD_PROJECT },
-  { name: "Settings", route: POD_SETTINGS },
+  { name: "Overview", route: POD, icon: BookIcon },
+  { name: "Project", route: POD_PROJECT, icon: ProjectIcon },
+  { name: "Settings", route: POD_SETTINGS, icon: GearIcon },
 ];
