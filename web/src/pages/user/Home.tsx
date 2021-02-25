@@ -15,11 +15,12 @@ import {
   BorderBox,
   TextInput,
   Grid,
-  CounterLabel,
+  SubNav,
+  TabNav,
+  ButtonInvisible,
+  Button,
 } from "@primer/components";
 import { gql } from "@apollo/client";
-import { RiBookMarkLine, RiCloseLine } from "react-icons/ri";
-import { FiSmile } from "react-icons/fi";
 
 // Graphql
 import {
@@ -35,7 +36,12 @@ import { POD } from "../../constants/routes";
 
 import Container from "../../components/Container";
 import mainOptions from "../../constants/mainOptions";
-import { MortarBoardIcon, SearchIcon } from "@primer/octicons-react";
+import {
+  CrossReferenceIcon,
+  MortarBoardIcon,
+  SearchIcon,
+  XIcon,
+} from "@primer/octicons-react";
 
 interface HomeProps extends RouteComponentProps {
   me: MeQuery["me"];
@@ -84,32 +90,28 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
     setModal(false);
   };
 
-  const getFilteredList = () => {
-    return pods
-      .filter(({ name }) =>
-        name.toLowerCase().includes(filterText.toLowerCase())
-      )
-      .map(({ id, name }) => (
-        <BorderBox key={id} padding={3}>
-          <Flex mb={1}>
-            <StyledOcticon icon={MortarBoardIcon} mr={2} />
-            <Link
-              as={RouterLink}
-              to={generatePath(POD, { id })}
-              fontWeight="bold"
-              fontSize={1}
-            >
-              {name}
-            </Link>
-          </Flex>
-          <Flex mb={1}>
-            <Text fontSize={1} color="gray.7">
-              This is some nice info about pod!
-            </Text>
-          </Flex>
-        </BorderBox>
-      ));
-  };
+  const filteredList = pods
+    .filter(({ name }) => name.toLowerCase().includes(filterText.toLowerCase()))
+    .map(({ id, name }) => (
+      <BorderBox key={id} padding={3} height={92}>
+        <Flex mb={2} alignItems="center">
+          <StyledOcticon icon={MortarBoardIcon} mr={2} />
+          <Link
+            as={RouterLink}
+            to={generatePath(POD, { id })}
+            fontWeight="bold"
+            fontSize={1}
+          >
+            {name}
+          </Link>
+        </Flex>
+        <Flex>
+          <Text fontSize={1} color="gray.7">
+            This is some nice info about pod!
+          </Text>
+        </Flex>
+      </BorderBox>
+    ));
 
   return (
     <Box>
@@ -134,31 +136,40 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
           </Flex>
         </Container>
       </UnderlineNav>
+
       <Container flexDirection="row">
         <Box width={350}></Box>
-        <Box flex={1}>
+        <Box flex={1} pt={3}>
+          <TabNav>
+            <TabNav.Link selected>Pods</TabNav.Link>
+            <TabNav.Link>Invites</TabNav.Link>
+          </TabNav>
           <Flex py={3}>
             <TextInput
               icon={SearchIcon}
-              aria-label="Zipcode"
               placeholder="Find a pod..."
               width={1}
               mr={3}
               onChange={(e) => setFilterText(e.target.value)}
+              value={filterText}
             />
             <ButtonPrimary>New</ButtonPrimary>
           </Flex>
-          {pods.length !== getFilteredList().length && (
-            <Box mb={3}>
+          {pods.length !== filteredList.length && (
+            <Flex mb={3} justifyContent="space-between">
               <Text fontSize={1}>
-                <Text fontWeight="bold">{getFilteredList().length}</Text>
+                <Text fontWeight="bold">{filteredList.length}</Text>
                 <Text> result for pods matching </Text>
                 <Text fontWeight="bold">{filterText}</Text>
               </Text>
-            </Box>
+              <ButtonInvisible onClick={() => setFilterText("")} paddingX={0}>
+                <StyledOcticon icon={XIcon} mr={1} />
+                Clear filter
+              </ButtonInvisible>
+            </Flex>
           )}
           <Grid gridTemplateColumns="1fr 1fr" gridGap={3}>
-            {getFilteredList()}
+            {filteredList}
           </Grid>
         </Box>
       </Container>
