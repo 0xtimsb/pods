@@ -132,7 +132,7 @@ export type MutationCreatePodArgs = {
 
 export type MutationInviteToPodArgs = {
   asAdmin: Scalars['Boolean'];
-  userId: Scalars['Int'];
+  username: Scalars['String'];
   podId: Scalars['Int'];
 };
 
@@ -312,7 +312,7 @@ export type DeletePodMutation = (
 );
 
 export type InviteToPodMutationVariables = Exact<{
-  userId: Scalars['Int'];
+  username: Scalars['String'];
   podId: Scalars['Int'];
   asAdmin: Scalars['Boolean'];
 }>;
@@ -692,8 +692,8 @@ export type DeletePodMutationHookResult = ReturnType<typeof useDeletePodMutation
 export type DeletePodMutationResult = Apollo.MutationResult<DeletePodMutation>;
 export type DeletePodMutationOptions = Apollo.BaseMutationOptions<DeletePodMutation, DeletePodMutationVariables>;
 export const InviteToPodDocument = gql`
-    mutation InviteToPod($userId: Int!, $podId: Int!, $asAdmin: Boolean!) {
-  inviteToPod(podId: $podId, userId: $userId, asAdmin: $asAdmin)
+    mutation InviteToPod($username: String!, $podId: Int!, $asAdmin: Boolean!) {
+  inviteToPod(podId: $podId, username: $username, asAdmin: $asAdmin)
 }
     `;
 export type InviteToPodMutationFn = Apollo.MutationFunction<InviteToPodMutation, InviteToPodMutationVariables>;
@@ -711,7 +711,7 @@ export type InviteToPodMutationFn = Apollo.MutationFunction<InviteToPodMutation,
  * @example
  * const [inviteToPodMutation, { data, loading, error }] = useInviteToPodMutation({
  *   variables: {
- *      userId: // value for 'userId'
+ *      username: // value for 'username'
  *      podId: // value for 'podId'
  *      asAdmin: // value for 'asAdmin'
  *   },

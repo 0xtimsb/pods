@@ -98,7 +98,7 @@ export class PodResolver {
   @Mutation(() => Boolean)
   async inviteToPod(
     @Arg("podId", () => Int) podId: number,
-    @Arg("userId", () => Int) userId: number,
+    @Arg("username", () => String) username: string,
     @Arg("asAdmin", () => Boolean) asAdmin: boolean,
     @Ctx() { req }: Context
   ): Promise<Boolean> {
@@ -114,17 +114,24 @@ export class PodResolver {
     if (!userPod) return false;
 
     try {
-      await getConnection()
-        .createQueryBuilder()
-        .insert()
-        .into(UserPod)
-        .values({
-          user: { id: userId },
-          pod: { id: podId },
-          isAdmin: asAdmin,
-          isJoined: false,
-        })
-        .execute();
+      const user = await getConnection()
+        .createQueryBuilder(User, "user")
+        .where("user.username = :username", { username })
+        .getOne();
+
+      if (user) {
+        await getConnection()
+          .createQueryBuilder()
+          .insert()
+          .into(UserPod)
+          .values({
+            user: { id: user.id },
+            pod: { id: podId },
+            isAdmin: asAdmin,
+            isJoined: false,
+          })
+          .execute();
+      }
     } catch (e) {
       console.log(e);
       return false;

@@ -151,6 +151,7 @@ const Home: React.FC<HomeProps> = ({ me, pods }) => {
                   <div className="text-lg text-gray-900">Invites</div>
                 </div>
               </div>
+
               <div className="grid grid-cols-3">You don't any invites</div>
             </div>
           </div>

@@ -34,7 +34,11 @@ const PodPage: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => {
 
   return (
     <Switch>
-      <Route exact path={POD} render={() => <Discussion />} />
+      <Route
+        exact
+        path={POD}
+        render={() => <Discussion pod={data.pod as Pod} />}
+      />
       <Route
         exact
         path={POD_PROJECT}
