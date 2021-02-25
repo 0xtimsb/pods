@@ -19,6 +19,7 @@ import {
   TabNav,
   ButtonInvisible,
   Button,
+  Dialog,
 } from "@primer/components";
 import { gql } from "@apollo/client";
 
@@ -50,22 +51,25 @@ interface HomeProps extends RouteComponentProps {
 const Home: React.FC<HomeProps> = ({ me, location }) => {
   const pods = me?.pods ?? [];
 
+  // Filter pods
   const [filterText, setFilterText] = useState("");
 
-  // Modal
-  const [modal, setModal] = useState(false);
-  const [text, setText] = useState("");
+  // To create pod
+  const [newPodText, setNewPodText] = useState("");
   const [createPodMutation] = useCreatePodMutation();
 
-  const handleCreatePod = async () => {
-    await createPodMutation({
-      variables: { name: text },
+  // For modal
+  const [isOpen, setIsOpen] = useState(false);
+  const returnFocusRef = useRef(null);
+
+  const handleCreatePod = () => {
+    createPodMutation({
+      variables: { name: newPodText },
       update: (cache, { data }) => {
         cache.modify({
           id: cache.identify(me as User),
           fields: {
             pods(existingPodsRefs: any[]) {
-              console.log(existingPodsRefs);
               const newPodRef = cache.writeFragment({
                 fragment: gql`
                   fragment NewPod on Pod {
@@ -83,11 +87,13 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
         });
       },
     });
-    setModal(false);
+    setIsOpen(false);
+    setNewPodText("");
   };
 
-  const handleCancelCreatePod = () => {
-    setModal(false);
+  const handleCancelNewPod = () => {
+    setIsOpen(false);
+    setNewPodText("");
   };
 
   const filteredList = pods
@@ -115,6 +121,28 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
 
   return (
     <Box>
+      <Dialog
+        isOpen={isOpen}
+        returnFocusRef={returnFocusRef}
+        onDismiss={handleCancelNewPod}
+        aria-labelledby="label"
+      >
+        <Dialog.Header>Create New Pod</Dialog.Header>
+        <Box p={3}>
+          <TextInput
+            placeholder="Enter pod name"
+            width={1}
+            onChange={(e) => setNewPodText(e.target.value)}
+            value={newPodText}
+          />
+          <Flex mt={3} justifyContent="flex-end">
+            <Button mr={1} onClick={handleCancelNewPod}>
+              Cancel
+            </Button>
+            <ButtonPrimary onClick={handleCreatePod}>Create</ButtonPrimary>
+          </Flex>
+        </Box>
+      </Dialog>
       <UnderlineNav bg="gray.0">
         <Container>
           <Flex>
@@ -136,7 +164,6 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
           </Flex>
         </Container>
       </UnderlineNav>
-
       <Container flexDirection="row">
         <Box width={350}></Box>
         <Box flex={1} pt={3}>
@@ -153,7 +180,9 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
               onChange={(e) => setFilterText(e.target.value)}
               value={filterText}
             />
-            <ButtonPrimary>New</ButtonPrimary>
+            <ButtonPrimary ref={returnFocusRef} onClick={() => setIsOpen(true)}>
+              New
+            </ButtonPrimary>
           </Flex>
           {pods.length !== filteredList.length && (
             <Flex mb={3} justifyContent="space-between">
