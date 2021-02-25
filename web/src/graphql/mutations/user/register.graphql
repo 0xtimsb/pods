@@ -7,7 +7,6 @@ mutation Register($username: String!, $password: String!, $email: String!) {
       pods {
         id
         name
-        joined
         createdAt
       }
     }

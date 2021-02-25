@@ -65,7 +65,6 @@ export type Pod = {
   updatedAt: Scalars['String'];
   members: Array<User>;
   admins: Array<User>;
-  joined: Scalars['Boolean'];
   stories: Array<Story>;
 };
 
@@ -492,7 +491,7 @@ export type LoginMutation = (
       & Pick<User, 'id' | 'email' | 'username'>
       & { pods: Array<(
         { __typename?: 'Pod' }
-        & Pick<Pod, 'id' | 'name' | 'joined' | 'createdAt'>
+        & Pick<Pod, 'id' | 'name' | 'createdAt'>
       )> }
     )>, errors?: Maybe<Array<(
       { __typename?: 'FieldError' }
@@ -525,7 +524,7 @@ export type RegisterMutation = (
       & Pick<User, 'id' | 'email' | 'username'>
       & { pods: Array<(
         { __typename?: 'Pod' }
-        & Pick<Pod, 'id' | 'name' | 'joined' | 'createdAt'>
+        & Pick<Pod, 'id' | 'name' | 'createdAt'>
       )> }
     )>, errors?: Maybe<Array<(
       { __typename?: 'FieldError' }
@@ -544,7 +543,7 @@ export type MeQuery = (
     & Pick<User, 'id' | 'username'>
     & { pods: Array<(
       { __typename?: 'Pod' }
-      & Pick<Pod, 'id' | 'name' | 'joined' | 'createdAt'>
+      & Pick<Pod, 'id' | 'name' | 'createdAt'>
     )>, sentInvites: Array<(
       { __typename?: 'Invite' }
       & Pick<Invite, 'asAdmin' | 'createdAt'>
@@ -578,7 +577,7 @@ export type PodQuery = (
   { __typename?: 'Query' }
   & { pod?: Maybe<(
     { __typename?: 'Pod' }
-    & Pick<Pod, 'id' | 'name' | 'joined' | 'createdAt'>
+    & Pick<Pod, 'id' | 'name' | 'createdAt'>
     & { admins: Array<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
@@ -1147,7 +1146,6 @@ export const LoginDocument = gql`
       pods {
         id
         name
-        joined
         createdAt
       }
     }
@@ -1223,7 +1221,6 @@ export const RegisterDocument = gql`
       pods {
         id
         name
-        joined
         createdAt
       }
     }
@@ -1269,7 +1266,6 @@ export const MeDocument = gql`
     pods {
       id
       name
-      joined
       createdAt
     }
     sentInvites {
@@ -1329,7 +1325,6 @@ export const PodDocument = gql`
   pod(id: $id) {
     id
     name
-    joined
     createdAt
     admins {
       id

@@ -252,17 +252,6 @@ export class PodResolver {
       .getMany();
   }
 
-  @FieldResolver(() => Boolean)
-  async joined(@Root() pod: Pod, @Ctx() { req }: Context) {
-    const userPod = await createQueryBuilder(UserPod, "userPod")
-      .where("userPod.pod.id = :podId", { podId: pod.id })
-      .andWhere("userPod.user.id = :userId", { userId: req.session.userId })
-      .getOne();
-
-    if (userPod) return true;
-    return false;
-  }
-
   @FieldResolver(() => [Story])
   stories(@Root() pod: Pod) {
     // Returns all the stories, but not pod, having pod.id

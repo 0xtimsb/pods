@@ -42,9 +42,6 @@ export class Pod extends BaseEntity {
   @Field(() => [User])
   admins: User[];
 
-  @Field(() => Boolean)
-  joined: boolean;
-
   @Field(() => [Story])
   @OneToMany(() => Story, (story) => story.pod)
   stories: Story[];
