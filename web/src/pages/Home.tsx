@@ -1,15 +1,22 @@
-import { Box, Heading, Pagehead } from "@primer/components";
+import {
+  Box,
+  Button,
+  ButtonPrimary,
+  Dialog,
+  Flex,
+  Heading,
+  TextInput,
+} from "@primer/components";
 import { gql, Reference } from "@apollo/client";
 
 // Graphql
 import { MeQuery, useCreatePodMutation, User } from "../generated/graphql";
 
 // Hooks
-import useModal from "../hooks/useModal";
+import useInputModal from "../hooks/useInputModal";
 
 // Components
 import Container from "../components/Container";
-import Modal from "../components/Modal";
 import Pods from "../components/home/Pods";
 import Invites from "../components/home/Invites";
 import UnderlineNavbar from "../components/UnderlineNavbar";
@@ -24,11 +31,17 @@ interface HomeProps {
 const Home: React.FC<HomeProps> = ({ me }) => {
   const [createPodMutation] = useCreatePodMutation();
 
-  const { modalProps, buttonProps } = useModal();
+  const {
+    value,
+    dialogProps,
+    inputProps,
+    buttonProps,
+    handleClose,
+  } = useInputModal();
 
-  const handleCreatePod = (text: string) => {
+  const handleCreatePod = () => {
     createPodMutation({
-      variables: { name: text },
+      variables: { name: value },
       update: (cache, { data }) => {
         cache.modify({
           id: cache.identify(me as User),
@@ -51,17 +64,23 @@ const Home: React.FC<HomeProps> = ({ me }) => {
         });
       },
     });
+    handleClose();
   };
 
   return (
     <Box>
-      <Modal
-        title="Create new pod"
-        placeholder="Enter pod name"
-        submit="Create"
-        handleSubmit={handleCreatePod}
-        {...modalProps}
-      />
+      <Dialog {...dialogProps} onDismiss={handleClose} aria-labelledby="label">
+        <Dialog.Header>Create new pod</Dialog.Header>
+        <Box p={3}>
+          <TextInput placeholder="Enter pod name" width={1} {...inputProps} />
+          <Flex mt={3} justifyContent="flex-end">
+            <Button mr={1} onClick={handleClose}>
+              Cancel
+            </Button>
+            <ButtonPrimary onClick={handleCreatePod}>Create</ButtonPrimary>
+          </Flex>
+        </Box>
+      </Dialog>
       <UnderlineNavbar navItems={homeNavItems} />
       <Container flexDirection="row">
         <Box width={350}></Box>

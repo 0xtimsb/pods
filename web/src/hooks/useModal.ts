@@ -9,13 +9,16 @@ const useModal = () => {
     onClick: () => setIsOpen(true),
   };
 
-  const modalProps = {
+  const dialogProps = {
     isOpen,
     returnFocusRef,
-    setIsOpen,
   };
 
-  return { modalProps, buttonProps };
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
+  return { buttonProps, dialogProps, handleClose };
 };
 
 export default useModal;
