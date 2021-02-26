@@ -30,8 +30,7 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
           fields: {
             receivedInvites(existingInvitesRefs: Reference[], { readField }) {
               return existingInvitesRefs.filter((inviteRef) => {
-                const pod = readField("pod", inviteRef) as Pod;
-                return pod.id !== podId;
+                return readField("id", readField("pod", inviteRef)) !== podId;
               });
             },
           },

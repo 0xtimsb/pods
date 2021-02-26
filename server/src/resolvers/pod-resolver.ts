@@ -186,13 +186,15 @@ export class PodResolver {
   ): Promise<Boolean> {
     try {
       await getConnection()
-        .createQueryBuilder()
+        .createQueryBuilder(Invite, "invite")
+        .innerJoin("invite.invitee", "invitee")
+        .innerJoin("invite.pod", "pod")
+        .where("invitee.id = :id", { id: req.session.userId })
+        .andWhere("pod.id = :podId", { podId })
         .delete()
-        .from(Invite, "invite")
-        .where("invite.invitee.id = :id", { id: req.session.userId })
-        .andWhere("invite.pod.id = :podId", { podId })
         .execute();
     } catch (e) {
+      console.log(e);
       return false;
     }
     return true;
