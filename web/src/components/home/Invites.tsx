@@ -12,7 +12,9 @@ import {
   MeQuery,
   Pod,
   useCancelInviteMutation,
+  useJoinPodMutation,
   User,
+  useUninviteToPodMutation,
 } from "../../generated/graphql";
 
 interface InvitesProps {
@@ -20,6 +22,8 @@ interface InvitesProps {
 }
 const Invites: React.FC<InvitesProps> = ({ me }) => {
   const [cancelInviteMutation] = useCancelInviteMutation();
+  const [joinPodMutation] = useJoinPodMutation();
+  const [uninviteToPodMutation] = useUninviteToPodMutation();
 
   const handleCancelInvite = (podId: number) => {
     cancelInviteMutation({
@@ -31,6 +35,58 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
             receivedInvites(existingInvitesRefs: Reference[], { readField }) {
               return existingInvitesRefs.filter((inviteRef) => {
                 return readField("id", readField("pod", inviteRef)) !== podId;
+              });
+            },
+          },
+        });
+      },
+    });
+  };
+
+  const handleJoinPod = (podId: number) => {
+    joinPodMutation({
+      variables: { podId },
+      update: (cache) => {
+        cache.modify({
+          id: cache.identify(me as User),
+          fields: {
+            receivedInvites(existingInvitesRefs: Reference[], { readField }) {
+              return existingInvitesRefs.filter((inviteRef) => {
+                return readField("id", readField("pod", inviteRef)) !== podId;
+              });
+            },
+            pods(existingPodsRefs: Reference[], { readField }) {
+              const newPodRef = cache.readFragment({
+                id: "Pod:" + podId,
+                fragment: gql`
+                  fragment NewPod on Pod {
+                    id
+                    name
+                  }
+                `,
+              });
+              return [newPodRef, ...existingPodsRefs];
+            },
+          },
+        });
+      },
+    });
+  };
+
+  const handleUninviteToPod = (username: string, podId: number) => {
+    uninviteToPodMutation({
+      variables: { username, podId },
+      update: (cache) => {
+        cache.modify({
+          id: cache.identify(me as User),
+          fields: {
+            sentInvites(existingInvitesRefs: Reference[], { readField }) {
+              return existingInvitesRefs.filter((inviteRef) => {
+                return !(
+                  readField("id", readField("pod", inviteRef)) === podId &&
+                  readField("username", readField("invitee", inviteRef)) ===
+                    username
+                );
               });
             },
           },
@@ -60,7 +116,9 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
             <ButtonDanger mr={2} onClick={() => handleCancelInvite(pod.id)}>
               Cancel
             </ButtonDanger>
-            <ButtonPrimary>Accept</ButtonPrimary>
+            <ButtonPrimary onClick={() => handleJoinPod(pod.id)}>
+              Accept
+            </ButtonPrimary>
           </Flex>
         </Flex>
       </BorderBox>
@@ -85,7 +143,11 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
             <Text> as </Text>
             <Text>{asAdmin ? "admin." : "member."}</Text>
           </Text>
-          <ButtonDanger>Cancel invite</ButtonDanger>
+          <ButtonDanger
+            onClick={() => handleUninviteToPod(invitee.username, pod.id)}
+          >
+            Revert
+          </ButtonDanger>
         </Flex>
       </BorderBox>
     )

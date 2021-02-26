@@ -161,16 +161,18 @@ export class PodResolver {
         .getOne();
 
       if (user) {
-        const inviteeId = user.username;
+        const inviteeId = user.id;
         await getConnection()
-          .createQueryBuilder()
-          .delete()
-          .from(Invite, "invite")
-          .where("invite.invitee.id = :inviteeId", { inviteeId })
-          .andWhere("invite.pod.id = :podId", { podId })
-          .andWhere("invite.inviter.id = :inviterId", {
+          .createQueryBuilder(Invite, "invite")
+          .innerJoin("invite.invitee", "invitee")
+          .innerJoin("invite.inviter", "inviter")
+          .innerJoin("invite.pod", "pod")
+          .where("invitee.id = :inviteeId", { inviteeId })
+          .andWhere("pod.id = :podId", { podId })
+          .andWhere("inviter.id = :inviterId", {
             inviterId: req.session.userId,
           })
+          .delete()
           .execute();
       }
     } catch (e) {
@@ -218,11 +220,12 @@ export class PodResolver {
 
     try {
       await getConnection()
-        .createQueryBuilder()
+        .createQueryBuilder(UserPod, "userPod")
+        .innerJoin("userPod.user", "user")
+        .innerJoin("userPod.pod", "pod")
+        .where("userPod.pod.id = :podId", { podId: podId })
+        .andWhere("userPod.user.id = :userId", { userId: userId })
         .delete()
-        .from(UserPod, "userPod")
-        .where("userPod.pod.id := podId", { podId: podId })
-        .andWhere("userPod.user.id := userId", { userId: userId })
         .execute();
     } catch (e) {
       return false;
@@ -237,13 +240,15 @@ export class PodResolver {
   ): Promise<Boolean> {
     try {
       await getConnection()
-        .createQueryBuilder()
-        .from(UserPod, "userPod")
+        .createQueryBuilder(UserPod, "userPod")
+        .innerJoin("userPod.user", "user")
+        .innerJoin("userPod.pod", "pod")
+        .where("pod.id = :podId", { podId: podId })
+        .andWhere("user.id = :userId", { userId: req.session.userId })
         .delete()
-        .where("userPod.user.id := userId", { userId: req.session.userId })
-        .andWhere("userPod.pod.id := podId", { podId: podId })
         .execute();
     } catch (e) {
+      console.log(e);
       return false;
     }
     return true;
@@ -263,6 +268,14 @@ export class PodResolver {
     if (!invite) return false;
 
     try {
+      await getConnection()
+        .createQueryBuilder(Invite, "invite")
+        .innerJoin("invite.invitee", "invitee")
+        .innerJoin("invite.pod", "pod")
+        .where("invitee.id = :id", { id: req.session.userId })
+        .andWhere("pod.id = :podId", { podId })
+        .delete()
+        .execute();
       await getConnection()
         .createQueryBuilder()
         .insert()
