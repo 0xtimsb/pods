@@ -1,3 +1,4 @@
+import { gql, Reference } from "@apollo/client";
 import {
   BorderBox,
   Box,
@@ -7,12 +8,38 @@ import {
   Text,
 } from "@primer/components";
 
-import { MeQuery } from "../../generated/graphql";
+import {
+  MeQuery,
+  Pod,
+  useCancelInviteMutation,
+  User,
+} from "../../generated/graphql";
 
 interface InvitesProps {
   me: MeQuery["me"];
 }
 const Invites: React.FC<InvitesProps> = ({ me }) => {
+  const [cancelInviteMutation] = useCancelInviteMutation();
+
+  const handleCancelInvite = (podId: number) => {
+    cancelInviteMutation({
+      variables: { podId },
+      update: (cache) => {
+        cache.modify({
+          id: cache.identify(me as User),
+          fields: {
+            receivedInvites(existingInvitesRefs: Reference[], { readField }) {
+              return existingInvitesRefs.filter((inviteRef) => {
+                const pod = readField("pod", inviteRef) as Pod;
+                return pod.id !== podId;
+              });
+            },
+          },
+        });
+      },
+    });
+  };
+
   const receivedInvites = me?.receivedInvites.map(
     ({ inviter, pod, asAdmin, createdAt }) => (
       <BorderBox
@@ -31,7 +58,9 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
             <Text>{asAdmin ? "admin" : "member"}</Text>
           </Text>
           <Flex>
-            <ButtonDanger mr={2}>Cancel</ButtonDanger>
+            <ButtonDanger mr={2} onClick={() => handleCancelInvite(pod.id)}>
+              Cancel
+            </ButtonDanger>
             <ButtonPrimary>Accept</ButtonPrimary>
           </Flex>
         </Flex>

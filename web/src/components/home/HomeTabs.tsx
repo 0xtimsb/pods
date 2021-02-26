@@ -1,12 +1,22 @@
 import { ButtonInvisible, TabNav } from "@primer/components";
 import { useState } from "react";
 
-interface HomeTabNavProps {
-  pods: () => void;
-  invites: () => void;
+// Graphql
+import { MeQuery } from "../../generated/graphql";
+
+// Components
+import Invites from "./Invites";
+import Pods from "./Pods";
+
+interface HomeTabsProps {
+  me: MeQuery["me"];
+  buttonProps: {
+    ref: React.MutableRefObject<null>;
+    onClick: () => void;
+  };
 }
 
-const HomeTabNav: React.FC<HomeTabNavProps> = ({ pods, invites }) => {
+const HomeTabs: React.FC<HomeTabsProps> = ({ me, buttonProps }) => {
   const [section, setSection] = useState<"first" | "second">("first");
 
   return (
@@ -23,9 +33,13 @@ const HomeTabNav: React.FC<HomeTabNavProps> = ({ pods, invites }) => {
           </ButtonInvisible>
         </TabNav.Link>
       </TabNav>
-      {section === "first" ? pods : invites}
+      {section === "first" ? (
+        <Pods me={me} buttonProps={buttonProps} />
+      ) : (
+        <Invites me={me} />
+      )}
     </>
   );
 };
 
-export default HomeTabNav;
+export default HomeTabs;

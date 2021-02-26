@@ -1,6 +1,5 @@
-import { RouteComponentProps } from "react-router-dom";
 import { Box } from "@primer/components";
-import { gql } from "@apollo/client";
+import { gql, Reference } from "@apollo/client";
 
 // Graphql
 import { MeQuery, useCreatePodMutation, User } from "../generated/graphql";
@@ -11,16 +10,14 @@ import useModal from "../hooks/useModal";
 // Components
 import Container from "../components/Container";
 import Modal from "../components/Modal";
-import Pods from "../components/home/Pods";
-import Invites from "../components/home/Invites";
-import HomeTabNav from "../components/home/HomeTabNav";
 import HomeUnderlineNav from "../components/home/HomeUnderlineNav";
+import HomeTabs from "../components/home/HomeTabs";
 
-interface HomeProps extends RouteComponentProps {
+interface HomeProps {
   me: MeQuery["me"];
 }
 
-const Home: React.FC<HomeProps> = ({ me, location }) => {
+const Home: React.FC<HomeProps> = ({ me }) => {
   const [createPodMutation] = useCreatePodMutation();
 
   const { modalProps, buttonProps } = useModal();
@@ -32,7 +29,7 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
         cache.modify({
           id: cache.identify(me as User),
           fields: {
-            pods(existingPodsRefs: any[]) {
+            pods(existingPodsRefs: Reference[]) {
               const newPodRef = cache.writeFragment({
                 fragment: gql`
                   fragment NewPod on Pod {
@@ -65,10 +62,7 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
       <Container flexDirection="row">
         <Box width={350}></Box>
         <Box flex={1} pt={3}>
-          <HomeTabNav
-            pods={() => <Pods me={me} buttonProps={buttonProps} />}
-            invites={() => <Invites me={me} />}
-          />
+          <HomeTabs me={me} buttonProps={buttonProps} />
         </Box>
       </Container>
     </Box>
