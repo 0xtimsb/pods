@@ -1,30 +1,20 @@
-import { useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import {
-  Box,
-  Flex,
-  StyledOcticon,
-  UnderlineNav,
-  Text,
-  ButtonPrimary,
-  Link,
-  BorderBox,
-  TabNav,
-  ButtonInvisible,
-  ButtonDanger,
-} from "@primer/components";
+import { Box } from "@primer/components";
 import { gql } from "@apollo/client";
 
 // Graphql
 import { MeQuery, useCreatePodMutation, User } from "../generated/graphql";
 
+// Hooks
+import useModal from "../hooks/useModal";
+
+// Components
 import Container from "../components/Container";
 import Modal from "../components/Modal";
-import mainOptions from "../constants/mainOptions";
-import useModal from "../hooks/useModal";
 import Pods from "../components/home/Pods";
 import Invites from "../components/home/Invites";
 import HomeTabNav from "../components/home/HomeTabNav";
+import HomeUnderlineNav from "../components/home/HomeUnderlineNav";
 
 interface HomeProps extends RouteComponentProps {
   me: MeQuery["me"];
@@ -71,27 +61,7 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
         handleSubmit={handleCreatePod}
         {...modalProps}
       />
-      <UnderlineNav bg="gray.0">
-        <Container>
-          <Flex>
-            {mainOptions.map(({ name, route, icon }, index) => (
-              <UnderlineNav.Link
-                as={Link}
-                to={route}
-                key={index}
-                selected={location.pathname === route}
-              >
-                <StyledOcticon icon={icon} mr={2} />
-                <Text
-                  fontWeight={location.pathname === route ? "bold" : "normal"}
-                >
-                  {name}
-                </Text>
-              </UnderlineNav.Link>
-            ))}
-          </Flex>
-        </Container>
-      </UnderlineNav>
+      <HomeUnderlineNav />
       <Container flexDirection="row">
         <Box width={350}></Box>
         <Box flex={1} pt={3}>
