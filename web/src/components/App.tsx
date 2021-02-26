@@ -7,6 +7,7 @@ import { useMeQuery } from "../generated/graphql";
 import AuthLayout from "./layout/AuthLayout";
 import AppLayout from "./layout/AppLayout";
 import Navbar from "./Navbar";
+import { Box } from "@primer/components";
 
 function App() {
   const { data, loading, error } = useMeQuery();

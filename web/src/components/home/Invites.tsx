@@ -25,6 +25,8 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
   const [joinPodMutation] = useJoinPodMutation();
   const [uninviteToPodMutation] = useUninviteToPodMutation();
 
+  if (!me) return null;
+
   const handleCancelInvite = (podId: number) => {
     cancelInviteMutation({
       variables: { podId },
@@ -95,7 +97,7 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
     });
   };
 
-  const receivedInvites = me?.receivedInvites.map(
+  const receivedInvites = me.receivedInvites.map(
     ({ inviter, pod, asAdmin, createdAt }) => (
       <BorderBox
         key={inviter.id}
@@ -125,7 +127,7 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
     )
   );
 
-  const sentInvites = me?.sentInvites.map(
+  const sentInvites = me.sentInvites.map(
     ({ invitee, pod, asAdmin, createdAt }) => (
       <BorderBox
         key={invitee.id}
@@ -161,7 +163,15 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
             Received
           </Text>
         </Box>
-        {receivedInvites}
+        {receivedInvites.length === 0 ? (
+          <BorderBox p={3} borderRadius={0} borderWidth={0} borderTopWidth={1}>
+            <Text fontSize={1} color="gray.5">
+              You haven't received any invites yet.
+            </Text>
+          </BorderBox>
+        ) : (
+          receivedInvites
+        )}
       </BorderBox>
       <BorderBox overflow="hidden">
         <Box bg="gray.1" p={3}>
@@ -169,7 +179,15 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
             Sent
           </Text>
         </Box>
-        {sentInvites}
+        {sentInvites.length === 0 ? (
+          <BorderBox p={3} borderRadius={0} borderWidth={0} borderTopWidth={1}>
+            <Text fontSize={1} color="gray.5">
+              You haven't sent any invites yet.
+            </Text>
+          </BorderBox>
+        ) : (
+          sentInvites
+        )}
       </BorderBox>
     </>
   );

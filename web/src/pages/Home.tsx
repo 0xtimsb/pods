@@ -1,4 +1,4 @@
-import { Box } from "@primer/components";
+import { Box, Heading, Pagehead } from "@primer/components";
 import { gql, Reference } from "@apollo/client";
 
 // Graphql
@@ -11,7 +11,8 @@ import useModal from "../hooks/useModal";
 import Container from "../components/Container";
 import Modal from "../components/Modal";
 import HomeUnderlineNav from "../components/home/HomeUnderlineNav";
-import HomeTabs from "../components/home/HomeTabs";
+import Pods from "../components/home/Pods";
+import Invites from "../components/home/Invites";
 
 interface HomeProps {
   me: MeQuery["me"];
@@ -61,8 +62,15 @@ const Home: React.FC<HomeProps> = ({ me }) => {
       <HomeUnderlineNav />
       <Container flexDirection="row">
         <Box width={350}></Box>
-        <Box flex={1} pt={3}>
-          <HomeTabs me={me} buttonProps={buttonProps} />
+        <Box flex={1} pt={3} mb={6}>
+          <Heading fontSize={2} mb={3}>
+            Pods
+          </Heading>
+          <Pods me={me} buttonProps={buttonProps} />
+          <Heading fontSize={2} mb={3}>
+            Invites
+          </Heading>
+          <Invites me={me} />
         </Box>
       </Container>
     </Box>
