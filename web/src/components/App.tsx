@@ -7,7 +7,6 @@ import { useMeQuery } from "../generated/graphql";
 import AuthLayout from "./layout/AuthLayout";
 import AppLayout from "./layout/AppLayout";
 import Navbar from "./Navbar";
-import { Box } from "@primer/components";
 
 function App() {
   const { data, loading, error } = useMeQuery();
@@ -16,12 +15,14 @@ function App() {
 
   if (error) return <div>Error occured.....</div>;
 
+  const me = data?.me;
+
   return (
     <BrowserRouter>
       <Navbar me={data?.me} />
       <Switch>
-        {data && data.me ? (
-          <Route exact render={() => <AppLayout me={data.me} />} />
+        {me ? (
+          <Route exact render={() => <AppLayout me={me} />} />
         ) : (
           <Route exact render={() => <AuthLayout />} />
         )}

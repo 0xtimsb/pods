@@ -1,93 +1,73 @@
 import {
-  generatePath,
   Redirect,
   Route,
   RouteComponentProps,
   Switch,
   Link,
+  generatePath,
 } from "react-router-dom";
-import {
-  Box,
-  Breadcrumb,
-  Text,
-  StyledOcticon,
-  UnderlineNav,
-  Flex,
-} from "@primer/components";
-
-import podOptions from "../constants/podOptions";
+import { Box, Breadcrumb, Text } from "@primer/components";
 
 // Routes
-import { POD, POD_PROJECT, POD_SETTINGS } from "../constants/routes";
+import { HOME, POD, POD_PROJECT, POD_SETTINGS } from "../constants/routes";
+
+// Graphql
+import { Pod, usePodQuery } from "../generated/graphql";
 
 // Pages
-import { Pod, usePodQuery } from "../generated/graphql";
+import Loading from "./Loading";
 import Discussion from "../pages/pod/Discussion";
 import Settings from "../pages/pod/Settings";
 import Board from "./project/Board";
+import UnderlineNavbar from "./UnderlineNavbar";
+
+// Constants
+import { podNavItems } from "../constants/navItems";
 import Container from "./Container";
 
 interface MatchParams {
   id: string;
 }
 
-const PodPage: React.FC<RouteComponentProps<MatchParams>> = ({
-  match,
-  location,
-}) => {
+const PodPage: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => {
   const id = parseInt(match.params.id);
   const { data, loading, error } = usePodQuery({
     variables: { id },
   });
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loading />;
 
   if (error || !data || !data.pod) return <p>Error occured</p>;
 
+  const pod = data.pod;
+
   return (
     <Box>
-      <UnderlineNav bg="gray.0">
-        <Container>
-          <Breadcrumb>
-            <Breadcrumb.Item as={Link} to="/">
+      <Container mb={2} mt={3}>
+        <Breadcrumb>
+          <Breadcrumb.Item as={Link} to={HOME}>
+            <Text fontSize={2} fontWeight="bold">
               Home
-            </Breadcrumb.Item>
-            <Breadcrumb.Item selected>Pod Name</Breadcrumb.Item>
-          </Breadcrumb>
-          <Flex>
-            {podOptions.map(({ name, route, icon }, index) => (
-              <UnderlineNav.Link
-                as={Link}
-                to={generatePath(route, { id })}
-                key={index}
-                selected={location.pathname === generatePath(route, { id })}
-              >
-                <StyledOcticon icon={icon} mr={2} />
-                <Text
-                  fontWeight={
-                    location.pathname === generatePath(route, { id })
-                      ? "bold"
-                      : "normal"
-                  }
-                >
-                  {name}
-                </Text>
-              </UnderlineNav.Link>
-            ))}
-          </Flex>
-        </Container>
-      </UnderlineNav>
-
+            </Text>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item as={Link} to={generatePath(POD, { id: pod.id })}>
+            <Text fontSize={2} fontWeight="bold">
+              {data.pod.name}
+            </Text>
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      </Container>
+      <UnderlineNavbar navItems={podNavItems} id={pod.id} />
       <Switch>
         <Route
           exact
           path={POD}
-          render={() => <Discussion pod={data.pod as Pod} />}
+          render={() => <Discussion pod={pod as Pod} />}
         />
         <Route
           exact
           path={POD_PROJECT}
-          render={() => <Board pod={data.pod as Pod} />}
+          render={() => <Board pod={pod as Pod} />}
         />
         <Route exact path={POD_SETTINGS} render={() => <Settings />} />
         <Redirect to={POD} />

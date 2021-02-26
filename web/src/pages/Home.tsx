@@ -10,12 +10,15 @@ import useModal from "../hooks/useModal";
 // Components
 import Container from "../components/Container";
 import Modal from "../components/Modal";
-import HomeUnderlineNav from "../components/home/HomeUnderlineNav";
 import Pods from "../components/home/Pods";
 import Invites from "../components/home/Invites";
+import UnderlineNavbar from "../components/UnderlineNavbar";
+
+// Constants
+import { homeNavItems } from "../constants/navItems";
 
 interface HomeProps {
-  me: MeQuery["me"];
+  me: NonNullable<MeQuery["me"]>;
 }
 
 const Home: React.FC<HomeProps> = ({ me }) => {
@@ -59,7 +62,7 @@ const Home: React.FC<HomeProps> = ({ me }) => {
         handleSubmit={handleCreatePod}
         {...modalProps}
       />
-      <HomeUnderlineNav />
+      <UnderlineNavbar navItems={homeNavItems} />
       <Container flexDirection="row">
         <Box width={350}></Box>
         <Box flex={1} pt={3} mb={6}>

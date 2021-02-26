@@ -1,16 +1,16 @@
-// User
+// HOME
 export const HOME = "/";
 
 export const SETTINGS = "/settings";
 
-// Pod
+// POD
 export const POD = "/pod/:id";
 
 export const POD_PROJECT = "/pod/:id/project";
 
 export const POD_SETTINGS = "/pod/:id/settings";
 
-// Auth
+// AUTH
 export const LOGIN = "/login";
 
 export const SIGNUP = "/signup";
