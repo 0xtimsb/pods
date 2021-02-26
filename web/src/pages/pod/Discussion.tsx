@@ -1,4 +1,5 @@
 import {
+  BorderBox,
   Box,
   Button,
   ButtonPrimary,
@@ -6,14 +7,22 @@ import {
   Dropdown,
   Flex,
   Heading,
+  SelectMenu,
+  StyledOcticon,
+  Text,
   TextInput,
 } from "@primer/components";
+import { KebabHorizontalIcon } from "@primer/octicons-react";
+import { useState } from "react";
 
+// Container
 import Container from "../../components/Container";
 
+// Graphql
 import { Pod, useInviteToPodMutation } from "../../generated/graphql";
+
+// Hooks
 import useInputAndCheckModal from "../../hooks/useInputAndCheckModal";
-import useInputModal from "../../hooks/useInputModal";
 
 const Discussion = ({ pod }: { pod: Pod }) => {
   const [inviteToPod] = useInviteToPodMutation();
@@ -27,6 +36,8 @@ const Discussion = ({ pod }: { pod: Pod }) => {
     buttonProps,
     handleClose,
   } = useInputAndCheckModal();
+
+  const [popover, setPopover] = useState(false);
 
   const handleInviteUser = () => {
     inviteToPod({
@@ -59,18 +70,57 @@ const Discussion = ({ pod }: { pod: Pod }) => {
             </Dropdown>
           </Flex>
           <Flex mt={3} justifyContent="flex-end">
-            <Button mr={1} onClick={handleClose}>
+            <Button mr={2} onClick={handleClose}>
               Cancel
             </Button>
             <ButtonPrimary onClick={handleInviteUser}>Invite</ButtonPrimary>
           </Flex>
         </Box>
       </Dialog>
+
       <Box width={250} py={3}>
         <Heading fontSize={3} mb={3}>
           {pod.name}
         </Heading>
-        <Button width={1} {...buttonProps}>
+        <BorderBox mb={3}>
+          <Box px={3} py={2} bg="gray.0">
+            <Flex justifyContent="space-between" alignItems="center">
+              <Heading fontSize={1}>Admins</Heading>
+              <StyledOcticon icon={KebabHorizontalIcon} />
+            </Flex>
+          </Box>
+          {pod.admins.map((admin) => (
+            <BorderBox
+              px={3}
+              py={2}
+              borderRadius={0}
+              borderWidth={0}
+              borderTopWidth={1}
+            >
+              <Text fontSize={1}>{admin.username}</Text>
+            </BorderBox>
+          ))}
+        </BorderBox>
+        <BorderBox mb={3}>
+          <Box px={3} py={2} bg="gray.0">
+            <Flex justifyContent="space-between" alignItems="center">
+              <Heading fontSize={1}>Members</Heading>
+              <StyledOcticon icon={KebabHorizontalIcon} />
+            </Flex>
+          </Box>
+          {pod.members.map((member) => (
+            <BorderBox
+              px={3}
+              py={2}
+              borderRadius={0}
+              borderWidth={0}
+              borderTopWidth={1}
+            >
+              <Text fontSize={1}>{member.username}</Text>
+            </BorderBox>
+          ))}
+        </BorderBox>
+        <Button width={1} mb={3} {...buttonProps}>
           Invite
         </Button>
       </Box>
