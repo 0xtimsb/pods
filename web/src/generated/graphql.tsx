@@ -98,6 +98,8 @@ export type Mutation = {
   changePassword: UserResponse;
   createPod: PodResponse;
   inviteToPod: Scalars['Boolean'];
+  uninviteToPod: Scalars['Boolean'];
+  cancelInvite: Scalars['Boolean'];
   removeFromPod: Scalars['Boolean'];
   leavePod: Scalars['Boolean'];
   joinPod: Scalars['Boolean'];
@@ -143,6 +145,17 @@ export type MutationCreatePodArgs = {
 export type MutationInviteToPodArgs = {
   asAdmin: Scalars['Boolean'];
   username: Scalars['String'];
+  podId: Scalars['Int'];
+};
+
+
+export type MutationUninviteToPodArgs = {
+  username: Scalars['String'];
+  podId: Scalars['Int'];
+};
+
+
+export type MutationCancelInviteArgs = {
   podId: Scalars['Int'];
 };
 
@@ -266,6 +279,16 @@ export type TaskInput = {
   storyId: Scalars['Int'];
 };
 
+export type CancelInviteMutationVariables = Exact<{
+  podId: Scalars['Int'];
+}>;
+
+
+export type CancelInviteMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'cancelInvite'>
+);
+
 export type CreatePodMutationVariables = Exact<{
   name: Scalars['String'];
 }>;
@@ -336,6 +359,17 @@ export type RemoveFromPodMutationVariables = Exact<{
 export type RemoveFromPodMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'removeFromPod'>
+);
+
+export type UninviteToPodMutationVariables = Exact<{
+  username: Scalars['String'];
+  podId: Scalars['Int'];
+}>;
+
+
+export type UninviteToPodMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'uninviteToPod'>
 );
 
 export type CreateStoryMutationVariables = Exact<{
@@ -596,6 +630,36 @@ export type PodQuery = (
 );
 
 
+export const CancelInviteDocument = gql`
+    mutation CancelInvite($podId: Int!) {
+  cancelInvite(podId: $podId)
+}
+    `;
+export type CancelInviteMutationFn = Apollo.MutationFunction<CancelInviteMutation, CancelInviteMutationVariables>;
+
+/**
+ * __useCancelInviteMutation__
+ *
+ * To run a mutation, you first call `useCancelInviteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCancelInviteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [cancelInviteMutation, { data, loading, error }] = useCancelInviteMutation({
+ *   variables: {
+ *      podId: // value for 'podId'
+ *   },
+ * });
+ */
+export function useCancelInviteMutation(baseOptions?: Apollo.MutationHookOptions<CancelInviteMutation, CancelInviteMutationVariables>) {
+        return Apollo.useMutation<CancelInviteMutation, CancelInviteMutationVariables>(CancelInviteDocument, baseOptions);
+      }
+export type CancelInviteMutationHookResult = ReturnType<typeof useCancelInviteMutation>;
+export type CancelInviteMutationResult = Apollo.MutationResult<CancelInviteMutation>;
+export type CancelInviteMutationOptions = Apollo.BaseMutationOptions<CancelInviteMutation, CancelInviteMutationVariables>;
 export const CreatePodDocument = gql`
     mutation CreatePod($name: String!) {
   createPod(data: {name: $name}) {
@@ -788,6 +852,37 @@ export function useRemoveFromPodMutation(baseOptions?: Apollo.MutationHookOption
 export type RemoveFromPodMutationHookResult = ReturnType<typeof useRemoveFromPodMutation>;
 export type RemoveFromPodMutationResult = Apollo.MutationResult<RemoveFromPodMutation>;
 export type RemoveFromPodMutationOptions = Apollo.BaseMutationOptions<RemoveFromPodMutation, RemoveFromPodMutationVariables>;
+export const UninviteToPodDocument = gql`
+    mutation UninviteToPod($username: String!, $podId: Int!) {
+  uninviteToPod(podId: $podId, username: $username)
+}
+    `;
+export type UninviteToPodMutationFn = Apollo.MutationFunction<UninviteToPodMutation, UninviteToPodMutationVariables>;
+
+/**
+ * __useUninviteToPodMutation__
+ *
+ * To run a mutation, you first call `useUninviteToPodMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUninviteToPodMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uninviteToPodMutation, { data, loading, error }] = useUninviteToPodMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *      podId: // value for 'podId'
+ *   },
+ * });
+ */
+export function useUninviteToPodMutation(baseOptions?: Apollo.MutationHookOptions<UninviteToPodMutation, UninviteToPodMutationVariables>) {
+        return Apollo.useMutation<UninviteToPodMutation, UninviteToPodMutationVariables>(UninviteToPodDocument, baseOptions);
+      }
+export type UninviteToPodMutationHookResult = ReturnType<typeof useUninviteToPodMutation>;
+export type UninviteToPodMutationResult = Apollo.MutationResult<UninviteToPodMutation>;
+export type UninviteToPodMutationOptions = Apollo.BaseMutationOptions<UninviteToPodMutation, UninviteToPodMutationVariables>;
 export const CreateStoryDocument = gql`
     mutation CreateStory($title: String!, $podId: Int!) {
   createStory(data: {title: $title, podId: $podId}) {

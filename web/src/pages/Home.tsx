@@ -19,18 +19,10 @@ import {
   ButtonInvisible,
   Button,
   Dialog,
-  Heading,
-  Details,
   ButtonDanger,
   useDetails,
 } from "@primer/components";
-import {
-  MailIcon,
-  MentionIcon,
-  MortarBoardIcon,
-  SearchIcon,
-  XIcon,
-} from "@primer/octicons-react";
+import { MortarBoardIcon, SearchIcon, XIcon } from "@primer/octicons-react";
 import { gql } from "@apollo/client";
 
 // Graphql
@@ -40,7 +32,9 @@ import { MeQuery, useCreatePodMutation, User } from "../generated/graphql";
 import { POD } from "../constants/routes";
 
 import Container from "../components/Container";
+import Modal from "../components/Modal";
 import mainOptions from "../constants/mainOptions";
+import useModal from "../hooks/useModal";
 
 interface HomeProps extends RouteComponentProps {
   me: MeQuery["me"];
@@ -52,20 +46,16 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
   // Filter pods
   const [filterText, setFilterText] = useState("");
 
-  // To create pod
-  const [newPodText, setNewPodText] = useState("");
   const [createPodMutation] = useCreatePodMutation();
 
-  // For modal
-  const [isOpen, setIsOpen] = useState(false);
-  const returnFocusRef = useRef(null);
+  const { modalProps, buttonProps } = useModal();
 
   // Section
   const [section, setSection] = useState<"first" | "second">("first");
 
-  const handleCreatePod = () => {
+  const handleCreatePod = (text: string) => {
     createPodMutation({
-      variables: { name: newPodText },
+      variables: { name: text },
       update: (cache, { data }) => {
         cache.modify({
           id: cache.identify(me as User),
@@ -88,13 +78,6 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
         });
       },
     });
-    setIsOpen(false);
-    setNewPodText("");
-  };
-
-  const handleCancelNewPod = () => {
-    setIsOpen(false);
-    setNewPodText("");
   };
 
   const filteredList = pods
@@ -120,10 +103,6 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
       </BorderBox>
     ));
 
-  const { getDetailsProps, setOpen } = useDetails({
-    closeOnOutsideClick: true,
-  });
-
   const receivedInvites = me?.receivedInvites.map(
     ({ inviter, pod, asAdmin, createdAt }) => (
       <BorderBox
@@ -142,9 +121,7 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
             <Text>{asAdmin ? "admin" : "member"}</Text>
           </Text>
           <Flex>
-            <ButtonDanger mr={2} onClick={() => setOpen(false)}>
-              Cancel
-            </ButtonDanger>
+            <ButtonDanger mr={2}>Cancel</ButtonDanger>
             <ButtonPrimary>Accept</ButtonPrimary>
           </Flex>
         </Flex>
@@ -170,9 +147,7 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
             <Text> as </Text>
             <Text>{asAdmin ? "admin." : "member."}</Text>
           </Text>
-          <ButtonDanger onClick={() => setOpen(false)}>
-            Cancel invite
-          </ButtonDanger>
+          <ButtonDanger>Cancel invite</ButtonDanger>
         </Flex>
       </BorderBox>
     )
@@ -180,28 +155,13 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
 
   return (
     <Box>
-      <Dialog
-        isOpen={isOpen}
-        returnFocusRef={returnFocusRef}
-        onDismiss={handleCancelNewPod}
-        aria-labelledby="label"
-      >
-        <Dialog.Header>Create New Pod</Dialog.Header>
-        <Box p={3}>
-          <TextInput
-            placeholder="Enter pod name"
-            width={1}
-            onChange={(e) => setNewPodText(e.target.value)}
-            value={newPodText}
-          />
-          <Flex mt={3} justifyContent="flex-end">
-            <Button mr={1} onClick={handleCancelNewPod}>
-              Cancel
-            </Button>
-            <ButtonPrimary onClick={handleCreatePod}>Create</ButtonPrimary>
-          </Flex>
-        </Box>
-      </Dialog>
+      <Modal
+        title="Create new pod"
+        placeholder="Enter pod name"
+        submit="Create"
+        handleSubmit={handleCreatePod}
+        {...modalProps}
+      />
       <UnderlineNav bg="gray.0">
         <Container>
           <Flex>
@@ -255,12 +215,7 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
                   onChange={(e) => setFilterText(e.target.value)}
                   value={filterText}
                 />
-                <ButtonPrimary
-                  ref={returnFocusRef}
-                  onClick={() => setIsOpen(true)}
-                >
-                  New
-                </ButtonPrimary>
+                <ButtonPrimary {...buttonProps}>New</ButtonPrimary>
               </Flex>
               {pods.length !== filteredList.length && (
                 <Flex mb={3} justifyContent="space-between">

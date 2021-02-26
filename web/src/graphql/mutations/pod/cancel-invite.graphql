@@ -1,0 +1,3 @@
+mutation CancelInvite($podId: Int!) {
+  cancelInvite(podId: $podId)
+}

@@ -1,0 +1,3 @@
+mutation UninviteToPod($username: String!, $podId: Int!) {
+  uninviteToPod(podId: $podId, username: $username)
+}
