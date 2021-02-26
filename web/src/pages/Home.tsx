@@ -20,8 +20,17 @@ import {
   Button,
   Dialog,
   Heading,
+  Details,
+  ButtonDanger,
+  useDetails,
 } from "@primer/components";
-import { MortarBoardIcon, SearchIcon, XIcon } from "@primer/octicons-react";
+import {
+  MailIcon,
+  MentionIcon,
+  MortarBoardIcon,
+  SearchIcon,
+  XIcon,
+} from "@primer/octicons-react";
 import { gql } from "@apollo/client";
 
 // Graphql
@@ -111,18 +120,33 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
       </BorderBox>
     ));
 
+  const { getDetailsProps, setOpen } = useDetails({
+    closeOnOutsideClick: true,
+  });
+
   const receivedInvites = me?.receivedInvites.map(
     ({ inviter, pod, asAdmin, createdAt }) => (
-      <BorderBox key={inviter.id} padding={3}>
-        <Flex mb={2} alignItems="center">
-          <StyledOcticon icon={MortarBoardIcon} mr={2} />
-          <Text>
+      <BorderBox
+        key={inviter.id}
+        p={3}
+        borderRadius={0}
+        borderWidth={0}
+        borderTopWidth={1}
+      >
+        <Flex justifyContent="space-between" alignItems="center">
+          <Text fontSize={1}>
             <Text fontWeight="bold">{inviter.username}</Text>
             <Text> invited you to join </Text>
             <Text fontWeight="bold">{pod.name}</Text>
             <Text> as </Text>
-            <Text>{asAdmin ? "admin." : "member."}</Text>
+            <Text>{asAdmin ? "admin" : "member"}</Text>
           </Text>
+          <Flex>
+            <ButtonDanger mr={2} onClick={() => setOpen(false)}>
+              Cancel
+            </ButtonDanger>
+            <ButtonPrimary>Accept</ButtonPrimary>
+          </Flex>
         </Flex>
       </BorderBox>
     )
@@ -130,10 +154,15 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
 
   const sentInvites = me?.sentInvites.map(
     ({ invitee, pod, asAdmin, createdAt }) => (
-      <BorderBox key={invitee.id} padding={3}>
-        <Flex mb={2} alignItems="center">
-          <StyledOcticon icon={MortarBoardIcon} mr={2} />
-          <Text>
+      <BorderBox
+        key={invitee.id}
+        p={3}
+        borderRadius={0}
+        borderWidth={0}
+        borderTopWidth={1}
+      >
+        <Flex justifyContent="space-between" alignItems="center">
+          <Text fontSize={1}>
             <Text> You invited </Text>
             <Text fontWeight="bold">{invitee.username}</Text>
             <Text> to join </Text>
@@ -141,6 +170,9 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
             <Text> as </Text>
             <Text>{asAdmin ? "admin." : "member."}</Text>
           </Text>
+          <ButtonDanger onClick={() => setOpen(false)}>
+            Cancel invite
+          </ButtonDanger>
         </Flex>
       </BorderBox>
     )
@@ -252,10 +284,22 @@ const Home: React.FC<HomeProps> = ({ me, location }) => {
             </>
           ) : (
             <>
-              <Heading fontSize={2}>Received</Heading>
-              <Box>{receivedInvites}</Box>
-              <Heading fontSize={2}>Sent</Heading>
-              <Box>{sentInvites}</Box>
+              <BorderBox mb={3} overflow="hidden">
+                <Box bg="gray.1" p={3}>
+                  <Text fontSize={1} fontWeight="bold">
+                    Received
+                  </Text>
+                </Box>
+                {receivedInvites}
+              </BorderBox>
+              <BorderBox overflow="hidden">
+                <Box bg="gray.1" p={3}>
+                  <Text fontSize={1} fontWeight="bold">
+                    Sent
+                  </Text>
+                </Box>
+                {sentInvites}
+              </BorderBox>
             </>
           )}
         </Box>
