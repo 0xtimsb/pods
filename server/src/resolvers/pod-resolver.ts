@@ -139,6 +139,66 @@ export class PodResolver {
   }
 
   @Mutation(() => Boolean)
+  async uninviteToPod(
+    @Arg("podId", () => Int) podId: number,
+    @Arg("username", () => String) username: string,
+    @Ctx() { req }: Context
+  ): Promise<Boolean> {
+    // Check if request is from  admin of a pod and he hase joined the pod.
+    const userPod = await getConnection()
+      .createQueryBuilder(UserPod, "userPod")
+      .where("userPod.pod.id = :podId", { podId })
+      .andWhere("userPod.user.id = :userId", { userId: req.session.userId })
+      .andWhere("userPod.isAdmin = :isAdmin", { isAdmin: true })
+      .getOne();
+
+    if (!userPod) return false;
+
+    try {
+      const user = await getConnection()
+        .createQueryBuilder(User, "user")
+        .where("user.username = :username", { username })
+        .getOne();
+
+      if (user) {
+        const inviteeId = user.username;
+        await getConnection()
+          .createQueryBuilder()
+          .delete()
+          .from(Invite, "invite")
+          .where("invite.invitee.id = :inviteeId", { inviteeId })
+          .andWhere("invite.pod.id = :podId", { podId })
+          .andWhere("invite.inviter.id = :inviterId", {
+            inviterId: req.session.userId,
+          })
+          .execute();
+      }
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  async cancelInvite(
+    @Arg("podId", () => Int) podId: number,
+    @Ctx() { req }: Context
+  ): Promise<Boolean> {
+    try {
+      await getConnection()
+        .createQueryBuilder()
+        .delete()
+        .from(Invite, "invite")
+        .where("invite.invitee.id = :id", { id: req.session.userId })
+        .andWhere("invite.pod.id = :podId", { podId })
+        .execute();
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  @Mutation(() => Boolean)
   async removeFromPod(
     @Arg("podId", () => Int) podId: number,
     @Arg("userId", () => Int) userId: number,
@@ -163,7 +223,6 @@ export class PodResolver {
         .andWhere("userPod.user.id := userId", { userId: userId })
         .execute();
     } catch (e) {
-      console.log(e);
       return false;
     }
     return true;
