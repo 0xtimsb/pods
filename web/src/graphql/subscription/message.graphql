@@ -1,0 +1,15 @@
+subscription NewMessages(podId: Number!) {
+  newMessages(podId: $podId) {
+    id
+    text
+    createdAt
+    user {
+      id
+      username
+    }
+    pod {
+      id
+      name
+    }
+  }
+}

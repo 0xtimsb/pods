@@ -1,0 +1,3 @@
+mutation CreateMessage(text: String!, podId: Number!){
+  createMessage(text: $text, podId: $podId)
+}
