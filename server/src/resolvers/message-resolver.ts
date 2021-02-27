@@ -82,13 +82,28 @@ export class MessageResolver {
   }
 
   @Subscription(() => Message, {
+    nullable: true,
     topics: "MESSAGES",
     filter: ({ payload, args }) => payload.podId === args.podId,
   })
-  newMessages(
+  async newMessages(
     @Root() message: Message,
-    @Arg("podId", () => Int) _podId: number
-  ): Message {
-    return message;
+    @Arg("podId", () => Int) podId: number,
+    @Ctx() { connection }: Context
+  ): Promise<Message | null> {
+    const userId = connection.context.req.session.userId;
+    console.log(userId);
+    try {
+      const userPod = await getConnection()
+        .createQueryBuilder(UserPod, "userPod")
+        .where("userPod.user.id = :userId", { userId })
+        .andWhere("userPod.pod.id = :podId", { podId })
+        .getOne();
+      console.log(userPod);
+      if (!userPod) return null;
+      return message;
+    } catch (e) {
+      return null;
+    }
   }
 }

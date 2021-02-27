@@ -7,4 +7,5 @@ export interface Context {
   };
   res: Response;
   redis: Redis;
+  connection: any;
 }

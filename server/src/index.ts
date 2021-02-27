@@ -25,7 +25,6 @@ import { PodResolver } from "./resolvers/pod-resolver";
 import { StoryResolver } from "./resolvers/story-resolver";
 import { TaskResolver } from "./resolvers/task-resolver";
 import { MessageResolver } from "./resolvers/message-resolver";
-import { Context } from "./types/context";
 
 const main = async () => {
   await createConnection({
@@ -71,30 +70,35 @@ const main = async () => {
 
   const redis = new Redis(process.env.REDIS_URL);
 
-  app.use(
-    session({
-      store: new RedisStore({
-        client: redis,
-        disableTouch: true, // To store data and extra calls
-      }),
-      cookie: {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
-        sameSite: __prod__ ? "none" : "lax", // "none" works with heroku domain. If you want to use "lax", you need custom domain.
-        secure: __prod__, // Cookie only works in https.
-      },
-      saveUninitialized: false,
-      secret: process.env.SESSION_SECRET,
-      resave: false,
-    })
-  );
+  const sessionMiddleware = session({
+    store: new RedisStore({
+      client: redis,
+      disableTouch: true, // To store data and extra calls
+    }),
+    cookie: {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
+      sameSite: __prod__ ? "none" : "lax", // "none" works with heroku domain. If you want to use "lax", you need custom domain.
+      secure: __prod__, // Cookie only works in https.
+    },
+    saveUninitialized: false,
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+  });
+
+  app.use(sessionMiddleware);
 
   const apolloServer = new ApolloServer({
     schema,
-    context: ({ req, res }) => ({ req, res, redis }),
+    context: ({ req, res, connection }) => ({ req, res, redis, connection }),
     subscriptions: {
-      onConnect: () => {
+      onConnect: (_, ws: any) => {
         console.log("Client connected");
+        return new Promise((res) =>
+          sessionMiddleware(ws.upgradeReq, {} as any, () => {
+            res({ req: ws.upgradeReq });
+          })
+        );
       },
       onDisconnect: () => {
         console.log("Client disconnected");
