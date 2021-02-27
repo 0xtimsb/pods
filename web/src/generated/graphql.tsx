@@ -66,6 +66,7 @@ export type Pod = {
   members: Array<User>;
   admins: Array<User>;
   stories: Array<Story>;
+  messages: Array<Message>;
 };
 
 export type Story = {
@@ -87,6 +88,16 @@ export type Task = {
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   users: Array<User>;
+};
+
+export type Message = {
+  __typename?: 'Message';
+  id: Scalars['Int'];
+  text: Scalars['String'];
+  user: User;
+  pod: Pod;
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
 };
 
 export type Mutation = {
@@ -112,6 +123,7 @@ export type Mutation = {
   assignUserToTask: Scalars['Boolean'];
   removeUserFromTask: Scalars['Boolean'];
   deleteTask: Scalars['Boolean'];
+  createMessage: Scalars['Boolean'];
 };
 
 
@@ -228,6 +240,12 @@ export type MutationDeleteTaskArgs = {
   taskId: Scalars['Int'];
 };
 
+
+export type MutationCreateMessageArgs = {
+  podId: Scalars['Int'];
+  text: Scalars['String'];
+};
+
 export type UserResponse = {
   __typename?: 'UserResponse';
   errors?: Maybe<Array<FieldError>>;
@@ -278,6 +296,27 @@ export type TaskInput = {
   description?: Maybe<Scalars['String']>;
   storyId: Scalars['Int'];
 };
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  newMessages?: Maybe<Message>;
+};
+
+
+export type SubscriptionNewMessagesArgs = {
+  podId: Scalars['Int'];
+};
+
+export type CreateMessageMutationVariables = Exact<{
+  text: Scalars['String'];
+  podId: Scalars['Int'];
+}>;
+
+
+export type CreateMessageMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'createMessage'>
+);
 
 export type CancelInviteMutationVariables = Exact<{
   podId: Scalars['Int'];
@@ -629,7 +668,58 @@ export type PodQuery = (
   )> }
 );
 
+export type NewMessagesSubscriptionVariables = Exact<{
+  podId: Scalars['Int'];
+}>;
 
+
+export type NewMessagesSubscription = (
+  { __typename?: 'Subscription' }
+  & { newMessages?: Maybe<(
+    { __typename?: 'Message' }
+    & Pick<Message, 'id' | 'text' | 'createdAt'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username'>
+    ), pod: (
+      { __typename?: 'Pod' }
+      & Pick<Pod, 'id' | 'name'>
+    ) }
+  )> }
+);
+
+
+export const CreateMessageDocument = gql`
+    mutation CreateMessage($text: String!, $podId: Int!) {
+  createMessage(text: $text, podId: $podId)
+}
+    `;
+export type CreateMessageMutationFn = Apollo.MutationFunction<CreateMessageMutation, CreateMessageMutationVariables>;
+
+/**
+ * __useCreateMessageMutation__
+ *
+ * To run a mutation, you first call `useCreateMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMessageMutation, { data, loading, error }] = useCreateMessageMutation({
+ *   variables: {
+ *      text: // value for 'text'
+ *      podId: // value for 'podId'
+ *   },
+ * });
+ */
+export function useCreateMessageMutation(baseOptions?: Apollo.MutationHookOptions<CreateMessageMutation, CreateMessageMutationVariables>) {
+        return Apollo.useMutation<CreateMessageMutation, CreateMessageMutationVariables>(CreateMessageDocument, baseOptions);
+      }
+export type CreateMessageMutationHookResult = ReturnType<typeof useCreateMessageMutation>;
+export type CreateMessageMutationResult = Apollo.MutationResult<CreateMessageMutation>;
+export type CreateMessageMutationOptions = Apollo.BaseMutationOptions<CreateMessageMutation, CreateMessageMutationVariables>;
 export const CancelInviteDocument = gql`
     mutation CancelInvite($podId: Int!) {
   cancelInvite(podId: $podId)
@@ -1466,3 +1556,42 @@ export function usePodLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PodQue
 export type PodQueryHookResult = ReturnType<typeof usePodQuery>;
 export type PodLazyQueryHookResult = ReturnType<typeof usePodLazyQuery>;
 export type PodQueryResult = Apollo.QueryResult<PodQuery, PodQueryVariables>;
+export const NewMessagesDocument = gql`
+    subscription NewMessages($podId: Int!) {
+  newMessages(podId: $podId) {
+    id
+    text
+    createdAt
+    user {
+      id
+      username
+    }
+    pod {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useNewMessagesSubscription__
+ *
+ * To run a query within a React component, call `useNewMessagesSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useNewMessagesSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewMessagesSubscription({
+ *   variables: {
+ *      podId: // value for 'podId'
+ *   },
+ * });
+ */
+export function useNewMessagesSubscription(baseOptions: Apollo.SubscriptionHookOptions<NewMessagesSubscription, NewMessagesSubscriptionVariables>) {
+        return Apollo.useSubscription<NewMessagesSubscription, NewMessagesSubscriptionVariables>(NewMessagesDocument, baseOptions);
+      }
+export type NewMessagesSubscriptionHookResult = ReturnType<typeof useNewMessagesSubscription>;
+export type NewMessagesSubscriptionResult = Apollo.SubscriptionResult<NewMessagesSubscription>;

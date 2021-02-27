@@ -1,4 +1,4 @@
-subscription NewMessages(podId: Number!) {
+subscription NewMessages($podId: Int!) {
   newMessages(podId: $podId) {
     id
     text
