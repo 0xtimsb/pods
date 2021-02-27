@@ -19,7 +19,11 @@ import { useState } from "react";
 import Container from "../../components/Container";
 
 // Graphql
-import { Pod, useInviteToPodMutation } from "../../generated/graphql";
+import {
+  Pod,
+  useInviteToPodMutation,
+  useNewMessagesSubscription,
+} from "../../generated/graphql";
 
 // Hooks
 import useInputAndCheckModal from "../../hooks/useInputAndCheckModal";
@@ -37,7 +41,9 @@ const Discussion = ({ pod }: { pod: Pod }) => {
     handleClose,
   } = useInputAndCheckModal();
 
-  const [popover, setPopover] = useState(false);
+  const { data, loading } = useNewMessagesSubscription({
+    variables: { podId: pod.id },
+  });
 
   const handleInviteUser = () => {
     inviteToPod({
@@ -46,7 +52,7 @@ const Discussion = ({ pod }: { pod: Pod }) => {
   };
 
   return (
-    <Container>
+    <Container flexDirection="row">
       <Dialog {...dialogProps} onDismiss={handleClose} aria-labelledby="label">
         <Dialog.Header>Invite user to the pod</Dialog.Header>
         <Box p={3}>
@@ -77,7 +83,6 @@ const Discussion = ({ pod }: { pod: Pod }) => {
           </Flex>
         </Box>
       </Dialog>
-
       <Box width={250} py={3}>
         <Heading fontSize={3} mb={3}>
           {pod.name}
@@ -124,7 +129,9 @@ const Discussion = ({ pod }: { pod: Pod }) => {
           Invite
         </Button>
       </Box>
-      <Box flex={1} pt={3} mb={6}></Box>
+      <Box flex={1} pt={3} mb={6}>
+        {data?.newMessages?.text}
+      </Box>
     </Container>
   );
 };
