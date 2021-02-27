@@ -12,6 +12,7 @@ import {
 import { Pod } from "./pod";
 import { Invite } from "./invite";
 import { UserPod } from "./user-pod";
+import { Message } from "./message";
 
 @Entity()
 @ObjectType()
@@ -49,6 +50,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => UserPod, (userPod) => userPod.user)
   userPods: UserPod[];
+
+  @OneToMany(() => Message, (message) => message.user)
+  messages: Message[];
 
   @Field(() => [Pod])
   pods: Pod[];

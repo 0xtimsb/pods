@@ -19,7 +19,6 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Navbar me={data?.me} />
       <Switch>
         {me ? (
           <Route exact render={() => <AppLayout me={me} />} />

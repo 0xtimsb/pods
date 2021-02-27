@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import "dotenv/config";
 
+import http from "http";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 
@@ -13,6 +14,8 @@ import Redis from "ioredis";
 import connectRedis from "connect-redis";
 import session from "express-session";
 
+import { RedisPubSub } from "graphql-redis-subscriptions";
+
 // Constants
 import { __prod__ } from "./constants";
 
@@ -21,6 +24,8 @@ import { UserResolver } from "./resolvers/user-resolver";
 import { PodResolver } from "./resolvers/pod-resolver";
 import { StoryResolver } from "./resolvers/story-resolver";
 import { TaskResolver } from "./resolvers/task-resolver";
+import { MessageResolver } from "./resolvers/message-resolver";
+import { Context } from "./types/context";
 
 const main = async () => {
   await createConnection({
@@ -38,10 +43,22 @@ const main = async () => {
     entities: [path.join(__dirname, "./entities/*")],
   });
 
+  const pubSub = new RedisPubSub({
+    publisher: new Redis(process.env.REDIS_URL),
+    subscriber: new Redis(process.env.REDIS_URL),
+  });
+
   const schema = await buildSchema({
-    resolvers: [UserResolver, PodResolver, StoryResolver, TaskResolver],
+    resolvers: [
+      UserResolver,
+      PodResolver,
+      StoryResolver,
+      TaskResolver,
+      MessageResolver,
+    ],
     //  emitSchemaFile: path.resolve(__dirname, "schema.gql"),  // To emit schema file
     validate: false,
+    pubSub,
   });
 
   const app = express();
@@ -51,6 +68,7 @@ const main = async () => {
   }
 
   const RedisStore = connectRedis(session);
+
   const redis = new Redis(process.env.REDIS_URL);
 
   app.use(
@@ -74,6 +92,14 @@ const main = async () => {
   const apolloServer = new ApolloServer({
     schema,
     context: ({ req, res }) => ({ req, res, redis }),
+    subscriptions: {
+      onConnect: () => {
+        console.log("Client connected");
+      },
+      onDisconnect: () => {
+        console.log("Client disconnected");
+      },
+    },
   });
 
   apolloServer.applyMiddleware({
@@ -84,7 +110,10 @@ const main = async () => {
     },
   });
 
-  app.listen(parseInt(process.env.PORT), () =>
+  const httpServer = http.createServer(app);
+  apolloServer.installSubscriptionHandlers(httpServer);
+
+  httpServer.listen(parseInt(process.env.PORT), () =>
     console.log(`Running: http://localhost:${process.env.PORT}/graphql`)
   );
 };
