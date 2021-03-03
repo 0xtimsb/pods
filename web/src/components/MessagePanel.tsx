@@ -1,4 +1,4 @@
-import { BorderBox, Flex } from "@primer/components";
+import { BorderBox, Box, Flex } from "@primer/components";
 import { useEffect, useState } from "react";
 import {
   Message,
@@ -7,6 +7,7 @@ import {
 } from "../generated/graphql";
 
 import MessageBox from "./MessageBox";
+import MessageInputBox from "./MessageInputBox";
 
 interface MessagePanelProps {
   podId: number;
@@ -24,23 +25,31 @@ const MessagePanel: React.FC<MessagePanelProps> = ({ podId }) => {
   useEffect(() => {
     if (data && data.newMessages) {
       const newMessage = data.newMessages;
-      setMessages([...messages, newMessage]);
+      // To avoid repeatation of any message, if occured due to some glitch.
+      const found = messages.find((message) => message.id === newMessage.id);
+      if (!found) setMessages([newMessage, ...messages]);
     }
   }, [data]);
 
   return (
-    <BorderBox
-      flexDirection="column"
-      flex={1}
-      height="100%"
-      justifyContent="flex-end"
-      bg="gray.1"
-      p={3}
-    >
-      {messages.map((message) => (
-        <MessageBox message={message} />
-      ))}
-    </BorderBox>
+    <Flex flexDirection="column" flex={1}>
+      <BorderBox
+        flex={1}
+        borderWidth={1}
+        borderBottomWidth={0}
+        borderRadius={2}
+        borderBottomRightRadius={0}
+        borderBottomLeftRadius={0}
+        overflowY="scroll"
+        display="flex"
+        flexDirection="column-reverse"
+      >
+        {messages.map((message) => (
+          <MessageBox key={message.id} message={message} />
+        ))}
+      </BorderBox>
+      <MessageInputBox podId={podId} />
+    </Flex>
   );
 };
 

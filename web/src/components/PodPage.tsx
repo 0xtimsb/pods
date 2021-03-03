@@ -12,7 +12,7 @@ import { Box, Breadcrumb, Flex, Text } from "@primer/components";
 import { HOME, POD, POD_PROJECT, POD_SETTINGS } from "../constants/routes";
 
 // Graphql
-import { Pod, usePodQuery } from "../generated/graphql";
+import { MeQuery, Pod, usePodQuery } from "../generated/graphql";
 
 // Pages
 import Loading from "./Loading";
@@ -29,7 +29,11 @@ interface MatchParams {
   id: string;
 }
 
-const PodPage: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => {
+interface PodPageInterface extends RouteComponentProps<MatchParams> {
+  me: NonNullable<MeQuery["me"]>;
+}
+
+const PodPage: React.FC<PodPageInterface> = ({ match, me }) => {
   const id = parseInt(match.params.id);
   const { data, loading, error } = usePodQuery({
     variables: { id },
@@ -42,7 +46,7 @@ const PodPage: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => {
   const pod = data.pod;
 
   return (
-    <Flex flexDirection="column" flex={1}>
+    <Flex flexDirection="column" height="100vh">
       <Box>
         <Container mb={2} mt={3}>
           <Breadcrumb>
@@ -60,22 +64,20 @@ const PodPage: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => {
         </Container>
         <UnderlineNavbar navItems={podNavItems} id={pod.id} />
       </Box>
-      <Flex flex={1}>
-        <Switch>
-          <Route
-            exact
-            path={POD}
-            render={() => <Discussion pod={pod as Pod} />}
-          />
-          <Route
-            exact
-            path={POD_PROJECT}
-            render={() => <Board pod={pod as Pod} />}
-          />
-          <Route exact path={POD_SETTINGS} render={() => <Settings />} />
-          <Redirect to={POD} />
-        </Switch>
-      </Flex>
+      <Switch>
+        <Route
+          exact
+          path={POD}
+          render={() => <Discussion me={me} pod={pod as Pod} />}
+        />
+        <Route
+          exact
+          path={POD_PROJECT}
+          render={() => <Board pod={pod as Pod} />}
+        />
+        <Route exact path={POD_SETTINGS} render={() => <Settings />} />
+        <Redirect to={POD} />
+      </Switch>
     </Flex>
   );
 };

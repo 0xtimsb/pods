@@ -7,7 +7,15 @@ import { Story, Task, useDeleteTaskMutation } from "../../generated/graphql";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useRef, useState } from "react";
 import { RiCloseLine } from "react-icons/ri";
-import { BorderBox, Flex, Heading, Text } from "@primer/components";
+import {
+  BorderBox,
+  Button,
+  Flex,
+  Heading,
+  SelectMenu,
+  StyledOcticon,
+  Text,
+} from "@primer/components";
 
 interface CardProps {
   story: {
@@ -116,27 +124,20 @@ const Card: React.FC<CardProps> = ({ task, story, index }) => {
               </div>
             </>
           )}
-          <div className="relative">
-            {toggleMenu && (
-              <div
-                className="absolute right-3 -top-2 z-10 py-1 border rounded shadow-md border-gray-300 bg-white text-sm"
-                ref={menuRef}
-              >
-                <div className="px-3 py-1.5 cursor-pointer hover:bg-gray-100">
-                  Assign User
-                </div>
-                <div className="px-3 py-1.5 cursor-pointer hover:bg-gray-100">
-                  Rename Task
-                </div>
-                <div
-                  className="px-3 py-1.5 cursor-pointer hover:bg-gray-100"
-                  onClick={handleDeleteTaskModal}
-                >
+          <SelectMenu>
+            <summary>
+              <FiMoreHorizontal onClick={() => setToggleMenu(true)} />
+            </summary>
+            <SelectMenu.Modal>
+              <SelectMenu.List>
+                <SelectMenu.Item href="#">Assign User</SelectMenu.Item>
+                <SelectMenu.Item href="#">Rename Task</SelectMenu.Item>
+                <SelectMenu.Item onClick={handleDeleteTaskModal}>
                   Delete Task
-                </div>
-              </div>
-            )}
-          </div>
+                </SelectMenu.Item>
+              </SelectMenu.List>
+            </SelectMenu.Modal>
+          </SelectMenu>
           <Text fontSize="12px">
             <Text>Added by </Text>
             <Text fontWeight="bold">smitbarmase</Text>
