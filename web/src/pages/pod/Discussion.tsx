@@ -87,7 +87,7 @@ const Discussion = ({
           </Flex>
         </Box>
       </Dialog>
-      <Box width={250} py={3} mr={3}>
+      <Box width={270} py={3} mr={3}>
         <Heading fontSize={3} mb={3}>
           {pod.name}
         </Heading>
