@@ -2,6 +2,8 @@ query Me {
   me {
     id
     username
+    createdAt
+    updatedAt
     pods {
       id
       name

@@ -92,17 +92,12 @@ const Discussion = ({
           {pod.name}
         </Heading>
         <BorderBox mb={3}>
-          <Box px={3} py={2} bg="gray.0">
-            <Flex justifyContent="space-between" alignItems="center">
-              <Flex>
-                <CounterLabel mr={2} px={2} py={1}>
-                  {pod.admins.length}
-                </CounterLabel>
-                <Heading fontSize={1}>Admins</Heading>
-              </Flex>
-              <StyledOcticon icon={KebabHorizontalIcon} />
-            </Flex>
-          </Box>
+          <Flex p={2} bg="gray.0">
+            <CounterLabel mr={2} px={2} py={1}>
+              {pod.admins.length}
+            </CounterLabel>
+            <Heading fontSize={1}>Admins</Heading>
+          </Flex>
           {pod.admins.map((admin) => (
             <BorderBox
               px={3}
@@ -116,17 +111,12 @@ const Discussion = ({
           ))}
         </BorderBox>
         <BorderBox mb={3}>
-          <Box px={3} py={2} bg="gray.0">
-            <Flex justifyContent="space-between" alignItems="center">
-              <Flex>
-                <CounterLabel mr={2} px={2} py={1}>
-                  {pod.members.length}
-                </CounterLabel>
-                <Heading fontSize={1}>Members</Heading>
-              </Flex>
-              <StyledOcticon icon={KebabHorizontalIcon} />
-            </Flex>
-          </Box>
+          <Flex p={2} bg="gray.0">
+            <CounterLabel mr={2} px={2} py={1}>
+              {pod.members.length}
+            </CounterLabel>
+            <Heading fontSize={1}>Members</Heading>
+          </Flex>
           {pod.members.map((member) => (
             <BorderBox
               px={3}

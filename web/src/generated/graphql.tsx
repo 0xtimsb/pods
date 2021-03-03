@@ -613,7 +613,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'username'>
+    & Pick<User, 'id' | 'username' | 'createdAt' | 'updatedAt'>
     & { pods: Array<(
       { __typename?: 'Pod' }
       & Pick<Pod, 'id' | 'name' | 'createdAt'>
@@ -1448,6 +1448,8 @@ export const MeDocument = gql`
   me {
     id
     username
+    createdAt
+    updatedAt
     pods {
       id
       name

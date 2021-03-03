@@ -6,8 +6,6 @@ import { Pod } from "../../generated/graphql";
 import useProject from "../../hooks/useProject";
 import Container from "../Container";
 
-import Layout from "../Layout";
-
 // Components
 import Column from "./Column";
 

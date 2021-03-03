@@ -25,6 +25,10 @@ import UnderlineNavbar from "../components/UnderlineNavbar";
 // Constants
 import { homeNavItems } from "../constants/navItems";
 
+// Image
+import Profile from "../images/profile.png";
+import { currentDate, timeAgo } from "../utils/date";
+
 interface HomeProps {
   me: NonNullable<MeQuery["me"]>;
 }
@@ -88,7 +92,28 @@ const Home: React.FC<HomeProps> = ({ me }) => {
           <Heading fontSize={2} mb={3}>
             Profile
           </Heading>
-          <Text mb={3}>{me.username}</Text>
+          <Flex mb={3}>
+            <Box marginRight={3}>
+              <img
+                src={Profile}
+                alt={me.username}
+                width={75}
+                height={75}
+                style={{ borderRadius: 4 }}
+              />
+            </Box>
+            <Box>
+              <Heading>{me.username}</Heading>
+              <Flex>
+                <Text fontSize={1} mr={2} color="gray.6">
+                  Joined
+                </Text>
+                <Text fontSize={1} color="gray.7" fontWeight="bold">
+                  {currentDate(me.createdAt)}
+                </Text>
+              </Flex>
+            </Box>
+          </Flex>
           <Heading fontSize={2} mb={3}>
             Invites
           </Heading>

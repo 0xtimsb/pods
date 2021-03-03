@@ -129,7 +129,7 @@ const Card: React.FC<CardProps> = ({ task, story, index }) => {
             <summary>
               <FiMoreHorizontal onClick={() => setToggleMenu(true)} />
             </summary>
-            <SelectMenu.Modal>
+            <SelectMenu.Modal width={170}>
               <SelectMenu.List>
                 <SelectMenu.Item href="#">Assign User</SelectMenu.Item>
                 <SelectMenu.Item href="#">Rename Task</SelectMenu.Item>
