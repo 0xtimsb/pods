@@ -24,6 +24,7 @@ import UnderlineNavbar from "./UnderlineNavbar";
 // Constants
 import { podNavItems } from "../constants/navItems";
 import Container from "./Container";
+import Layout from "./Layout";
 
 interface MatchParams {
   id: string;
@@ -46,7 +47,7 @@ const PodPage: React.FC<PodPageInterface> = ({ match, me }) => {
   const pod = data.pod;
 
   return (
-    <Flex flexDirection="column" height="100vh">
+    <Layout>
       <Box>
         <Container mb={2} mt={3}>
           <Breadcrumb>
@@ -78,7 +79,7 @@ const PodPage: React.FC<PodPageInterface> = ({ match, me }) => {
         <Route exact path={POD_SETTINGS} render={() => <Settings />} />
         <Redirect to={POD} />
       </Switch>
-    </Flex>
+    </Layout>
   );
 };
 

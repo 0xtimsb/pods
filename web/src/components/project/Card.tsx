@@ -82,6 +82,7 @@ const Card: React.FC<CardProps> = ({ task, story, index }) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           bg="white"
+          width={300}
           boxShadow="0px 1px 0px 0px rgba(0, 0, 0, 0.05)"
           py="10px"
           px="12px"

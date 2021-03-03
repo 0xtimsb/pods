@@ -147,16 +147,16 @@ const Column: React.FC<ColumnProps> = ({ pod, story, index }) => {
         <BorderBox
           ref={provided.innerRef}
           {...provided.draggableProps}
-          width={300}
+          minWidth={320}
           marginRight={3}
-          flexDirection="column"
           bg="gray.1"
-          px={2}
-          className={`${snapshot.isDragging && "ring border-blue-500"}`}
+          display="flex"
+          flexDirection="column"
         >
           <Flex
             {...provided.dragHandleProps}
             py={3}
+            px={2}
             justifyContent="space-between"
           >
             <Flex alignItems="center">
@@ -249,12 +249,12 @@ const Column: React.FC<ColumnProps> = ({ pod, story, index }) => {
           </div>
           <Droppable droppableId={"S" + story.id} type="tasks">
             {(provided, snapshot) => (
-              <Flex ref={provided.innerRef} flexDirection="column">
+              <Box ref={provided.innerRef} overflowY="auto" flex={1} px={2}>
                 {story.tasks.map((task, index) => (
                   <Card key={task.id} task={task} story={story} index={index} />
                 ))}
                 {provided.placeholder}
-              </Flex>
+              </Box>
             )}
           </Droppable>
         </BorderBox>

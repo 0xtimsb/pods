@@ -1,21 +1,12 @@
 import { Flex } from "@primer/components";
-import {
-  DragDropContext,
-  Droppable,
-  OnDragEndResponder,
-} from "react-beautiful-dnd";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 // Graphql
-import {
-  Pod,
-  PodQuery,
-  PodQueryResult,
-  PodResponse,
-  Story,
-  Task,
-} from "../../generated/graphql";
+import { Pod } from "../../generated/graphql";
 import useProject from "../../hooks/useProject";
 import Container from "../Container";
+
+import Layout from "../Layout";
 
 // Components
 import Column from "./Column";
@@ -30,7 +21,7 @@ const Board: React.FC<BoardProps> = ({ pod }) => {
   const { stories } = pod;
 
   return (
-    <Container flex={1}>
+    <Container>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable
           droppableId="droppable"
