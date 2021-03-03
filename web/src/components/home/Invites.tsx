@@ -158,7 +158,7 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
   return (
     <>
       <BorderBox mb={3} overflow="hidden">
-        <Box bg="gray.1" p={3}>
+        <Box bg="gray.0" p={3}>
           <Text fontSize={1} fontWeight="bold">
             Received
           </Text>
@@ -174,7 +174,7 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
         )}
       </BorderBox>
       <BorderBox overflow="hidden">
-        <Box bg="gray.1" p={3}>
+        <Box bg="gray.0" p={3}>
           <Text fontSize={1} fontWeight="bold">
             Sent
           </Text>

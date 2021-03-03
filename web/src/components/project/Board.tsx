@@ -1,3 +1,4 @@
+import { Flex } from "@primer/components";
 import {
   DragDropContext,
   Droppable,
@@ -29,33 +30,23 @@ const Board: React.FC<BoardProps> = ({ pod }) => {
   const { stories } = pod;
 
   return (
-    <Container>
-      <div className="flex justify-center overflow-y-hidden">
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable
-            droppableId="droppable"
-            type="stories"
-            direction="horizontal"
-          >
-            {(provided, snapshot) => (
-              <div
-                ref={provided.innerRef}
-                className="py-3 max-w-7xl flex-1 flex"
-              >
-                {stories.map((story, index) => (
-                  <Column
-                    key={story.id}
-                    pod={pod}
-                    story={story}
-                    index={index}
-                  />
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
-      </div>
+    <Container flex={1}>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable
+          droppableId="droppable"
+          type="stories"
+          direction="horizontal"
+        >
+          {(provided, snapshot) => (
+            <Flex ref={provided.innerRef} py={3} flex={1}>
+              {stories.map((story, index) => (
+                <Column key={story.id} pod={pod} story={story} index={index} />
+              ))}
+              {provided.placeholder}
+            </Flex>
+          )}
+        </Droppable>
+      </DragDropContext>
     </Container>
   );
 };

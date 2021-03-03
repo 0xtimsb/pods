@@ -6,7 +6,7 @@ import {
   Link,
   generatePath,
 } from "react-router-dom";
-import { Box, Breadcrumb, Text } from "@primer/components";
+import { Box, Breadcrumb, Flex, Text } from "@primer/components";
 
 // Routes
 import { HOME, POD, POD_PROJECT, POD_SETTINGS } from "../constants/routes";
@@ -42,37 +42,41 @@ const PodPage: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => {
   const pod = data.pod;
 
   return (
-    <Box>
-      <Container mb={2} mt={3}>
-        <Breadcrumb>
-          <Breadcrumb.Item as={Link} to={HOME}>
-            <Text fontSize={2} fontWeight="bold">
-              Home
-            </Text>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item as={Link} to={generatePath(POD, { id: pod.id })}>
-            <Text fontSize={2} fontWeight="bold">
-              {data.pod.name}
-            </Text>
-          </Breadcrumb.Item>
-        </Breadcrumb>
-      </Container>
-      <UnderlineNavbar navItems={podNavItems} id={pod.id} />
-      <Switch>
-        <Route
-          exact
-          path={POD}
-          render={() => <Discussion pod={pod as Pod} />}
-        />
-        <Route
-          exact
-          path={POD_PROJECT}
-          render={() => <Board pod={pod as Pod} />}
-        />
-        <Route exact path={POD_SETTINGS} render={() => <Settings />} />
-        <Redirect to={POD} />
-      </Switch>
-    </Box>
+    <Flex flexDirection="column" flex={1}>
+      <Box>
+        <Container mb={2} mt={3}>
+          <Breadcrumb>
+            <Breadcrumb.Item as={Link} to={HOME}>
+              <Text fontSize={2} fontWeight="bold">
+                Home
+              </Text>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item as={Link} to={generatePath(POD, { id: pod.id })}>
+              <Text fontSize={2} fontWeight="bold">
+                {data.pod.name}
+              </Text>
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </Container>
+        <UnderlineNavbar navItems={podNavItems} id={pod.id} />
+      </Box>
+      <Flex flex={1}>
+        <Switch>
+          <Route
+            exact
+            path={POD}
+            render={() => <Discussion pod={pod as Pod} />}
+          />
+          <Route
+            exact
+            path={POD_PROJECT}
+            render={() => <Board pod={pod as Pod} />}
+          />
+          <Route exact path={POD_SETTINGS} render={() => <Settings />} />
+          <Redirect to={POD} />
+        </Switch>
+      </Flex>
+    </Flex>
   );
 };
 

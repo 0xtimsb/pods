@@ -6,6 +6,7 @@ import {
   Flex,
   Heading,
   TextInput,
+  Text,
 } from "@primer/components";
 import { gql, Reference } from "@apollo/client";
 
@@ -82,17 +83,22 @@ const Home: React.FC<HomeProps> = ({ me }) => {
         </Box>
       </Dialog>
       <UnderlineNavbar navItems={homeNavItems} />
-      <Container flexDirection="row">
-        <Box width={350}></Box>
-        <Box flex={1} pt={3} mb={6}>
+      <Container flexDirection="row" pt={3}>
+        <Box flex={1} mr={3}>
           <Heading fontSize={2} mb={3}>
-            Pods
+            Profile
           </Heading>
-          <Pods me={me} buttonProps={buttonProps} />
+          <Text mb={3}>{me.username}</Text>
           <Heading fontSize={2} mb={3}>
             Invites
           </Heading>
           <Invites me={me} />
+        </Box>
+        <Box flex={2}>
+          <Heading fontSize={2} mb={3}>
+            Pods
+          </Heading>
+          <Pods me={me} buttonProps={buttonProps} />
         </Box>
       </Container>
     </Box>

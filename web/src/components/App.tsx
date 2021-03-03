@@ -7,6 +7,7 @@ import { useMeQuery } from "../generated/graphql";
 import AuthLayout from "./layout/AuthLayout";
 import AppLayout from "./layout/AppLayout";
 import Navbar from "./Navbar";
+import { Flex } from "@primer/components";
 
 function App() {
   const { data, loading, error } = useMeQuery();
@@ -19,13 +20,15 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Switch>
-        {me ? (
-          <Route exact render={() => <AppLayout me={me} />} />
-        ) : (
-          <Route exact render={() => <AuthLayout />} />
-        )}
-      </Switch>
+      <Flex flexDirection="column" height="100vh">
+        <Switch>
+          {me ? (
+            <Route exact render={() => <AppLayout me={me} />} />
+          ) : (
+            <Route exact render={() => <AuthLayout />} />
+          )}
+        </Switch>
+      </Flex>
     </BrowserRouter>
   );
 }

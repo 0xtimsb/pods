@@ -1,5 +1,16 @@
 import { gql } from "@apollo/client";
-import { useEffect, useRef, useState } from "react";
+import {
+  BorderBox,
+  Box,
+  Button,
+  ButtonPrimary,
+  CounterLabel,
+  Dialog,
+  Flex,
+  Heading,
+  TextInput,
+} from "@primer/components";
+import { useRef, useState } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { FiPlus, FiMoreHorizontal } from "react-icons/fi";
 import { RiCloseLine } from "react-icons/ri";
@@ -12,6 +23,7 @@ import {
   useCreateTaskMutation,
   useDeleteStoryMutation,
 } from "../../generated/graphql";
+import useInputModal from "../../hooks/useInputModal";
 import useOutsideClick from "../../hooks/useOutsideClick";
 
 // Components
@@ -42,6 +54,14 @@ interface ColumnProps {
 const Column: React.FC<ColumnProps> = ({ pod, story, index }) => {
   // Add Task
   const [createTaskMutation] = useCreateTaskMutation();
+  const {
+    value,
+    dialogProps,
+    inputProps,
+    buttonProps,
+    handleClose,
+  } = useInputModal();
+
   const [toggleAdd, setToggleAdd] = useState(false);
   const [text, setText] = useState("");
 
@@ -124,34 +144,35 @@ const Column: React.FC<ColumnProps> = ({ pod, story, index }) => {
   return (
     <Draggable key={story.id} draggableId={"S" + story.id} index={index}>
       {(provided, snapshot) => (
-        <div
+        <BorderBox
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className={`flex flex-col w-72 bg-gray-50 border rounded-md mr-3 ${
-            snapshot.isDragging && "ring border-blue-500"
-          }`}
+          width={300}
+          marginRight={3}
+          flexDirection="column"
+          bg="gray.1"
+          px={2}
+          className={`${snapshot.isDragging && "ring border-blue-500"}`}
         >
-          <div
-            className="p-3 flex justify-between"
+          <Flex
             {...provided.dragHandleProps}
+            py={3}
+            justifyContent="space-between"
           >
-            <div className="flex gap-2 items-center font-semibold">
-              <div className="text-xs text-gray-800 w-6 h-6 flex justify-center items-center bg-gray-200 rounded-full">
+            <Flex alignItems="center">
+              <CounterLabel mr={2} px={2} py={1}>
                 {story.tasks.length}
-              </div>
-              <div className="text-sm text-gray-900">{story.title}</div>
-            </div>
-            <div className="text-xl text-gray-500 flex gap-3 items-center">
-              <FiPlus
-                className="cursor-pointer hover:text-blue-500"
+              </CounterLabel>
+              <Heading fontSize={1}>{story.title}</Heading>
+            </Flex>
+            <Flex alignItems="center">
+              <FiPlus cursor="pointer" onClick={() => setToggleAdd(true)} />
+              <FiMoreHorizontal
+                cursor="pointer"
                 onClick={() => setToggleAdd(true)}
               />
-              <FiMoreHorizontal
-                className="cursor-pointer"
-                onClick={() => setToggleMenu(true)}
-              />
-            </div>
-          </div>
+            </Flex>
+          </Flex>
           {modal && (
             <>
               <div className="absolute inset-0 bg-black opacity-50 z-20"></div>
@@ -183,29 +204,30 @@ const Column: React.FC<ColumnProps> = ({ pod, story, index }) => {
             </>
           )}
           {toggleAdd && (
-            <div className="px-3 flex flex-col gap-2 mb-2">
-              <textarea
-                className="h-16 px-3 py-2 border rounded-md text-sm placeholder-gray-400 focus:ring focus:border-blue-500 focus:outline-none"
+            <Flex flexDirection="column" mb={2}>
+              <TextInput
                 placeholder="Enter your task"
                 autoFocus={true}
                 onChange={(e) => setText(e.target.value)}
+                mb={2}
+                bg="white"
+                as="textarea"
+                style={{ resize: "vertical" }}
               />
-              <div className="flex gap-2 h-8 text-sm">
-                <button
-                  className="flex-1 text-white bg-green-500 border border-green-600 rounded-md font-medium shadow-sm hover:bg-green-600  focus:ring focus:ring-green-500 focus:ring-opacity-40 focus:outline-none disabled:opacity-50 disabled:cursor-default"
+              <Flex>
+                <ButtonPrimary
                   onClick={handleCreateTask}
                   disabled={text === ""}
+                  mr={2}
+                  width="100%"
                 >
                   Add
-                </button>
-                <button
-                  className="flex-1 text-gray-900 bg-white border border-gray-300 rounded-md font-medium shadow-sm hover:bg-gray-50 focus:ring focus:border-blue-500 focus:outline-none"
-                  onClick={handleCancelAddTask}
-                >
+                </ButtonPrimary>
+                <Button width="100%" onClick={handleCancelAddTask}>
                   Cancel
-                </button>
-              </div>
-            </div>
+                </Button>
+              </Flex>
+            </Flex>
           )}
           <div className="relative">
             {toggleMenu && (
@@ -227,18 +249,15 @@ const Column: React.FC<ColumnProps> = ({ pod, story, index }) => {
           </div>
           <Droppable droppableId={"S" + story.id} type="tasks">
             {(provided, snapshot) => (
-              <div
-                ref={provided.innerRef}
-                className="pb-1 flex-1 flex flex-col px-3 overflow-y-auto overflow-x-hidden"
-              >
+              <Flex ref={provided.innerRef} flexDirection="column">
                 {story.tasks.map((task, index) => (
                   <Card key={task.id} task={task} story={story} index={index} />
                 ))}
                 {provided.placeholder}
-              </div>
+              </Flex>
             )}
           </Droppable>
-        </div>
+        </BorderBox>
       )}
     </Draggable>
   );
