@@ -27,16 +27,16 @@ import { Context } from "../types/context";
 
 @Resolver(Pod)
 export class PodResolver {
+  @Authorized(["ADMIN", "MEMBER"])
   @Query(() => Pod, { nullable: true })
-  pod(@Arg("id", () => Int) id: number, @Ctx() { req }: Context) {
+  pod(@Arg("podId", () => Int) podId: number) {
     return getConnection()
       .createQueryBuilder(Pod, "pod")
-      .innerJoin("pod.userPods", "userPod")
-      .where("pod.id = :podId", { podId: id })
-      .andWhere("userPod.user.id = :userId", { userId: req.session.userId })
+      .where("pod.id = :podId", { podId })
       .getOne();
   }
 
+  @Authorized()
   @Mutation(() => PodResponse)
   async createPod(
     @Arg("data") data: PodInput,
@@ -164,6 +164,7 @@ export class PodResolver {
     return true;
   }
 
+  @Authorized("MEMBER")
   @Mutation(() => Boolean)
   async cancelInvite(
     @Arg("podId", () => Int) podId: number,
@@ -185,22 +186,12 @@ export class PodResolver {
     return true;
   }
 
+  @Authorized("ADMIN")
   @Mutation(() => Boolean)
   async removeFromPod(
     @Arg("podId", () => Int) podId: number,
-    @Arg("userId", () => Int) userId: number,
-    @Ctx() { req }: Context
+    @Arg("userId", () => Int) userId: number
   ): Promise<Boolean> {
-    // Check if request is from  admin of a pod and he hase joined the pod.
-    const userPod = await getConnection()
-      .createQueryBuilder(UserPod, "userPod")
-      .where("userPod.pod.id = :podId", { podId })
-      .andWhere("userPod.user.id = :userId", { userId: req.session.userId })
-      .andWhere("userPod.isAdmin = :isAdmin", { isAdmin: true })
-      .getOne();
-
-    if (!userPod) return false;
-
     try {
       await getConnection()
         .createQueryBuilder(UserPod, "userPod")
@@ -216,6 +207,7 @@ export class PodResolver {
     return true;
   }
 
+  @Authorized("MEMBER")
   @Mutation(() => Boolean)
   async leavePod(
     @Arg("podId", () => Int) podId: number,
@@ -237,6 +229,7 @@ export class PodResolver {
     return true;
   }
 
+  @Authorized()
   @Mutation(() => Boolean)
   async joinPod(
     @Arg("podId", () => Int) podId: number,
@@ -276,6 +269,7 @@ export class PodResolver {
     return true;
   }
 
+  @Authorized("ADMIN")
   @Mutation(() => Boolean)
   async deletePod(@Arg("podId", () => Int) podId: number): Promise<Boolean> {
     try {
@@ -311,7 +305,6 @@ export class PodResolver {
 
   @FieldResolver(() => [Story])
   stories(@Root() pod: Pod) {
-    // Returns all the stories, but not pod, having pod.id
     return createQueryBuilder(Story, "story")
       .innerJoin("story.pod", "pod")
       .where("pod.id = :id", { id: pod.id })
