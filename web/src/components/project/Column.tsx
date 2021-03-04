@@ -18,6 +18,7 @@ import { RiCloseLine } from "react-icons/ri";
 // Graphql
 import {
   Pod,
+  PodQuery,
   Story,
   Task,
   useCreateTaskMutation,
@@ -30,17 +31,7 @@ import useOutsideClick from "../../hooks/useOutsideClick";
 import Card from "./Card";
 
 interface ColumnProps {
-  pod: {
-    __typename?: "Pod" | undefined;
-  } & Pick<Pod, "id" | "name"> & {
-      stories: ({
-        __typename?: "Story" | undefined;
-      } & Pick<Story, "title" | "id"> & {
-          tasks: ({
-            __typename?: "Task" | undefined;
-          } & Pick<Task, "title" | "id">)[];
-        })[];
-    };
+  pod: NonNullable<PodQuery["pod"]>;
   story: {
     __typename?: "Story" | undefined;
   } & Pick<Story, "title" | "id"> & {
@@ -173,38 +164,8 @@ const Column: React.FC<ColumnProps> = ({ pod, story, index }) => {
               />
             </Flex>
           </Flex>
-          {modal && (
-            <>
-              <div className="absolute inset-0 bg-black opacity-50 z-20"></div>
-              <div className="w-96 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md shadow-lg z-30 overflow-hidden">
-                <div className="p-5 flex items-center justify-between bg-gray-100 border-b">
-                  <div className="text-sm font-medium">{`Delete ${story.title}`}</div>
-                  <RiCloseLine className="cursor-pointer text-lg" />
-                </div>
-                <div className="flex flex-col p-5 bg-white gap-4">
-                  <div className="text-sm">
-                    This action will remove any tasks associated with the story.
-                  </div>
-                  <div className="flex gap-2 h-8 text-sm">
-                    <button
-                      className="flex-1 text-white bg-red-500 border border-red-600 rounded-md font-medium shadow-sm hover:bg-red-600  focus:ring focus:ring-red-500 focus:ring-opacity-40 focus:outline-none disabled:opacity-50 disabled:cursor-default"
-                      onClick={handleDeleteStory}
-                    >
-                      Delete
-                    </button>
-                    <button
-                      className="flex-1 text-gray-900 bg-white border border-gray-300 rounded-md font-medium shadow-sm hover:bg-gray-50 focus:ring focus:border-blue-500 focus:outline-none"
-                      onClick={handleCancelDeleteStory}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
           {toggleAdd && (
-            <Flex flexDirection="column" mb={2}>
+            <Flex flexDirection="column" mb={2} mx={2}>
               <TextInput
                 placeholder="Enter your task"
                 autoFocus={true}
@@ -229,29 +190,17 @@ const Column: React.FC<ColumnProps> = ({ pod, story, index }) => {
               </Flex>
             </Flex>
           )}
-          <div className="relative">
-            {toggleMenu && (
-              <div
-                className="absolute right-3 -top-2 z-10 py-1 border rounded shadow-md border-gray-300 bg-white text-sm"
-                ref={menuRef}
-              >
-                <div className="px-3 py-1.5 cursor-pointer hover:bg-gray-100">
-                  Rename Story
-                </div>
-                <div
-                  className="px-3 py-1.5 cursor-pointer hover:bg-gray-100"
-                  onClick={handleDeleteStoryModal}
-                >
-                  Delete Story
-                </div>
-              </div>
-            )}
-          </div>
           <Droppable droppableId={"S" + story.id} type="tasks">
             {(provided, snapshot) => (
               <Box ref={provided.innerRef} overflowY="auto" flex={1} px={2}>
                 {story.tasks.map((task, index) => (
-                  <Card key={task.id} task={task} story={story} index={index} />
+                  <Card
+                    key={task.id}
+                    pod={pod}
+                    task={task}
+                    story={story}
+                    index={index}
+                  />
                 ))}
                 {provided.placeholder}
               </Box>

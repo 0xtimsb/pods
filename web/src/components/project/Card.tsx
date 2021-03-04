@@ -1,23 +1,33 @@
 import { Draggable } from "react-beautiful-dnd";
-import { FiMoreHorizontal } from "react-icons/fi";
+import { FiMoreHorizontal, FiPlus } from "react-icons/fi";
 import { BsCardText } from "react-icons/bs";
 
 // Graphql
-import { Story, Task, useDeleteTaskMutation } from "../../generated/graphql";
+import {
+  Pod,
+  PodQuery,
+  Story,
+  Task,
+  useDeleteTaskMutation,
+} from "../../generated/graphql";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useRef, useState } from "react";
 import { RiCloseLine } from "react-icons/ri";
 import {
   BorderBox,
+  Box,
   Button,
   Flex,
   Heading,
   SelectMenu,
   StyledOcticon,
   Text,
+  TextInput,
 } from "@primer/components";
+import { PlusIcon, TagIcon } from "@primer/octicons-react";
 
 interface CardProps {
+  pod: NonNullable<PodQuery["pod"]>;
   story: {
     __typename?: "Story" | undefined;
   } & Pick<Story, "title" | "id"> & {
@@ -31,7 +41,7 @@ interface CardProps {
   index: number;
 }
 
-const Card: React.FC<CardProps> = ({ task, story, index }) => {
+const Card: React.FC<CardProps> = ({ pod, task, story, index }) => {
   // Menu
   const [toggleMenu, setToggleMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -39,6 +49,9 @@ const Card: React.FC<CardProps> = ({ task, story, index }) => {
   // Modal
   const [modal, setModal] = useState(false);
   const [deleteTaskMutation] = useDeleteTaskMutation();
+
+  // Assign users
+  const [assignFilter, setAssignFilter] = useState("");
 
   useOutsideClick(menuRef, () => {
     if (toggleMenu) setToggleMenu(false);
@@ -74,6 +87,14 @@ const Card: React.FC<CardProps> = ({ task, story, index }) => {
     setModal(false);
   };
 
+  const filteredMembers = pod.members.filter((member) =>
+    member.username.toLowerCase().includes(assignFilter.toLowerCase())
+  );
+
+  const filteredAdmins = pod.admins.filter((admin) =>
+    admin.username.toLowerCase().includes(assignFilter.toLowerCase())
+  );
+
   return (
     <Draggable key={task.id} draggableId={"T" + task.id} index={index}>
       {(provided, snapshot) => (
@@ -83,17 +104,60 @@ const Card: React.FC<CardProps> = ({ task, story, index }) => {
           {...provided.dragHandleProps}
           bg="white"
           width={300}
-          boxShadow="0px 1px 0px 0px rgba(0, 0, 0, 0.05)"
           py="10px"
           px="12px"
           mb={2}
         >
           <Flex justifyContent="space-between">
             <Heading fontSize={1}>{task.title}</Heading>
-            <FiMoreHorizontal
-              className="text-lg text-gray-500 cursor-pointer"
-              onClick={() => setToggleMenu(true)}
-            />
+            <Flex color="gray.5">
+              <SelectMenu mr={2}>
+                <summary style={{ cursor: "pointer" }}>
+                  <FiPlus />
+                </summary>
+                <SelectMenu.Modal width={200}>
+                  <SelectMenu.Header>Assign members</SelectMenu.Header>
+                  <SelectMenu.Filter
+                    placeholder="Search members"
+                    aria-label="Search members"
+                    value={assignFilter}
+                    variant="small"
+                    onChange={(e) => setAssignFilter(e.target.value)}
+                  />
+                  <SelectMenu.List>
+                    {filteredMembers.length > 0 && (
+                      <SelectMenu.Divider>Members</SelectMenu.Divider>
+                    )}
+                    {filteredMembers.map((member) => (
+                      <SelectMenu.Item href="#">
+                        {member.username}
+                      </SelectMenu.Item>
+                    ))}
+                    {filteredAdmins.length > 0 && (
+                      <SelectMenu.Divider>Admins</SelectMenu.Divider>
+                    )}
+                    {filteredAdmins.map((admin) => (
+                      <SelectMenu.Item href="#">
+                        {admin.username}
+                      </SelectMenu.Item>
+                    ))}
+                  </SelectMenu.List>
+                </SelectMenu.Modal>
+              </SelectMenu>
+              <SelectMenu>
+                <summary style={{ cursor: "pointer" }}>
+                  <FiMoreHorizontal onClick={() => setToggleMenu(true)} />
+                </summary>
+                <SelectMenu.Modal width={150}>
+                  <SelectMenu.List>
+                    <SelectMenu.Item href="#">Rename</SelectMenu.Item>
+                    <SelectMenu.Item onClick={handleDeleteTaskModal}>
+                      Delete
+                    </SelectMenu.Item>
+                  </SelectMenu.List>
+                </SelectMenu.Modal>
+              </SelectMenu>
+            </Flex>
           </Flex>
           {modal && (
             <>
@@ -125,20 +189,6 @@ const Card: React.FC<CardProps> = ({ task, story, index }) => {
               </div>
             </>
           )}
-          <SelectMenu>
-            <summary>
-              <FiMoreHorizontal onClick={() => setToggleMenu(true)} />
-            </summary>
-            <SelectMenu.Modal width={170}>
-              <SelectMenu.List>
-                <SelectMenu.Item href="#">Assign User</SelectMenu.Item>
-                <SelectMenu.Item href="#">Rename Task</SelectMenu.Item>
-                <SelectMenu.Item onClick={handleDeleteTaskModal}>
-                  Delete Task
-                </SelectMenu.Item>
-              </SelectMenu.List>
-            </SelectMenu.Modal>
-          </SelectMenu>
           <Text fontSize="12px">
             <Text>Added by </Text>
             <Text fontWeight="bold">smitbarmase</Text>

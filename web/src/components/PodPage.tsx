@@ -71,11 +71,7 @@ const PodPage: React.FC<PodPageInterface> = ({ match, me }) => {
           path={POD}
           render={() => <Discussion me={me} pod={pod as Pod} />}
         />
-        <Route
-          exact
-          path={POD_PROJECT}
-          render={() => <Board pod={pod as Pod} />}
-        />
+        <Route exact path={POD_PROJECT} render={() => <Board pod={pod} />} />
         <Route exact path={POD_SETTINGS} render={() => <Settings />} />
         <Redirect to={POD} />
       </Switch>

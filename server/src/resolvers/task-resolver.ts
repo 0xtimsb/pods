@@ -1,5 +1,6 @@
 import {
   Arg,
+  Ctx,
   FieldResolver,
   Int,
   Mutation,
@@ -8,10 +9,12 @@ import {
   Root,
 } from "type-graphql";
 import { createQueryBuilder, getConnection } from "typeorm";
+import { Context } from "vm";
 
 // Entities
 import { Task } from "../entities/task";
 import { User } from "../entities/user";
+import { UserPod } from "../entities/user-pod";
 
 // Inputs and Objects
 import { TaskInput } from "../inputs/task-input";
@@ -190,10 +193,9 @@ export class TaskResolver {
   @Mutation(() => Boolean)
   async assignUserToTask(
     @Arg("taskId", () => Int) taskId: number,
-    @Arg("userId", () => Int) userId: number
+    @Arg("userId", () => Int) userId: number,
+    @Ctx() { req }: Context
   ): Promise<Boolean> {
-    // Need to check if leader is doing this or not. TODO
-
     // Adds user to the task
     try {
       await getConnection()

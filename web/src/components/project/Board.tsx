@@ -2,7 +2,7 @@ import { Flex } from "@primer/components";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 // Graphql
-import { Pod } from "../../generated/graphql";
+import { Pod, PodQuery } from "../../generated/graphql";
 import useProject from "../../hooks/useProject";
 import Container from "../Container";
 
@@ -10,7 +10,7 @@ import Container from "../Container";
 import Column from "./Column";
 
 interface BoardProps {
-  pod: Pod;
+  pod: NonNullable<PodQuery["pod"]>;
 }
 
 const Board: React.FC<BoardProps> = ({ pod }) => {
