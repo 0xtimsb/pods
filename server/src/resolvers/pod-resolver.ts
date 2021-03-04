@@ -1,5 +1,6 @@
 import {
   Arg,
+  Authorized,
   Ctx,
   FieldResolver,
   Int,
@@ -95,6 +96,7 @@ export class PodResolver {
     return { pod };
   }
 
+  @Authorized("ADMIN")
   @Mutation(() => Boolean)
   async inviteToPod(
     @Arg("podId", () => Int) podId: number,
@@ -102,16 +104,6 @@ export class PodResolver {
     @Arg("asAdmin", () => Boolean) asAdmin: boolean,
     @Ctx() { req }: Context
   ): Promise<Boolean> {
-    // Check if request is from  admin of a pod and he hase joined the pod.
-    const userPod = await getConnection()
-      .createQueryBuilder(UserPod, "userPod")
-      .where("userPod.pod.id = :podId", { podId })
-      .andWhere("userPod.user.id = :userId", { userId: req.session.userId })
-      .andWhere("userPod.isAdmin = :isAdmin", { isAdmin: true })
-      .getOne();
-
-    if (!userPod) return false;
-
     try {
       const user = await getConnection()
         .createQueryBuilder(User, "user")
@@ -138,22 +130,13 @@ export class PodResolver {
     return true;
   }
 
+  @Authorized("ADMIN")
   @Mutation(() => Boolean)
   async uninviteToPod(
     @Arg("podId", () => Int) podId: number,
     @Arg("username", () => String) username: string,
     @Ctx() { req }: Context
   ): Promise<Boolean> {
-    // Check if request is from  admin of a pod and he hase joined the pod.
-    const userPod = await getConnection()
-      .createQueryBuilder(UserPod, "userPod")
-      .where("userPod.pod.id = :podId", { podId })
-      .andWhere("userPod.user.id = :userId", { userId: req.session.userId })
-      .andWhere("userPod.isAdmin = :isAdmin", { isAdmin: true })
-      .getOne();
-
-    if (!userPod) return false;
-
     try {
       const user = await getConnection()
         .createQueryBuilder(User, "user")

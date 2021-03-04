@@ -26,6 +26,9 @@ import { StoryResolver } from "./resolvers/story-resolver";
 import { TaskResolver } from "./resolvers/task-resolver";
 import { MessageResolver } from "./resolvers/message-resolver";
 
+// Middleware
+import { middleware } from "./middleware/middleware";
+
 const main = async () => {
   await createConnection({
     type: "postgres",
@@ -58,6 +61,7 @@ const main = async () => {
     //  emitSchemaFile: path.resolve(__dirname, "schema.gql"),  // To emit schema file
     validate: false,
     pubSub,
+    authChecker: middleware,
   });
 
   const app = express();
