@@ -42,7 +42,7 @@ export class Task extends BaseEntity {
   updatedAt: Date;
 
   @Field(() => [User])
-  @ManyToMany(() => User)
+  @ManyToMany(() => User, (user) => user.tasks)
   @JoinTable()
   users: User[];
 

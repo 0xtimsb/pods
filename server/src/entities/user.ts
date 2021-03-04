@@ -7,12 +7,14 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToMany,
 } from "typeorm";
 
 import { Pod } from "./pod";
 import { Invite } from "./invite";
 import { UserPod } from "./user-pod";
 import { Message } from "./message";
+import { Task } from "./task";
 
 @Entity()
 @ObjectType()
@@ -56,4 +58,7 @@ export class User extends BaseEntity {
 
   @Field(() => [Pod])
   pods: Pod[];
+
+  @ManyToMany(() => Task, (task) => task.users)
+  tasks: Task[];
 }

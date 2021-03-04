@@ -9,12 +9,13 @@ import {
   Root,
 } from "type-graphql";
 import { createQueryBuilder, getConnection } from "typeorm";
-import { Context } from "vm";
+import { Context } from "../types/context";
 
 // Entities
 import { Task } from "../entities/task";
 import { User } from "../entities/user";
-import { UserPod } from "../entities/user-pod";
+import { Pod } from "../entities/pod";
+import { Story } from "../entities/story";
 
 // Inputs and Objects
 import { TaskInput } from "../inputs/task-input";
@@ -194,8 +195,22 @@ export class TaskResolver {
   async assignUserToTask(
     @Arg("taskId", () => Int) taskId: number,
     @Arg("userId", () => Int) userId: number,
+    @Root() task: Task,
     @Ctx() { req }: Context
   ): Promise<Boolean> {
+    // Wokring on this...
+    const pod = await getConnection()
+      .createQueryBuilder()
+      .select("pod.id")
+      .from(Pod, "pod")
+      .innerJoin(Story, "story", "story.pod.id = pod.id")
+      .innerJoin(Task, "task", "task.story.id = story.id")
+      .where("task.id = :taskId", { taskId })
+      .getOne();
+
+    console.log(pod?.id);
+
+    return false;
     // Adds user to the task
     try {
       await getConnection()
@@ -244,7 +259,6 @@ export class TaskResolver {
 
   @FieldResolver(() => [User])
   users(@Root() task: Task) {
-    // Returns all the users, but not task, having task.id
     return createQueryBuilder(User, "user")
       .innerJoin("user.tasks", "task")
       .where("task.id = :id", { id: task.id })
