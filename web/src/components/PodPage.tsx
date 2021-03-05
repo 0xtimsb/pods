@@ -37,7 +37,7 @@ interface PodPageInterface extends RouteComponentProps<MatchParams> {
 const PodPage: React.FC<PodPageInterface> = ({ match, me }) => {
   const id = parseInt(match.params.id);
   const { data, loading, error } = usePodQuery({
-    variables: { id },
+    variables: { podId: id },
   });
 
   if (loading) return <Loading />;

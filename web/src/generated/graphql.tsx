@@ -23,17 +23,17 @@ export type Query = {
 
 
 export type QueryPodArgs = {
-  id: Scalars['Int'];
+  podId: Scalars['Int'];
 };
 
 
 export type QueryStoryArgs = {
-  id: Scalars['Int'];
+  storyId: Scalars['Int'];
 };
 
 
 export type QueryTaskArgs = {
-  id: Scalars['Int'];
+  taskId: Scalars['Int'];
 };
 
 export type User = {
@@ -150,7 +150,7 @@ export type MutationChangePasswordArgs = {
 
 
 export type MutationCreatePodArgs = {
-  data: PodInput;
+  name: Scalars['String'];
 };
 
 
@@ -196,12 +196,13 @@ export type MutationDeletePodArgs = {
 export type MutationMoveStoryArgs = {
   destinationIndex: Scalars['Int'];
   sourceIndex: Scalars['Int'];
-  id: Scalars['Int'];
+  storyId: Scalars['Int'];
 };
 
 
 export type MutationCreateStoryArgs = {
-  data: StoryInput;
+  podId: Scalars['Int'];
+  title: Scalars['String'];
 };
 
 
@@ -215,12 +216,14 @@ export type MutationMoveTaskArgs = {
   sourceStoryId: Scalars['Int'];
   destinationIndex: Scalars['Int'];
   sourceIndex: Scalars['Int'];
-  id: Scalars['Int'];
+  taskId: Scalars['Int'];
 };
 
 
 export type MutationCreateTaskArgs = {
-  data: TaskInput;
+  description: Scalars['String'];
+  title: Scalars['String'];
+  storyId: Scalars['Int'];
 };
 
 
@@ -270,31 +273,16 @@ export type PodResponse = {
   pod?: Maybe<Pod>;
 };
 
-export type PodInput = {
-  name: Scalars['String'];
-};
-
 export type StoryResponse = {
   __typename?: 'StoryResponse';
   errors?: Maybe<Array<FieldError>>;
   story?: Maybe<Story>;
 };
 
-export type StoryInput = {
-  title: Scalars['String'];
-  podId: Scalars['Int'];
-};
-
 export type TaskResponse = {
   __typename?: 'TaskResponse';
   errors?: Maybe<Array<FieldError>>;
   task?: Maybe<Task>;
-};
-
-export type TaskInput = {
-  title: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  storyId: Scalars['Int'];
 };
 
 export type Subscription = {
@@ -442,7 +430,7 @@ export type DeleteStoryMutation = (
 );
 
 export type MoveStoryMutationVariables = Exact<{
-  id: Scalars['Int'];
+  storyId: Scalars['Int'];
   sourceIndex: Scalars['Int'];
   destinationIndex: Scalars['Int'];
 }>;
@@ -466,6 +454,7 @@ export type AssignUserToTaskMutation = (
 
 export type CreateTaskMutationVariables = Exact<{
   title: Scalars['String'];
+  description: Scalars['String'];
   storyId: Scalars['Int'];
 }>;
 
@@ -495,7 +484,7 @@ export type DeleteTaskMutation = (
 );
 
 export type MoveTaskMutationVariables = Exact<{
-  id: Scalars['Int'];
+  taskId: Scalars['Int'];
   sourceIndex: Scalars['Int'];
   destinationIndex: Scalars['Int'];
   sourceStoryId: Scalars['Int'];
@@ -642,7 +631,7 @@ export type MeQuery = (
 );
 
 export type PodQueryVariables = Exact<{
-  id: Scalars['Int'];
+  podId: Scalars['Int'];
 }>;
 
 
@@ -662,7 +651,11 @@ export type PodQuery = (
       & Pick<Story, 'id' | 'title'>
       & { tasks: Array<(
         { __typename?: 'Task' }
-        & Pick<Task, 'id' | 'title'>
+        & Pick<Task, 'id' | 'title' | 'description'>
+        & { users: Array<(
+          { __typename?: 'User' }
+          & Pick<User, 'id' | 'username'>
+        )> }
       )> }
     )> }
   )> }
@@ -752,7 +745,7 @@ export type CancelInviteMutationResult = Apollo.MutationResult<CancelInviteMutat
 export type CancelInviteMutationOptions = Apollo.BaseMutationOptions<CancelInviteMutation, CancelInviteMutationVariables>;
 export const CreatePodDocument = gql`
     mutation CreatePod($name: String!) {
-  createPod(data: {name: $name}) {
+  createPod(name: $name) {
     pod {
       id
       name
@@ -975,7 +968,7 @@ export type UninviteToPodMutationResult = Apollo.MutationResult<UninviteToPodMut
 export type UninviteToPodMutationOptions = Apollo.BaseMutationOptions<UninviteToPodMutation, UninviteToPodMutationVariables>;
 export const CreateStoryDocument = gql`
     mutation CreateStory($title: String!, $podId: Int!) {
-  createStory(data: {title: $title, podId: $podId}) {
+  createStory(title: $title, podId: $podId) {
     story {
       id
       title
@@ -1044,9 +1037,9 @@ export type DeleteStoryMutationHookResult = ReturnType<typeof useDeleteStoryMuta
 export type DeleteStoryMutationResult = Apollo.MutationResult<DeleteStoryMutation>;
 export type DeleteStoryMutationOptions = Apollo.BaseMutationOptions<DeleteStoryMutation, DeleteStoryMutationVariables>;
 export const MoveStoryDocument = gql`
-    mutation MoveStory($id: Int!, $sourceIndex: Int!, $destinationIndex: Int!) {
+    mutation MoveStory($storyId: Int!, $sourceIndex: Int!, $destinationIndex: Int!) {
   moveStory(
-    id: $id
+    storyId: $storyId
     sourceIndex: $sourceIndex
     destinationIndex: $destinationIndex
   )
@@ -1067,7 +1060,7 @@ export type MoveStoryMutationFn = Apollo.MutationFunction<MoveStoryMutation, Mov
  * @example
  * const [moveStoryMutation, { data, loading, error }] = useMoveStoryMutation({
  *   variables: {
- *      id: // value for 'id'
+ *      storyId: // value for 'storyId'
  *      sourceIndex: // value for 'sourceIndex'
  *      destinationIndex: // value for 'destinationIndex'
  *   },
@@ -1111,8 +1104,8 @@ export type AssignUserToTaskMutationHookResult = ReturnType<typeof useAssignUser
 export type AssignUserToTaskMutationResult = Apollo.MutationResult<AssignUserToTaskMutation>;
 export type AssignUserToTaskMutationOptions = Apollo.BaseMutationOptions<AssignUserToTaskMutation, AssignUserToTaskMutationVariables>;
 export const CreateTaskDocument = gql`
-    mutation CreateTask($title: String!, $storyId: Int!) {
-  createTask(data: {title: $title, storyId: $storyId}) {
+    mutation CreateTask($title: String!, $description: String!, $storyId: Int!) {
+  createTask(title: $title, description: $description, storyId: $storyId) {
     task {
       id
       title
@@ -1140,6 +1133,7 @@ export type CreateTaskMutationFn = Apollo.MutationFunction<CreateTaskMutation, C
  * const [createTaskMutation, { data, loading, error }] = useCreateTaskMutation({
  *   variables: {
  *      title: // value for 'title'
+ *      description: // value for 'description'
  *      storyId: // value for 'storyId'
  *   },
  * });
@@ -1181,9 +1175,9 @@ export type DeleteTaskMutationHookResult = ReturnType<typeof useDeleteTaskMutati
 export type DeleteTaskMutationResult = Apollo.MutationResult<DeleteTaskMutation>;
 export type DeleteTaskMutationOptions = Apollo.BaseMutationOptions<DeleteTaskMutation, DeleteTaskMutationVariables>;
 export const MoveTaskDocument = gql`
-    mutation MoveTask($id: Int!, $sourceIndex: Int!, $destinationIndex: Int!, $sourceStoryId: Int!, $destinationStoryId: Int!) {
+    mutation MoveTask($taskId: Int!, $sourceIndex: Int!, $destinationIndex: Int!, $sourceStoryId: Int!, $destinationStoryId: Int!) {
   moveTask(
-    id: $id
+    taskId: $taskId
     sourceIndex: $sourceIndex
     destinationIndex: $destinationIndex
     sourceStoryId: $sourceStoryId
@@ -1206,7 +1200,7 @@ export type MoveTaskMutationFn = Apollo.MutationFunction<MoveTaskMutation, MoveT
  * @example
  * const [moveTaskMutation, { data, loading, error }] = useMoveTaskMutation({
  *   variables: {
- *      id: // value for 'id'
+ *      taskId: // value for 'taskId'
  *      sourceIndex: // value for 'sourceIndex'
  *      destinationIndex: // value for 'destinationIndex'
  *      sourceStoryId: // value for 'sourceStoryId'
@@ -1508,8 +1502,8 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const PodDocument = gql`
-    query Pod($id: Int!) {
-  pod(id: $id) {
+    query Pod($podId: Int!) {
+  pod(podId: $podId) {
     id
     name
     createdAt
@@ -1527,6 +1521,11 @@ export const PodDocument = gql`
       tasks {
         id
         title
+        description
+        users {
+          id
+          username
+        }
       }
     }
   }
@@ -1545,7 +1544,7 @@ export const PodDocument = gql`
  * @example
  * const { data, loading, error } = usePodQuery({
  *   variables: {
- *      id: // value for 'id'
+ *      podId: // value for 'podId'
  *   },
  * });
  */

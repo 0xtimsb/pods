@@ -1,5 +1,5 @@
 mutation CreatePod($name: String!) {
-  createPod(data: { name: $name }) {
+  createPod(name: $name) {
     pod {
       id
       name

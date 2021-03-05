@@ -1,6 +1,15 @@
+import { useRef, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { FiMoreHorizontal, FiPlus } from "react-icons/fi";
-import { BsCardText } from "react-icons/bs";
+import { RiCloseLine } from "react-icons/ri";
+import {
+  BorderBox,
+  Flex,
+  Heading,
+  Label,
+  SelectMenu,
+  Text,
+} from "@primer/components";
 
 // Graphql
 import {
@@ -8,36 +17,18 @@ import {
   PodQuery,
   Story,
   Task,
+  useAssignUserToTaskMutation,
   useDeleteTaskMutation,
+  useRemoveUserFromTaskMutation,
 } from "../../generated/graphql";
+
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { useRef, useState } from "react";
-import { RiCloseLine } from "react-icons/ri";
-import {
-  BorderBox,
-  Box,
-  Button,
-  Flex,
-  Heading,
-  SelectMenu,
-  StyledOcticon,
-  Text,
-  TextInput,
-} from "@primer/components";
-import { PlusIcon, TagIcon } from "@primer/octicons-react";
+import { gql } from "@apollo/client";
 
 interface CardProps {
   pod: NonNullable<PodQuery["pod"]>;
-  story: {
-    __typename?: "Story" | undefined;
-  } & Pick<Story, "title" | "id"> & {
-      tasks: ({
-        __typename?: "Task" | undefined;
-      } & Pick<Task, "title" | "id">)[];
-    };
-  task: {
-    __typename?: "Task" | undefined;
-  } & Pick<Task, "title" | "id">;
+  story: NonNullable<PodQuery["pod"]>["stories"][0];
+  task: NonNullable<PodQuery["pod"]>["stories"][0]["tasks"][0];
   index: number;
 }
 
@@ -52,6 +43,10 @@ const Card: React.FC<CardProps> = ({ pod, task, story, index }) => {
 
   // Assign users
   const [assignFilter, setAssignFilter] = useState("");
+  const [assignUserToTaskMutation] = useAssignUserToTaskMutation();
+
+  // Unassign user
+  const [removeUserFromTaskMutation] = useRemoveUserFromTaskMutation();
 
   useOutsideClick(menuRef, () => {
     if (toggleMenu) setToggleMenu(false);
@@ -85,6 +80,53 @@ const Card: React.FC<CardProps> = ({ pod, task, story, index }) => {
 
   const handleCancelDeleteTask = () => {
     setModal(false);
+  };
+
+  const handleAssignUserToTask = async (userId: number) => {
+    await assignUserToTaskMutation({
+      variables: { taskId: task.id, userId },
+      update: (cache, { data }) => {
+        if (data && data.assignUserToTask) {
+          cache.modify({
+            id: cache.identify(task),
+            fields: {
+              users(existingUsersRefs: any[], { readField }) {
+                const newUserRef = cache.readFragment({
+                  id: "User:" + userId,
+                  fragment: gql`
+                    fragment NewUser on User {
+                      id
+                      username
+                    }
+                  `,
+                });
+                return [newUserRef, ...existingUsersRefs];
+              },
+            },
+          });
+        }
+      },
+    });
+  };
+
+  const handleRemoveUserFromTask = async (userId: number) => {
+    await removeUserFromTaskMutation({
+      variables: { taskId: task.id, userId },
+      update: (cache, { data }) => {
+        if (data && data.removeUserFromTask) {
+          cache.modify({
+            id: cache.identify(task),
+            fields: {
+              users(existingUsersRefs: any[], { readField }) {
+                return existingUsersRefs.filter(
+                  (userRef) => readField("id", userRef) !== userId
+                );
+              },
+            },
+          });
+        }
+      },
+    });
   };
 
   const filteredMembers = pod.members.filter((member) =>
@@ -129,7 +171,10 @@ const Card: React.FC<CardProps> = ({ pod, task, story, index }) => {
                       <SelectMenu.Divider>Members</SelectMenu.Divider>
                     )}
                     {filteredMembers.map((member) => (
-                      <SelectMenu.Item href="#">
+                      <SelectMenu.Item
+                        key={member.id}
+                        onClick={() => handleAssignUserToTask(member.id)}
+                      >
                         {member.username}
                       </SelectMenu.Item>
                     ))}
@@ -137,7 +182,10 @@ const Card: React.FC<CardProps> = ({ pod, task, story, index }) => {
                       <SelectMenu.Divider>Admins</SelectMenu.Divider>
                     )}
                     {filteredAdmins.map((admin) => (
-                      <SelectMenu.Item href="#">
+                      <SelectMenu.Item
+                        key={admin.id}
+                        onClick={() => handleAssignUserToTask(admin.id)}
+                      >
                         {admin.username}
                       </SelectMenu.Item>
                     ))}
@@ -189,10 +237,19 @@ const Card: React.FC<CardProps> = ({ pod, task, story, index }) => {
               </div>
             </>
           )}
-          <Text fontSize="12px">
-            <Text>Added by </Text>
-            <Text fontWeight="bold">smitbarmase</Text>
-          </Text>
+          <Flex mt={1}>
+            {task.users.map((user) => (
+              <Label key={user.id} variant="medium" bg="#1C90FA" mr={1}>
+                <Flex alignItems="center">
+                  <Text mr={1}>{user.username}</Text>
+                  <RiCloseLine
+                    cursor="pointer"
+                    onClick={() => handleRemoveUserFromTask(user.id)}
+                  />
+                </Flex>
+              </Label>
+            ))}
+          </Flex>
         </BorderBox>
       )}
     </Draggable>

@@ -17,7 +17,6 @@ import { RiCloseLine } from "react-icons/ri";
 
 // Graphql
 import {
-  Pod,
   PodQuery,
   Story,
   Task,
@@ -32,13 +31,7 @@ import Card from "./Card";
 
 interface ColumnProps {
   pod: NonNullable<PodQuery["pod"]>;
-  story: {
-    __typename?: "Story" | undefined;
-  } & Pick<Story, "title" | "id"> & {
-      tasks: ({
-        __typename?: "Task" | undefined;
-      } & Pick<Task, "title" | "id">)[];
-    };
+  story: NonNullable<PodQuery["pod"]>["stories"][0];
   index: number;
 }
 
@@ -70,7 +63,7 @@ const Column: React.FC<ColumnProps> = ({ pod, story, index }) => {
 
   const handleCreateTask = async () => {
     await createTaskMutation({
-      variables: { storyId: story.id, title: text },
+      variables: { storyId: story.id, title: text, description: "" },
       update: (cache, { data }) => {
         if (data && data.createTask.task) {
           cache.modify({

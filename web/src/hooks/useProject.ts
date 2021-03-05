@@ -37,7 +37,7 @@ const useProject = (pod: NonNullable<PodQuery["pod"]>) => {
       // Make rank update request to graphql server.
       moveStoryMutation({
         variables: {
-          id: stories[sourceIndex].id,
+          storyId: stories[sourceIndex].id,
           sourceIndex,
           destinationIndex,
         },
@@ -92,7 +92,7 @@ const useProject = (pod: NonNullable<PodQuery["pod"]>) => {
         // Make rank update request to graphql server.
         moveTaskMutation({
           variables: {
-            id: sourceTasks[sourceIndex].id,
+            taskId: sourceTasks[sourceIndex].id,
             sourceIndex,
             destinationIndex,
             sourceStoryId: sourceStory.id,
@@ -123,7 +123,7 @@ const useProject = (pod: NonNullable<PodQuery["pod"]>) => {
         // If tasks are reordered between diffrent stories.
         moveTaskMutation({
           variables: {
-            id: sourceTasks[sourceIndex].id,
+            taskId: sourceTasks[sourceIndex].id,
             sourceIndex,
             destinationIndex,
             sourceStoryId: sourceStory.id,

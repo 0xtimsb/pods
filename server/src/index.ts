@@ -62,6 +62,7 @@ const main = async () => {
     validate: false,
     pubSub,
     authChecker: authMiddleware,
+    authMode: "null",
   });
 
   const app = express();

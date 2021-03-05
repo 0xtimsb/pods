@@ -82,7 +82,7 @@ export class StoryResolver {
   @Mutation(() => StoryResponse)
   async createStory(
     @Arg("title") title: string,
-    @Arg("podId") podId: number
+    @Arg("podId", () => Int) podId: number
   ): Promise<StoryResponse> {
     // Title validation
     if (title.length <= 2) {

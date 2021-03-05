@@ -1,12 +1,12 @@
 mutation MoveTask(
-  $id: Int!
+  $taskId: Int!
   $sourceIndex: Int!
   $destinationIndex: Int!
   $sourceStoryId: Int!
   $destinationStoryId: Int!
 ) {
   moveTask(
-    id: $id
+    taskId: $taskId
     sourceIndex: $sourceIndex
     destinationIndex: $destinationIndex
     sourceStoryId: $sourceStoryId

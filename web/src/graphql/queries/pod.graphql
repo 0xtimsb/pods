@@ -1,5 +1,5 @@
-query Pod($id: Int!) {
-  pod(id: $id) {
+query Pod($podId: Int!) {
+  pod(podId: $podId) {
     id
     name
     createdAt
@@ -17,6 +17,11 @@ query Pod($id: Int!) {
       tasks {
         id
         title
+        description
+        users {
+          id
+          username
+        }
       }
     }
   }
