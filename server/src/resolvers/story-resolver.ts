@@ -1,5 +1,6 @@
 import {
   Arg,
+  Authorized,
   FieldResolver,
   Int,
   Mutation,
@@ -15,19 +16,22 @@ import { Story } from "../entities/story";
 
 // Inputs and Objects
 import { StoryResponse } from "../objects/story-response";
-import { StoryInput } from "../inputs/story-input";
+
+// Utils
 import { midString } from "../utils/mid-string";
 
 @Resolver(Story)
 export class StoryResolver {
+  @Authorized("ADMIN", "MEMBER")
   @Query(() => Story, { nullable: true })
-  story(@Arg("id", () => Int) id: number) {
-    return Story.findOne(id);
+  story(@Arg("storyId", () => Int) storyId: number) {
+    return Story.findOne(storyId);
   }
 
+  @Authorized("ADMIN", "MEMBER")
   @Mutation(() => Boolean)
   async moveStory(
-    @Arg("id", () => Int) id: number,
+    @Arg("storyId", () => Int) storyId: number,
     @Arg("sourceIndex", () => Int) sourceIndex: number,
     @Arg("destinationIndex", () => Int) destinationIndex: number
   ): Promise<Boolean> {
@@ -60,7 +64,7 @@ export class StoryResolver {
 
       // Updates new rank
       await Story.update(
-        { id },
+        { id: storyId },
         {
           rank: midString(
             prevStory ? prevStory.rank : "",
@@ -74,10 +78,12 @@ export class StoryResolver {
     return true;
   }
 
+  @Authorized("ADMIN", "MEMBER")
   @Mutation(() => StoryResponse)
-  async createStory(@Arg("data") data: StoryInput): Promise<StoryResponse> {
-    const { title, podId } = data;
-
+  async createStory(
+    @Arg("title") title: string,
+    @Arg("podId") podId: number
+  ): Promise<StoryResponse> {
     // Title validation
     if (title.length <= 2) {
       return {
@@ -134,6 +140,7 @@ export class StoryResolver {
     return { story };
   }
 
+  @Authorized("ADMIN", "MEMBER")
   @Mutation(() => Boolean)
   async deleteStory(
     @Arg("storyId", () => Int) storyId: number

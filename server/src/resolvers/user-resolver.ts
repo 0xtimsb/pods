@@ -1,5 +1,6 @@
 import {
   Arg,
+  Authorized,
   Ctx,
   FieldResolver,
   Mutation,
@@ -32,14 +33,9 @@ import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
 
 @Resolver(User)
 export class UserResolver {
+  @Authorized()
   @Query(() => User, { nullable: true })
   me(@Ctx() { req }: Context) {
-    console.log("me run!");
-    // Not logged in.
-    if (!req.session.userId) {
-      return null;
-    }
-
     return User.findOne(req.session.userId);
   }
 

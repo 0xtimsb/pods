@@ -27,7 +27,7 @@ import { TaskResolver } from "./resolvers/task-resolver";
 import { MessageResolver } from "./resolvers/message-resolver";
 
 // Middleware
-import { middleware } from "./middleware/middleware";
+import { authMiddleware } from "./middleware/auth-middleware";
 
 const main = async () => {
   await createConnection({
@@ -61,7 +61,7 @@ const main = async () => {
     //  emitSchemaFile: path.resolve(__dirname, "schema.gql"),  // To emit schema file
     validate: false,
     pubSub,
-    authChecker: middleware,
+    authChecker: authMiddleware,
   });
 
   const app = express();
