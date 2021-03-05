@@ -28,6 +28,7 @@ import { MessageResolver } from "./resolvers/message-resolver";
 
 // Middleware
 import { authMiddleware } from "./middleware/auth-middleware";
+import { InviteResolver } from "./resolvers/invite-resolver";
 
 const main = async () => {
   await createConnection({
@@ -57,6 +58,7 @@ const main = async () => {
       StoryResolver,
       TaskResolver,
       MessageResolver,
+      InviteResolver,
     ],
     //  emitSchemaFile: path.resolve(__dirname, "schema.gql"),  // To emit schema file
     validate: false,

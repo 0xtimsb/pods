@@ -1,3 +1,20 @@
 mutation InviteToPod($username: String!, $podId: Int!, $asAdmin: Boolean!) {
-  inviteToPod(podId: $podId, username: $username, asAdmin: $asAdmin)
+  inviteToPod(podId: $podId, username: $username, asAdmin: $asAdmin) {
+    invite {
+      asAdmin
+      createdAt
+      invitee {
+        id
+        username
+      }
+      pod {
+        id
+        name
+      }
+    }
+    errors {
+      field
+      message
+    }
+  }
 }

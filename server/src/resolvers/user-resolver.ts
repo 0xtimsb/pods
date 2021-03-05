@@ -250,6 +250,7 @@ export class UserResolver {
   async receivedInvites(@Ctx() { req }: Context) {
     return createQueryBuilder(Invite, "invite")
       .innerJoinAndSelect("invite.inviter", "inviter")
+      .innerJoinAndSelect("invite.invitee", "invitee")
       .innerJoinAndSelect("invite.pod", "pod")
       .where("invite.invitee.id = :id", { id: req.session.userId })
       .getMany();

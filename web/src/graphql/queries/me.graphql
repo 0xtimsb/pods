@@ -29,6 +29,10 @@ query Me {
         id
         username
       }
+      invitee {
+        id
+        username
+      }
       pod {
         id
         name

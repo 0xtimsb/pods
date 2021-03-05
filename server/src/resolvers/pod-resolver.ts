@@ -23,6 +23,7 @@ import { PodResponse } from "../objects/pod-response";
 
 // Types
 import { Context } from "../types/context";
+import { InviteResponse } from "../objects/invite-response";
 
 @Resolver(Pod)
 export class PodResolver {
@@ -93,13 +94,14 @@ export class PodResolver {
   }
 
   @Authorized("ADMIN")
-  @Mutation(() => Boolean)
+  @Mutation(() => InviteResponse)
   async inviteToPod(
     @Arg("podId", () => Int) podId: number,
     @Arg("username", () => String) username: string,
     @Arg("asAdmin", () => Boolean) asAdmin: boolean,
     @Ctx() { req }: Context
-  ): Promise<Boolean> {
+  ): Promise<InviteResponse> {
+    let invite;
     try {
       const user = await getConnection()
         .createQueryBuilder(User, "user")
@@ -107,7 +109,7 @@ export class PodResolver {
         .getOne();
 
       if (user) {
-        await getConnection()
+        const result = await getConnection()
           .createQueryBuilder()
           .insert()
           .into(Invite)
@@ -117,13 +119,22 @@ export class PodResolver {
             pod: { id: podId },
             asAdmin,
           })
+          .returning("*")
           .execute();
+
+        invite = result.raw[0];
       }
-    } catch (e) {
-      console.log(e);
-      return false;
+    } catch (err) {
+      return {
+        errors: [
+          {
+            field: `Error code: ${err.code}`,
+            message: err.message,
+          },
+        ],
+      };
     }
-    return true;
+    return { invite };
   }
 
   @Authorized("ADMIN")

@@ -123,7 +123,7 @@ export type Mutation = {
   forgotPassword: Scalars['Boolean'];
   changePassword: UserResponse;
   createPod: PodResponse;
-  inviteToPod: Scalars['Boolean'];
+  inviteToPod: InviteResponse;
   uninviteToPod: Scalars['Boolean'];
   cancelInvite: Scalars['Boolean'];
   removeFromPod: Scalars['Boolean'];
@@ -288,6 +288,12 @@ export type PodResponse = {
   pod?: Maybe<Pod>;
 };
 
+export type InviteResponse = {
+  __typename?: 'InviteResponse';
+  errors?: Maybe<Array<FieldError>>;
+  invite?: Maybe<Invite>;
+};
+
 export type StoryResponse = {
   __typename?: 'StoryResponse';
   errors?: Maybe<Array<FieldError>>;
@@ -369,7 +375,23 @@ export type InviteToPodMutationVariables = Exact<{
 
 export type InviteToPodMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'inviteToPod'>
+  & { inviteToPod: (
+    { __typename?: 'InviteResponse' }
+    & { invite?: Maybe<(
+      { __typename?: 'Invite' }
+      & Pick<Invite, 'asAdmin' | 'createdAt'>
+      & { invitee: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username'>
+      ), pod: (
+        { __typename?: 'Pod' }
+        & Pick<Pod, 'id' | 'name'>
+      ) }
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>> }
+  ) }
 );
 
 export type JoinPodMutationVariables = Exact<{
@@ -637,6 +659,9 @@ export type MeQuery = (
       & { inviter: (
         { __typename?: 'User' }
         & Pick<User, 'id' | 'username'>
+      ), invitee: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username'>
       ), pod: (
         { __typename?: 'Pod' }
         & Pick<Pod, 'id' | 'name'>
@@ -849,7 +874,24 @@ export type DeletePodMutationResult = Apollo.MutationResult<DeletePodMutation>;
 export type DeletePodMutationOptions = Apollo.BaseMutationOptions<DeletePodMutation, DeletePodMutationVariables>;
 export const InviteToPodDocument = gql`
     mutation InviteToPod($username: String!, $podId: Int!, $asAdmin: Boolean!) {
-  inviteToPod(podId: $podId, username: $username, asAdmin: $asAdmin)
+  inviteToPod(podId: $podId, username: $username, asAdmin: $asAdmin) {
+    invite {
+      asAdmin
+      createdAt
+      invitee {
+        id
+        username
+      }
+      pod {
+        id
+        name
+      }
+    }
+    errors {
+      field
+      message
+    }
+  }
 }
     `;
 export type InviteToPodMutationFn = Apollo.MutationFunction<InviteToPodMutation, InviteToPodMutationVariables>;
@@ -1501,6 +1543,10 @@ export const MeDocument = gql`
       asAdmin
       createdAt
       inviter {
+        id
+        username
+      }
+      invitee {
         id
         username
       }

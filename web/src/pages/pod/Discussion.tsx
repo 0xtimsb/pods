@@ -1,3 +1,4 @@
+import { gql } from "@apollo/client";
 import {
   BorderBox,
   Box,
@@ -8,24 +9,16 @@ import {
   Dropdown,
   Flex,
   Heading,
-  StyledOcticon,
   Text,
   TextInput,
 } from "@primer/components";
-import { KebabHorizontalIcon } from "@primer/octicons-react";
 
 // Container
 import Container from "../../components/Container";
-import MessageBox from "../../components/MessageBox";
 import MessagePanel from "../../components/MessagePanel";
 
 // Graphql
-import {
-  MeQuery,
-  Pod,
-  useInviteToPodMutation,
-  useNewMessagesSubscription,
-} from "../../generated/graphql";
+import { MeQuery, Pod, useInviteToPodMutation } from "../../generated/graphql";
 
 // Hooks
 import useInputAndCheckModal from "../../hooks/useInputAndCheckModal";
@@ -52,6 +45,35 @@ const Discussion = ({
   const handleInviteUser = () => {
     inviteToPod({
       variables: { username: value, podId: pod.id, asAdmin: check },
+      update: (cache, { data }) => {
+        if (data && data.inviteToPod) {
+          cache.modify({
+            id: cache.identify(me),
+            fields: {
+              sentInvites(existingInviteRefs) {
+                const newInviteRef = cache.writeFragment({
+                  data: data.inviteToPod.invite,
+                  fragment: gql`
+                    fragment NewInvite on Invite {
+                      asAdmin
+                      createdAt
+                      invitee {
+                        id
+                        username
+                      }
+                      pod {
+                        id
+                        name
+                      }
+                    }
+                  `,
+                });
+                return [newInviteRef, ...existingInviteRefs];
+              },
+            },
+          });
+        }
+      },
     });
   };
 

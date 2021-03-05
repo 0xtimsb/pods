@@ -1,6 +1,7 @@
 import { ApolloClient, HttpLink, InMemoryCache, split } from "@apollo/client";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
+import { read } from "node:fs";
 
 import { __prod__ } from "../constants/constant";
 
@@ -32,7 +33,13 @@ const splitLink = split(
 
 const client = new ApolloClient({
   link: splitLink,
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Invite: {
+        keyFields: ["invitee", ["id"], "pod", ["id"]],
+      },
+    },
+  }),
 });
 
 export default client;
