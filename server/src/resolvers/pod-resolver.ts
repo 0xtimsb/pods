@@ -18,9 +18,8 @@ import { Story } from "../entities/story";
 import { UserPod } from "../entities/user-pod";
 import { Invite } from "../entities/invite";
 
-// Inputs and Objects
+// Objects
 import { PodResponse } from "../objects/pod-response";
-import { PodInput } from "../inputs/pod-input";
 
 // Types
 import { Context } from "../types/context";
@@ -39,12 +38,9 @@ export class PodResolver {
   @Authorized()
   @Mutation(() => PodResponse)
   async createPod(
-    @Arg("data") data: PodInput,
+    @Arg("name") name: string,
     @Ctx() { req }: Context
   ): Promise<PodResponse> {
-    const { name } = data;
-
-    // Name validation
     if (name.length <= 2) {
       return {
         errors: [

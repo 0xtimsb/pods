@@ -1,6 +1,6 @@
 import {
   Arg,
-  Ctx,
+  Authorized,
   FieldResolver,
   Int,
   Mutation,
@@ -9,29 +9,29 @@ import {
   Root,
 } from "type-graphql";
 import { createQueryBuilder, getConnection } from "typeorm";
-import { Context } from "../types/context";
 
 // Entities
 import { Task } from "../entities/task";
 import { User } from "../entities/user";
-import { Pod } from "../entities/pod";
-import { Story } from "../entities/story";
 
-// Inputs and Objects
-import { TaskInput } from "../inputs/task-input";
+//=Objects
 import { TaskResponse } from "../objects/task-response";
+
+// Utils
 import { midString } from "../utils/mid-string";
 
 @Resolver(Task)
 export class TaskResolver {
+  @Authorized("ADMIN", "MEMBER")
   @Query(() => Task, { nullable: true })
-  task(@Arg("id", () => Int) id: number) {
-    return Task.findOne(id);
+  task(@Arg("taskId", () => Int) taskId: number) {
+    return Task.findOne(taskId);
   }
 
+  @Authorized("ADMIN", "MEMBER")
   @Mutation(() => Boolean)
   async moveTask(
-    @Arg("id", () => Int) id: number,
+    @Arg("taskId", () => Int) taskId: number,
     @Arg("sourceIndex", () => Int) sourceIndex: number,
     @Arg("destinationIndex", () => Int) destinationIndex: number,
     @Arg("sourceStoryId", () => Int) sourceStoryId: number,
@@ -72,7 +72,7 @@ export class TaskResolver {
 
         // Updates new rank
         await Task.update(
-          { id },
+          { id: taskId },
           {
             rank: midString(
               prevTask ? prevTask.rank : "",
@@ -107,7 +107,7 @@ export class TaskResolver {
 
         // Updates new rank in new story.
         await Task.update(
-          { id },
+          { id: taskId },
           {
             rank: midString(
               prevTask ? prevTask.rank : "",
@@ -125,10 +125,13 @@ export class TaskResolver {
     return true;
   }
 
+  @Authorized("ADMIN", "MEMBER")
   @Mutation(() => TaskResponse)
-  async createTask(@Arg("data") data: TaskInput): Promise<TaskResponse> {
-    const { title, description, storyId } = data;
-
+  async createTask(
+    @Arg("storyId", () => Int) storyId: number,
+    @Arg("title") title: string,
+    @Arg("description") description: string
+  ): Promise<TaskResponse> {
     // Title validation
     if (title.length <= 2) {
       return {
@@ -191,27 +194,12 @@ export class TaskResolver {
     return { task };
   }
 
+  @Authorized("ADMIN", "MEMBER")
   @Mutation(() => Boolean)
   async assignUserToTask(
     @Arg("taskId", () => Int) taskId: number,
-    @Arg("userId", () => Int) userId: number,
-    @Root() task: Task,
-    @Ctx() { req }: Context
+    @Arg("userId", () => Int) userId: number
   ): Promise<Boolean> {
-    // Wokring on this...
-    const pod = await getConnection()
-      .createQueryBuilder()
-      .select("pod.id")
-      .from(Pod, "pod")
-      .innerJoin(Story, "story", "story.pod.id = pod.id")
-      .innerJoin(Task, "task", "task.story.id = story.id")
-      .where("task.id = :taskId", { taskId })
-      .getOne();
-
-    console.log(pod?.id);
-
-    return false;
-    // Adds user to the task
     try {
       await getConnection()
         .createQueryBuilder()
@@ -224,12 +212,12 @@ export class TaskResolver {
     return true;
   }
 
+  @Authorized("ADMIN", "MEMBER")
   @Mutation(() => Boolean)
   async removeUserFromTask(
     @Arg("taskId", () => Int) taskId: number,
     @Arg("userId", () => Int) userId: number
   ): Promise<Boolean> {
-    // Remove user from the task
     try {
       await getConnection()
         .createQueryBuilder()
@@ -242,6 +230,7 @@ export class TaskResolver {
     return true;
   }
 
+  @Authorized("ADMIN", "MEMBER")
   @Mutation(() => Boolean)
   async deleteTask(@Arg("taskId", () => Int) taskId: number): Promise<Boolean> {
     try {

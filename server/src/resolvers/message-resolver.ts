@@ -1,15 +1,13 @@
-import { withFilter } from "graphql-subscriptions";
 import {
   Arg,
+  Authorized,
   Ctx,
-  Field,
   FieldResolver,
   Int,
   Mutation,
   PubSub,
   PubSubEngine,
   Resolver,
-  ResolverFilterData,
   Root,
   Subscription,
 } from "type-graphql";
@@ -26,6 +24,7 @@ import { Context } from "../types/context";
 
 @Resolver(Message)
 export class MessageResolver {
+  @Authorized("ADMIN", "MEMBER")
   @Mutation(() => Boolean)
   async createMessage(
     @PubSub() pubSub: PubSubEngine,
@@ -33,14 +32,6 @@ export class MessageResolver {
     @Arg("podId", () => Int) podId: number,
     @Ctx() { req }: Context
   ): Promise<boolean> {
-    const exist = await getConnection()
-      .createQueryBuilder(UserPod, "userPod")
-      .where("userPod.user.id = :userId", { userId: req.session.userId })
-      .andWhere("userPod.pod.id = :podId", { podId })
-      .getOne();
-
-    if (!exist) return false;
-
     const result = await getConnection()
       .createQueryBuilder()
       .insert()
@@ -92,7 +83,6 @@ export class MessageResolver {
     @Ctx() { connection }: Context
   ): Promise<Message | null> {
     const userId = connection.context.req.session.userId;
-    console.log(userId);
     try {
       const userPod = await getConnection()
         .createQueryBuilder(UserPod, "userPod")
