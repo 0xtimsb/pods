@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
   Message,
   NewMessagesSubscription,
+  useMessagesQuery,
   useNewMessagesSubscription,
 } from "../generated/graphql";
 
@@ -14,6 +15,10 @@ interface MessagePanelProps {
 }
 
 const MessagePanel: React.FC<MessagePanelProps> = ({ podId }) => {
+  const { data: paginatedData } = useMessagesQuery({
+    variables: { podId, limit: 10 },
+  });
+
   const { data, loading } = useNewMessagesSubscription({
     variables: { podId },
   });
@@ -44,6 +49,10 @@ const MessagePanel: React.FC<MessagePanelProps> = ({ podId }) => {
         display="flex"
         flexDirection="column-reverse"
       >
+        {paginatedData &&
+          paginatedData.messages.result.map((message) => (
+            <MessageBox key={message.id} message={message} />
+          ))}
         {messages.map((message) => (
           <MessageBox key={message.id} message={message} />
         ))}

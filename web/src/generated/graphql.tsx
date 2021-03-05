@@ -19,6 +19,7 @@ export type Query = {
   pod?: Maybe<Pod>;
   story?: Maybe<Story>;
   task?: Maybe<Task>;
+  messages: PaginatedMessages;
 };
 
 
@@ -34,6 +35,13 @@ export type QueryStoryArgs = {
 
 export type QueryTaskArgs = {
   taskId: Scalars['Int'];
+};
+
+
+export type QueryMessagesArgs = {
+  cursor?: Maybe<Scalars['String']>;
+  limit: Scalars['Int'];
+  podId: Scalars['Int'];
 };
 
 export type User = {
@@ -99,6 +107,12 @@ export type Message = {
   pod: Pod;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
+};
+
+export type PaginatedMessages = {
+  __typename?: 'PaginatedMessages';
+  result: Array<Message>;
+  hasMore: Scalars['Boolean'];
 };
 
 export type Mutation = {
@@ -631,6 +645,29 @@ export type MeQuery = (
   )> }
 );
 
+export type MessagesQueryVariables = Exact<{
+  podId: Scalars['Int'];
+  limit: Scalars['Int'];
+  cursor?: Maybe<Scalars['String']>;
+}>;
+
+
+export type MessagesQuery = (
+  { __typename?: 'Query' }
+  & { messages: (
+    { __typename?: 'PaginatedMessages' }
+    & Pick<PaginatedMessages, 'hasMore'>
+    & { result: Array<(
+      { __typename?: 'Message' }
+      & Pick<Message, 'id' | 'text' | 'createdAt'>
+      & { user: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username'>
+      ) }
+    )> }
+  ) }
+);
+
 export type PodQueryVariables = Exact<{
   podId: Scalars['Int'];
 }>;
@@ -675,9 +712,6 @@ export type NewMessagesSubscription = (
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
-    ), pod: (
-      { __typename?: 'Pod' }
-      & Pick<Pod, 'id' | 'name'>
     ) }
   )> }
 );
@@ -1503,6 +1537,50 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const MessagesDocument = gql`
+    query Messages($podId: Int!, $limit: Int!, $cursor: String) {
+  messages(podId: $podId, limit: $limit, cursor: $cursor) {
+    result {
+      id
+      text
+      createdAt
+      user {
+        id
+        username
+      }
+    }
+    hasMore
+  }
+}
+    `;
+
+/**
+ * __useMessagesQuery__
+ *
+ * To run a query within a React component, call `useMessagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMessagesQuery({
+ *   variables: {
+ *      podId: // value for 'podId'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useMessagesQuery(baseOptions: Apollo.QueryHookOptions<MessagesQuery, MessagesQueryVariables>) {
+        return Apollo.useQuery<MessagesQuery, MessagesQueryVariables>(MessagesDocument, baseOptions);
+      }
+export function useMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MessagesQuery, MessagesQueryVariables>) {
+          return Apollo.useLazyQuery<MessagesQuery, MessagesQueryVariables>(MessagesDocument, baseOptions);
+        }
+export type MessagesQueryHookResult = ReturnType<typeof useMessagesQuery>;
+export type MessagesLazyQueryHookResult = ReturnType<typeof useMessagesLazyQuery>;
+export type MessagesQueryResult = Apollo.QueryResult<MessagesQuery, MessagesQueryVariables>;
 export const PodDocument = gql`
     query Pod($podId: Int!) {
   pod(podId: $podId) {
@@ -1568,10 +1646,6 @@ export const NewMessagesDocument = gql`
     user {
       id
       username
-    }
-    pod {
-      id
-      name
     }
   }
 }

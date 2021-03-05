@@ -73,8 +73,8 @@ const UnderlineNavbar: React.FC<UnderlineNavbarProps> = ({
               <img
                 src={Profile}
                 alt={me.username}
-                width={32}
-                height={32}
+                width={24}
+                height={24}
                 style={{ borderRadius: 3 }}
               />
               <Text fontWeight="bold" ml={2}>

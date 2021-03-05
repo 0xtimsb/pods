@@ -7,9 +7,5 @@ subscription NewMessages($podId: Int!) {
       id
       username
     }
-    pod {
-      id
-      name
-    }
   }
 }

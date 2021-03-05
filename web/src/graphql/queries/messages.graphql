@@ -1,0 +1,14 @@
+query Messages($podId: Int!, $limit: Int!, $cursor: String) {
+  messages(podId: $podId, limit: $limit, cursor: $cursor) {
+    result {
+      id
+      text
+      createdAt
+      user {
+        id
+        username
+      }
+    }
+    hasMore
+  }
+}
