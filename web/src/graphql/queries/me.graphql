@@ -8,6 +8,7 @@ query Me {
       id
       name
       createdAt
+      isAdmin
     }
     sentInvites {
       asAdmin

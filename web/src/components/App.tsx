@@ -1,5 +1,4 @@
 import { Route, BrowserRouter, Switch } from "react-router-dom";
-import { Box, Flex } from "@primer/components";
 
 // Graphql
 import { useMeQuery } from "../generated/graphql";
@@ -7,7 +6,6 @@ import { useMeQuery } from "../generated/graphql";
 // Components
 import AuthLayout from "./layout/AuthLayout";
 import AppLayout from "./layout/AppLayout";
-import Navbar from "./Navbar";
 
 function App() {
   const { data, loading, error } = useMeQuery();

@@ -307,4 +307,16 @@ export class PodResolver {
       .orderBy("story.rank")
       .getMany();
   }
+
+  @FieldResolver(() => Boolean)
+  async isAdmin(@Root() pod: Pod, @Ctx() { req }: Context) {
+    const userPod = await createQueryBuilder(UserPod, "userPod")
+      .where("userPod.pod.id = :podId", { podId: pod.id })
+      .andWhere("userPod.user.id = :userId", { userId: req.session.userId })
+      .getOne();
+
+    if (userPod) return userPod.isAdmin;
+
+    return false;
+  }
 }

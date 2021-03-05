@@ -11,6 +11,7 @@ import {
   TextInput,
   Text,
   ButtonInvisible,
+  Box,
 } from "@primer/components";
 
 // Routes
@@ -18,13 +19,11 @@ import { POD } from "../../constants/routes";
 import { MeQuery } from "../../generated/graphql";
 
 interface PodsProps {
-  me: MeQuery["me"];
+  pods: NonNullable<MeQuery["me"]>["pods"];
   buttonProps: any;
 }
 
-const Pods: React.FC<PodsProps> = ({ me, buttonProps }) => {
-  const pods = me?.pods ?? [];
-
+const Pods: React.FC<PodsProps> = ({ pods, buttonProps }) => {
   const [filterText, setFilterText] = useState("");
 
   const filteredList = pods
@@ -51,7 +50,7 @@ const Pods: React.FC<PodsProps> = ({ me, buttonProps }) => {
     ));
 
   return (
-    <>
+    <Box>
       <Flex mb={3}>
         <TextInput
           icon={SearchIcon}
@@ -79,7 +78,7 @@ const Pods: React.FC<PodsProps> = ({ me, buttonProps }) => {
       <Grid gridTemplateColumns="1fr 1fr" gridGap={3} mb={3}>
         {filteredList}
       </Grid>
-    </>
+    </Box>
   );
 };
 

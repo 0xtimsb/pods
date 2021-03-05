@@ -7,6 +7,7 @@ import {
   Heading,
   TextInput,
   Text,
+  BorderBox,
 } from "@primer/components";
 import { gql, Reference } from "@apollo/client";
 
@@ -17,6 +18,7 @@ import { MeQuery, useCreatePodMutation, User } from "../generated/graphql";
 import useInputModal from "../hooks/useInputModal";
 
 // Components
+import Layout from "../components/Layout";
 import Container from "../components/Container";
 import Pods from "../components/home/Pods";
 import Invites from "../components/home/Invites";
@@ -73,7 +75,8 @@ const Home: React.FC<HomeProps> = ({ me }) => {
   };
 
   return (
-    <Box>
+    <Layout>
+      <UnderlineNavbar me={me} navItems={homeNavItems} />
       <Dialog {...dialogProps} onDismiss={handleClose} aria-labelledby="label">
         <Dialog.Header>Create new pod</Dialog.Header>
         <Box p={3}>
@@ -86,34 +89,60 @@ const Home: React.FC<HomeProps> = ({ me }) => {
           </Flex>
         </Box>
       </Dialog>
-      <UnderlineNavbar navItems={homeNavItems} />
       <Container flexDirection="row" pt={3}>
         <Box flex={1} mr={3}>
           <Heading fontSize={2} mb={3}>
             Profile
           </Heading>
-          <Flex mb={3}>
-            <Box marginRight={3}>
+          <BorderBox mb={3} overflow="hidden">
+            <Flex bg="gray.0" p={3} alignItems="center">
               <img
                 src={Profile}
                 alt={me.username}
-                width={75}
-                height={75}
+                width={70}
+                height={70}
                 style={{ borderRadius: 4 }}
               />
-            </Box>
-            <Box>
-              <Heading>{me.username}</Heading>
-              <Flex>
-                <Text fontSize={1} mr={2} color="gray.6">
+              <Heading ml={3}>{me.username}</Heading>
+            </Flex>
+            <BorderBox
+              p={3}
+              borderRadius={0}
+              borderWidth={0}
+              borderTopWidth={1}
+            >
+              <Flex mb={1}>
+                <Text fontSize={1} mr={1} color="gray.6">
                   Joined
                 </Text>
                 <Text fontSize={1} color="gray.7" fontWeight="bold">
                   {currentDate(me.createdAt)}
                 </Text>
               </Flex>
-            </Box>
-          </Flex>
+              <Flex mb={1}>
+                <Text fontSize={1} mr={1} color="gray.6">
+                  Admin of
+                </Text>
+                <Text fontSize={1} color="gray.7" fontWeight="bold">
+                  {me.pods.reduce(
+                    (prev, curr) => prev + (curr.isAdmin ? 1 : 0),
+                    0
+                  )}
+                </Text>
+              </Flex>
+              <Flex>
+                <Text fontSize={1} mr={1} color="gray.6">
+                  Member of
+                </Text>
+                <Text fontSize={1} color="gray.7" fontWeight="bold">
+                  {me.pods.reduce(
+                    (prev, curr) => prev + (!curr.isAdmin ? 1 : 0),
+                    0
+                  )}
+                </Text>
+              </Flex>
+            </BorderBox>
+          </BorderBox>
           <Heading fontSize={2} mb={3}>
             Invites
           </Heading>
@@ -123,10 +152,10 @@ const Home: React.FC<HomeProps> = ({ me }) => {
           <Heading fontSize={2} mb={3}>
             Pods
           </Heading>
-          <Pods me={me} buttonProps={buttonProps} />
+          <Pods pods={me.pods} buttonProps={buttonProps} />
         </Box>
       </Container>
-    </Box>
+    </Layout>
   );
 };
 

@@ -7,6 +7,7 @@
 │ └─schema.png
 ├─bin
 │ └─heroku-postbuild.sh
+├─layout.md
 ├─node_modules
 ├─package.json
 ├─server
@@ -32,6 +33,8 @@
 │ │ │ ├─story-input.ts
 │ │ │ ├─task-input.ts
 │ │ │ └─user-input.ts
+│ │ ├─middleware
+│ │ │ └─auth-middleware.ts
 │ │ ├─objects
 │ │ │ ├─field-error.ts
 │ │ │ ├─pod-response.ts
@@ -71,8 +74,10 @@
 │ │ ├─components
 │ │ │ ├─App.tsx
 │ │ │ ├─Container.tsx
+│ │ │ ├─Layout.tsx
 │ │ │ ├─Loading.tsx
 │ │ │ ├─MessageBox.tsx
+│ │ │ ├─MessageInputBox.tsx
 │ │ │ ├─MessagePanel.tsx
 │ │ │ ├─Navbar.tsx
 │ │ │ ├─PodPage.tsx
@@ -136,6 +141,8 @@
 │ │ │ ├─useModal.ts
 │ │ │ ├─useOutsideClick.ts
 │ │ │ └─useProject.ts
+│ │ ├─images
+│ │ │ └─profile.png
 │ │ ├─index.tsx
 │ │ ├─lib
 │ │ │ └─apolloClient.ts
@@ -150,6 +157,7 @@
 │ │ ├─types
 │ │ │ └─react-app-env.d.ts
 │ │ └─utils
+│ │   └─date.ts
 │ └─tsconfig.json
 └─yarn.lock
 ```

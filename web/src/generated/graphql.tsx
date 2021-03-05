@@ -65,6 +65,7 @@ export type Pod = {
   updatedAt: Scalars['String'];
   members: Array<User>;
   admins: Array<User>;
+  isAdmin: Scalars['Boolean'];
   stories: Array<Story>;
   messages: Array<Message>;
 };
@@ -605,7 +606,7 @@ export type MeQuery = (
     & Pick<User, 'id' | 'username' | 'createdAt' | 'updatedAt'>
     & { pods: Array<(
       { __typename?: 'Pod' }
-      & Pick<Pod, 'id' | 'name' | 'createdAt'>
+      & Pick<Pod, 'id' | 'name' | 'createdAt' | 'isAdmin'>
     )>, sentInvites: Array<(
       { __typename?: 'Invite' }
       & Pick<Invite, 'asAdmin' | 'createdAt'>
@@ -1448,6 +1449,7 @@ export const MeDocument = gql`
       id
       name
       createdAt
+      isAdmin
     }
     sentInvites {
       asAdmin

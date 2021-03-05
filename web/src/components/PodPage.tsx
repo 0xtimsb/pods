@@ -63,7 +63,7 @@ const PodPage: React.FC<PodPageInterface> = ({ match, me }) => {
             </Breadcrumb.Item>
           </Breadcrumb>
         </Container>
-        <UnderlineNavbar navItems={podNavItems} id={pod.id} />
+        <UnderlineNavbar me={me} navItems={podNavItems} id={pod.id} />
       </Box>
       <Switch>
         <Route
