@@ -8,6 +8,8 @@ import {
   Dialog,
   Flex,
   Heading,
+  SelectMenu,
+  Text,
   TextInput,
 } from "@primer/components";
 import { useRef, useState } from "react";
@@ -24,6 +26,7 @@ import {
   useDeleteStoryMutation,
 } from "../../generated/graphql";
 import useInputModal from "../../hooks/useInputModal";
+import useModal from "../../hooks/useModal";
 import useOutsideClick from "../../hooks/useOutsideClick";
 
 // Components
@@ -38,13 +41,6 @@ interface ColumnProps {
 const Column: React.FC<ColumnProps> = ({ pod, story, index }) => {
   // Add Task
   const [createTaskMutation] = useCreateTaskMutation();
-  const {
-    value,
-    dialogProps,
-    inputProps,
-    buttonProps,
-    handleClose,
-  } = useInputModal();
 
   const [toggleAdd, setToggleAdd] = useState(false);
   const [text, setText] = useState("");
@@ -54,8 +50,8 @@ const Column: React.FC<ColumnProps> = ({ pod, story, index }) => {
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Modal
-  const [modal, setModal] = useState(false);
   const [deleteStoryMutation] = useDeleteStoryMutation();
+  const { dialogProps, buttonProps, handleClose } = useModal();
 
   useOutsideClick(menuRef, () => {
     if (toggleMenu) setToggleMenu(false);
@@ -95,11 +91,6 @@ const Column: React.FC<ColumnProps> = ({ pod, story, index }) => {
     setText("");
   };
 
-  const handleDeleteStoryModal = () => {
-    setToggleMenu(false);
-    setModal(true);
-  };
-
   const handleDeleteStory = async () => {
     await deleteStoryMutation({
       variables: { storyId: story.id },
@@ -118,11 +109,6 @@ const Column: React.FC<ColumnProps> = ({ pod, story, index }) => {
         }
       },
     });
-    setModal(false);
-  };
-
-  const handleCancelDeleteStory = () => {
-    setModal(false);
   };
 
   return (
@@ -151,12 +137,38 @@ const Column: React.FC<ColumnProps> = ({ pod, story, index }) => {
             </Flex>
             <Flex alignItems="center">
               <FiPlus cursor="pointer" onClick={() => setToggleAdd(true)} />
-              <FiMoreHorizontal
-                cursor="pointer"
-                onClick={() => setToggleAdd(true)}
-              />
+              <SelectMenu ml={2}>
+                <summary style={{ cursor: "pointer" }}>
+                  <FiMoreHorizontal />
+                </summary>
+                <SelectMenu.Modal width={150}>
+                  <SelectMenu.List>
+                    <SelectMenu.Item {...buttonProps}>Delete</SelectMenu.Item>
+                  </SelectMenu.List>
+                </SelectMenu.Modal>
+              </SelectMenu>
             </Flex>
           </Flex>
+          <Dialog
+            {...dialogProps}
+            onDismiss={handleClose}
+            aria-labelledby="label"
+          >
+            <Dialog.Header>
+              Are you sure you want to delete story?
+            </Dialog.Header>
+            <Text>{story.title}</Text>
+            <Box p={3}>
+              <Flex mt={3} justifyContent="flex-end">
+                <Button mr={1} onClick={handleClose}>
+                  Cancel
+                </Button>
+                <ButtonPrimary onClick={handleDeleteStory}>
+                  Delete
+                </ButtonPrimary>
+              </Flex>
+            </Box>
+          </Dialog>
           {toggleAdd && (
             <Flex flexDirection="column" mb={2} mx={2}>
               <TextInput
