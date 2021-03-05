@@ -29,7 +29,7 @@ const MessageInputBox: React.FC<MessageInputBoxProps> = ({ podId }) => {
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      handleCreateMessage();
+      if (text.trim().length !== 0) handleCreateMessage();
       e.preventDefault();
     }
   };
@@ -54,7 +54,12 @@ const MessageInputBox: React.FC<MessageInputBoxProps> = ({ podId }) => {
         onKeyPress={handleKeyPress}
       />
       <Flex justifyContent="flex-end">
-        <ButtonPrimary onClick={handleCreateMessage}>Send</ButtonPrimary>
+        <ButtonPrimary
+          onClick={handleCreateMessage}
+          disabled={text.trim().length === 0}
+        >
+          Send
+        </ButtonPrimary>
       </Flex>
     </BorderBox>
   );

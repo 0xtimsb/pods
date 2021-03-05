@@ -15,17 +15,15 @@ import {
 import { useRef, useState } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { FiPlus, FiMoreHorizontal } from "react-icons/fi";
-import { RiCloseLine } from "react-icons/ri";
 
 // Graphql
 import {
   PodQuery,
-  Story,
-  Task,
   useCreateTaskMutation,
   useDeleteStoryMutation,
 } from "../../generated/graphql";
-import useInputModal from "../../hooks/useInputModal";
+
+// Hooks
 import useModal from "../../hooks/useModal";
 import useOutsideClick from "../../hooks/useOutsideClick";
 

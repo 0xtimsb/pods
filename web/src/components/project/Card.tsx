@@ -11,6 +11,7 @@ import {
   Flex,
   Heading,
   Label,
+  LabelGroup,
   SelectMenu,
   Text,
 } from "@primer/components";
@@ -208,17 +209,19 @@ const Card: React.FC<CardProps> = ({ pod, task, story, index }) => {
             </Box>
           </Dialog>
           <Flex mt={1}>
-            {task.users.map((user) => (
-              <Label key={user.id} variant="medium" bg="#1C90FA" mr={1}>
-                <Flex alignItems="center">
-                  <Text mr={1}>{user.username}</Text>
-                  <RiCloseLine
-                    cursor="pointer"
-                    onClick={() => handleRemoveUserFromTask(user.id)}
-                  />
-                </Flex>
-              </Label>
-            ))}
+            <LabelGroup>
+              {task.users.map((user) => (
+                <Label key={user.id} variant="medium" bg="#1C90FA">
+                  <Flex alignItems="center">
+                    <Text mr={1}>{user.username}</Text>
+                    <RiCloseLine
+                      cursor="pointer"
+                      onClick={() => handleRemoveUserFromTask(user.id)}
+                    />
+                  </Flex>
+                </Label>
+              ))}
+            </LabelGroup>
           </Flex>
         </BorderBox>
       )}

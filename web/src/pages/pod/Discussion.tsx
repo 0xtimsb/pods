@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import {
   BorderBox,
   Box,
+  Breadcrumb,
   Button,
   ButtonPrimary,
   CounterLabel,
@@ -9,26 +10,36 @@ import {
   Dropdown,
   Flex,
   Heading,
+  Label,
   Text,
   TextInput,
 } from "@primer/components";
+import { generatePath, Link } from "react-router-dom";
 
 // Container
 import Container from "../../components/Container";
 import MessagePanel from "../../components/MessagePanel";
+import { HOME, POD } from "../../constants/routes";
 
 // Graphql
-import { MeQuery, Pod, useInviteToPodMutation } from "../../generated/graphql";
+import {
+  MeQuery,
+  PodQuery,
+  useInviteToPodMutation,
+} from "../../generated/graphql";
 
 // Hooks
 import useInputAndCheckModal from "../../hooks/useInputAndCheckModal";
+
+// Utils
+import { currentDate } from "../../utils/date";
 
 const Discussion = ({
   me,
   pod,
 }: {
   me: NonNullable<MeQuery["me"]>;
-  pod: Pod;
+  pod: NonNullable<PodQuery["pod"]>;
 }) => {
   const [inviteToPod] = useInviteToPodMutation();
 
@@ -75,10 +86,11 @@ const Discussion = ({
         }
       },
     });
+    handleClose();
   };
 
   return (
-    <Container py={3}>
+    <Container flexDirection="column">
       <Dialog {...dialogProps} onDismiss={handleClose} aria-labelledby="label">
         <Dialog.Header>Invite user to the pod</Dialog.Header>
         <Box p={3}>
@@ -109,55 +121,106 @@ const Discussion = ({
           </Flex>
         </Box>
       </Dialog>
-      <Box width={270} py={3} mr={3}>
-        <Heading fontSize={3} mb={3}>
-          {pod.name}
-        </Heading>
-        <BorderBox mb={3}>
-          <Flex p={2} bg="gray.0">
-            <CounterLabel mr={2} px={2} py={1}>
-              {pod.admins.length}
-            </CounterLabel>
-            <Heading fontSize={1}>Admins</Heading>
-          </Flex>
-          {pod.admins.map((admin) => (
+      <Flex py={3} justifyContent="space-between">
+        <Breadcrumb>
+          <Breadcrumb.Item as={Link} to={HOME}>
+            <Text fontSize={2} fontWeight="bold">
+              Home
+            </Text>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item as={Link} to={generatePath(POD, { id: pod.id })}>
+            <Text fontSize={2} fontWeight="bold">
+              {pod.name}
+            </Text>
+          </Breadcrumb.Item>
+        </Breadcrumb>
+        {pod.isAdmin && <Button {...buttonProps}>Invite</Button>}
+      </Flex>
+      <Container pb={3}>
+        <Flex flexDirection="column" width={275} mr={3}>
+          <BorderBox mb={3} overflow="hidden">
+            <Box bg="gray.0" p={3}>
+              <Heading>{pod.name}</Heading>
+              <Label variant="large" bg="#656BFE" mt={3}>
+                You are {pod.isAdmin ? "Admin" : "Member"}
+              </Label>
+            </Box>
             <BorderBox
-              px={3}
-              py={2}
+              p={3}
               borderRadius={0}
               borderWidth={0}
               borderTopWidth={1}
             >
-              <Text fontSize={1}>{admin.username}</Text>
+              <Flex mb={1}>
+                <Text fontSize={1} mr={1} color="gray.6">
+                  Created at
+                </Text>
+                <Text fontSize={1} color="gray.7" fontWeight="bold">
+                  {currentDate(pod.createdAt)}
+                </Text>
+              </Flex>
+              <Flex mb={1}>
+                <Text fontSize={1} mr={1} color="gray.6">
+                  Stories created
+                </Text>
+                <Text fontSize={1} color="gray.7" fontWeight="bold">
+                  {pod.stories.length}
+                </Text>
+              </Flex>
+              <Flex>
+                <Text fontSize={1} mr={1} color="gray.6">
+                  Tasks working on
+                </Text>
+                <Text fontSize={1} color="gray.7" fontWeight="bold">
+                  {pod.stories.reduce(
+                    (prev, curr) => curr.tasks.length + prev,
+                    0
+                  )}
+                </Text>
+              </Flex>
             </BorderBox>
-          ))}
-        </BorderBox>
-        <BorderBox mb={3}>
-          <Flex p={2} bg="gray.0">
-            <CounterLabel mr={2} px={2} py={1}>
-              {pod.members.length}
-            </CounterLabel>
-            <Heading fontSize={1}>Members</Heading>
-          </Flex>
-          {pod.members.map((member) => (
-            <BorderBox
-              px={3}
-              py={2}
-              borderRadius={0}
-              borderWidth={0}
-              borderTopWidth={1}
-            >
-              <Text fontSize={1}>{member.username}</Text>
-            </BorderBox>
-          ))}
-        </BorderBox>
-        {pod.admins.find((admin) => admin.username === me.username) && (
-          <Button width={1} mb={3} {...buttonProps}>
-            Invite
-          </Button>
-        )}
-      </Box>
-      <MessagePanel podId={pod.id} />
+          </BorderBox>
+          <BorderBox mb={3}>
+            <Flex p={2} bg="gray.0">
+              <CounterLabel mr={2} px={2} py={1}>
+                {pod.admins.length}
+              </CounterLabel>
+              <Heading fontSize={1}>Admins</Heading>
+            </Flex>
+            {pod.admins.map((admin) => (
+              <BorderBox
+                px={3}
+                py={2}
+                borderRadius={0}
+                borderWidth={0}
+                borderTopWidth={1}
+              >
+                <Text fontSize={1}>{admin.username}</Text>
+              </BorderBox>
+            ))}
+          </BorderBox>
+          <BorderBox mb={3}>
+            <Flex p={2} bg="gray.0">
+              <CounterLabel mr={2} px={2} py={1}>
+                {pod.members.length}
+              </CounterLabel>
+              <Heading fontSize={1}>Members</Heading>
+            </Flex>
+            {pod.members.map((member) => (
+              <BorderBox
+                px={3}
+                py={2}
+                borderRadius={0}
+                borderWidth={0}
+                borderTopWidth={1}
+              >
+                <Text fontSize={1}>{member.username}</Text>
+              </BorderBox>
+            ))}
+          </BorderBox>
+        </Flex>
+        <MessagePanel pod={pod} />
+      </Container>
     </Container>
   );
 };

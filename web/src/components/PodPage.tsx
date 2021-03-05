@@ -48,28 +48,12 @@ const PodPage: React.FC<PodPageInterface> = ({ match, me }) => {
 
   return (
     <Layout>
-      <Box>
-        <Container mb={2} mt={3}>
-          <Breadcrumb>
-            <Breadcrumb.Item as={Link} to={HOME}>
-              <Text fontSize={2} fontWeight="bold">
-                Home
-              </Text>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item as={Link} to={generatePath(POD, { id: pod.id })}>
-              <Text fontSize={2} fontWeight="bold">
-                {data.pod.name}
-              </Text>
-            </Breadcrumb.Item>
-          </Breadcrumb>
-        </Container>
-        <UnderlineNavbar me={me} navItems={podNavItems} id={pod.id} />
-      </Box>
+      <UnderlineNavbar me={me} navItems={podNavItems} id={pod.id} />
       <Switch>
         <Route
           exact
           path={POD}
-          render={() => <Discussion me={me} pod={pod as Pod} />}
+          render={() => <Discussion me={me} pod={pod} />}
         />
         <Route exact path={POD_PROJECT} render={() => <Board pod={pod} />} />
         <Route exact path={POD_SETTINGS} render={() => <Settings />} />

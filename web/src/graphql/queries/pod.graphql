@@ -3,6 +3,7 @@ query Pod($podId: Int!) {
     id
     name
     createdAt
+    isAdmin
     admins {
       id
       username

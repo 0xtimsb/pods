@@ -702,7 +702,7 @@ export type PodQuery = (
   { __typename?: 'Query' }
   & { pod?: Maybe<(
     { __typename?: 'Pod' }
-    & Pick<Pod, 'id' | 'name' | 'createdAt'>
+    & Pick<Pod, 'id' | 'name' | 'createdAt' | 'isAdmin'>
     & { admins: Array<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
@@ -1633,6 +1633,7 @@ export const PodDocument = gql`
     id
     name
     createdAt
+    isAdmin
     admins {
       id
       username

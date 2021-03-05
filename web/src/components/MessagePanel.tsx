@@ -1,8 +1,9 @@
-import { BorderBox, Box, Flex } from "@primer/components";
+import { BorderBox, Box, Button, Flex } from "@primer/components";
 import { useEffect, useState } from "react";
 import {
   Message,
   NewMessagesSubscription,
+  PodQuery,
   useMessagesQuery,
   useNewMessagesSubscription,
 } from "../generated/graphql";
@@ -11,16 +12,16 @@ import MessageBox from "./MessageBox";
 import MessageInputBox from "./MessageInputBox";
 
 interface MessagePanelProps {
-  podId: number;
+  pod: NonNullable<PodQuery["pod"]>;
 }
 
-const MessagePanel: React.FC<MessagePanelProps> = ({ podId }) => {
+const MessagePanel: React.FC<MessagePanelProps> = ({ pod }) => {
   const { data: paginatedData } = useMessagesQuery({
-    variables: { podId, limit: 10 },
+    variables: { podId: pod.id, limit: 10 },
   });
 
   const { data, loading } = useNewMessagesSubscription({
-    variables: { podId },
+    variables: { podId: pod.id },
   });
 
   const [messages, setMessages] = useState<
@@ -49,15 +50,15 @@ const MessagePanel: React.FC<MessagePanelProps> = ({ podId }) => {
         display="flex"
         flexDirection="column-reverse"
       >
+        {messages.map((message) => (
+          <MessageBox key={message.id} message={message} />
+        ))}
         {paginatedData &&
           paginatedData.messages.result.map((message) => (
             <MessageBox key={message.id} message={message} />
           ))}
-        {messages.map((message) => (
-          <MessageBox key={message.id} message={message} />
-        ))}
       </BorderBox>
-      <MessageInputBox podId={podId} />
+      <MessageInputBox podId={pod.id} />
     </Flex>
   );
 };
