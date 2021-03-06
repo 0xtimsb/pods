@@ -7,7 +7,11 @@ const useInfiniteScroll = (callback: () => any) => {
   const handleScroll = useCallback(() => {
     if (scrollWindowRef.current) {
       const scrolled = scrollWindowRef.current.scrollTop;
-      if (-130 < scrolled || isFetching) return;
+      const height = scrollWindowRef.current.scrollHeight;
+      const top = scrollWindowRef.current.getBoundingClientRect().top;
+      const bottom = scrollWindowRef.current.getBoundingClientRect().bottom;
+      console.log(top, bottom, scrolled + height);
+      if (-150 > scrolled || isFetching) return;
       setIsFetching(true);
     }
   }, [isFetching]);

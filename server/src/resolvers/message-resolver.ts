@@ -52,12 +52,16 @@ export class MessageResolver {
       .take(limit + 1);
 
     if (cursor) {
-      qb.andWhere("post.createdAt < :cursor", {
+      qb.andWhere("message.createdAt < :cursor", {
         cursor: new Date(parseInt(cursor)),
       });
     }
 
-    let result = await qb.getMany();
+    let unsortedResult = await qb.getMany();
+
+    let result = unsortedResult.sort(
+      (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+    );
 
     let hasMore = false;
 
@@ -66,7 +70,10 @@ export class MessageResolver {
       result.pop();
     }
 
-    return { result, hasMore };
+    return {
+      result,
+      hasMore,
+    };
   }
 
   @Authorized("ADMIN", "MEMBER")

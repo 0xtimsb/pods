@@ -1,5 +1,5 @@
 import { BorderBox, Box, Button, Flex } from "@primer/components";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Message,
   NewMessagesSubscription,
@@ -19,11 +19,11 @@ interface MessagePanelProps {
 }
 
 const MessagePanel: React.FC<MessagePanelProps> = ({ pod }) => {
+  const scrollDiv = useRef<HTMLDivElement>(null);
+
   const { data: paginatedData } = useMessagesQuery({
     variables: { podId: pod.id, limit: 10 },
   });
-
-  const [messageLazy, { data: lazyMessages }] = useMessagesLazyQuery();
 
   const { data, loading } = useNewMessagesSubscription({
     variables: { podId: pod.id },
@@ -33,38 +33,20 @@ const MessagePanel: React.FC<MessagePanelProps> = ({ pod }) => {
     NonNullable<NewMessagesSubscription["newMessages"]>[]
   >([]);
 
-  const handleFetchMore = () => {
-    console.log("fetch more");
-    if (paginatedData && paginatedData.messages.hasMore) {
-      setIsFetching(true);
-      messageLazy({
-        variables: {
-          podId: pod.id,
-          limit: 10,
-          cursor: paginatedData.messages.result[0].createdAt,
-        },
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (lazyMessages) {
-      console.log(lazyMessages.messages.result);
-    }
-  }, [lazyMessages]);
-
-  const { isFetching, setIsFetching, scrollWindowRef } = useInfiniteScroll(
-    handleFetchMore
-  );
-
   useEffect(() => {
     if (data && data.newMessages) {
       const newMessage = data.newMessages;
-      // To avoid repeatation of any message, if occured due to some glitch.
-      const found = messages.find((message) => message.id === newMessage.id);
-      if (!found) setMessages([newMessage, ...messages]);
+      if (messages.filter((m) => m.id === newMessage.id).length === 0) {
+        setMessages([...messages, newMessage]);
+      }
     }
   }, [data]);
+
+  useEffect(() => {
+    if (scrollDiv && scrollDiv.current) {
+      scrollDiv.current.scrollTop = scrollDiv.current.scrollHeight;
+    }
+  }, [messages]);
 
   return (
     <Flex flexDirection="column" flex={1}>
@@ -77,16 +59,16 @@ const MessagePanel: React.FC<MessagePanelProps> = ({ pod }) => {
         borderBottomLeftRadius={0}
         overflowY="scroll"
         display="flex"
-        flexDirection="column-reverse"
-        ref={scrollWindowRef}
+        flexDirection="column"
+        ref={scrollDiv}
       >
-        {messages.map((message) => (
-          <MessageBox key={message.id} message={message} />
-        ))}
         {paginatedData &&
           paginatedData.messages.result.map((message) => (
             <MessageBox key={message.id} message={message} />
           ))}
+        {messages.map((message) => (
+          <MessageBox key={message.id} message={message} />
+        ))}
       </BorderBox>
       <MessageInputBox podId={pod.id} />
     </Flex>
