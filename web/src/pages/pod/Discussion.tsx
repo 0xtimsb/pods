@@ -36,6 +36,9 @@ import useInputAndCheckModal from "../../hooks/useInputAndCheckModal";
 // Utils
 import { currentDate } from "../../utils/date";
 
+// Image
+import Profile from "../../images/profile.png";
+
 const Discussion = ({
   me,
   pod,
@@ -198,14 +201,25 @@ const Discussion = ({
             </Flex>
             {pod.admins.map((admin) => (
               <BorderBox
+                as={Flex}
                 key={admin.id}
                 px={3}
                 py={2}
                 borderRadius={0}
                 borderWidth={0}
                 borderTopWidth={1}
+                alignItems="center"
               >
-                <Text fontSize={1}>{admin.username}</Text>
+                <img
+                  src={Profile}
+                  alt={me.username}
+                  width={20}
+                  height={20}
+                  style={{ borderRadius: 4 }}
+                />
+                <Heading fontSize={1} ml={2}>
+                  {admin.username}
+                </Heading>
               </BorderBox>
             ))}
           </BorderBox>
@@ -218,14 +232,25 @@ const Discussion = ({
             </Flex>
             {pod.members.map((member) => (
               <BorderBox
+                as={Flex}
                 key={member.id}
                 px={3}
                 py={2}
                 borderRadius={0}
                 borderWidth={0}
                 borderTopWidth={1}
+                alignItems="center"
               >
-                <Text fontSize={1}>{member.username}</Text>
+                <img
+                  src={Profile}
+                  alt={me.username}
+                  width={20}
+                  height={20}
+                  style={{ borderRadius: 4 }}
+                />
+                <Heading fontSize={1} ml={2}>
+                  {member.username}
+                </Heading>
               </BorderBox>
             ))}
           </BorderBox>
