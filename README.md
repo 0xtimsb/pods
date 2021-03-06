@@ -7,17 +7,6 @@
 - **Server** - **Node, Apollo Server Express, TypeORM, Type GraphQL, GraphQL Subscriptions, Argon, Connect-Redis**
 - **Database** - **PostgreSQL, Redis**
 
-## 📸 Screenshots
-
-<p float="left">
-  <img src="assets/screenshots/home.png" alt="Home" width="450px" />
-  <img src="assets/screenshots/messaging.png" alt="Messaging" width="450px" />
-</p>
-<p float="left">
-  <img src="assets/screenshots/project.png" alt="Project" width="450px" />
-</p>
-
-
 ## 🧐 Features
 
 ### Team Management and Communication
@@ -35,6 +24,12 @@
 ### Authetication and Security
 - **Secure authetication with diffrent access levels for diffrent APIs (Public, Authenticated, Member and Admin).**
 - **Cookie-session based authetication using redis.**
+
+## 📸 Screenshots
+
+<img src="assets/screenshots/home.png" alt="Home" width="100%" />
+<img src="assets/screenshots/messaging.png" alt="Messaging" width="100%" />
+<img src="assets/screenshots/project.png" alt="Project" width="100%" />
 
 ## Getting Started
 
