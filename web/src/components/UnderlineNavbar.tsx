@@ -1,15 +1,8 @@
-import {
-  generatePath,
-  NavLink,
-  useLocation,
-  RouteProps,
-} from "react-router-dom";
+import { generatePath, NavLink, useLocation, Link } from "react-router-dom";
 import { IconProps } from "@primer/octicons-react";
 import {
   BorderBox,
-  Box,
   Flex,
-  Heading,
   SelectMenu,
   StyledOcticon,
   Text,
@@ -25,6 +18,7 @@ import Container from "./Container";
 // Graphql
 import { MeQuery } from "../generated/graphql";
 import { RiArrowDropDownFill } from "react-icons/ri";
+import { HOME, SETTINGS } from "../constants/routes";
 
 interface UnderlineNavbarProps {
   me: NonNullable<MeQuery["me"]>;
@@ -88,8 +82,12 @@ const UnderlineNavbar: React.FC<UnderlineNavbarProps> = ({
           <SelectMenu.Modal width={150}>
             <SelectMenu.List>
               <SelectMenu.Divider>Pages</SelectMenu.Divider>
-              <SelectMenu.Item href="#">Home</SelectMenu.Item>
-              <SelectMenu.Item href="#">Settings</SelectMenu.Item>
+              <Link to={HOME}>
+                <SelectMenu.Item>Home</SelectMenu.Item>
+              </Link>
+              <Link to={SETTINGS}>
+                <SelectMenu.Item href="#">Settings</SelectMenu.Item>
+              </Link>
               <SelectMenu.Divider>Account</SelectMenu.Divider>
               <SelectMenu.Item href="#">Logout</SelectMenu.Item>
             </SelectMenu.List>
