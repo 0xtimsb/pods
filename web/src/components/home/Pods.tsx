@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { Link as RouterLink, generatePath } from "react-router-dom";
-import { MortarBoardIcon, SearchIcon, XIcon } from "@primer/octicons-react";
+import {
+  MortarBoardIcon,
+  SearchIcon,
+  XIcon,
+  ZapIcon,
+} from "@primer/octicons-react";
 import {
   BorderBox,
   ButtonPrimary,
@@ -32,11 +37,13 @@ const Pods: React.FC<PodsProps> = ({ pods, buttonProps }) => {
   const filteredList = pods
     .filter(({ name }) => name.toLowerCase().includes(filterText.toLowerCase()))
     .map(({ id, name, isAdmin, createdAt, description }) => (
-      <BorderBox key={id} padding={3}>
-        <Flex alignItems="flex-start" mb={2}>
-          <StyledOcticon icon={MortarBoardIcon} mr={2} />
+      <BorderBox as={Flex} key={id} padding={3}>
+        <Box mr={2}>
+          <StyledOcticon icon={ZapIcon} size={16} />
+        </Box>
+        <Flex flexDirection="column" justifyContent="space-between">
           <Box>
-            <Box>
+            <Box mb={1}>
               <Link
                 as={RouterLink}
                 to={generatePath(POD, { id })}
@@ -47,26 +54,18 @@ const Pods: React.FC<PodsProps> = ({ pods, buttonProps }) => {
                 {name}
               </Link>
             </Box>
-            <Box>
-              <Text fontSize={1} mb={2}>
-                {description}
+            <Box mb={1}>
+              <Text fontSize={13} color="gray.5">
+                {description.slice(0, 80)}
+                {description.length > 81 && "..."}
               </Text>
             </Box>
           </Box>
+          <Box>
+            <Text fontSize={12}>{isAdmin ? "Admin • " : "Member • "}</Text>
+            <Text fontSize={12}>Created {timeAgo(createdAt)} ago</Text>
+          </Box>
         </Flex>
-        <LabelGroup>
-          <Label
-            variant="medium"
-            outline
-            borderColor="purple.4"
-            color="purple.4"
-          >
-            You are {isAdmin ? "Admin" : "Member"}
-          </Label>
-          <Label variant="medium" outline borderColor="pink.4" color="pink.4">
-            Created {timeAgo(createdAt)} ago
-          </Label>
-        </LabelGroup>
       </BorderBox>
     ));
 
