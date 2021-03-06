@@ -12,11 +12,14 @@ import {
   Text,
   ButtonInvisible,
   Box,
+  Label,
+  LabelGroup,
 } from "@primer/components";
 
 // Routes
 import { POD } from "../../constants/routes";
 import { MeQuery } from "../../generated/graphql";
+import { timeAgo } from "../../utils/date";
 
 interface PodsProps {
   pods: NonNullable<MeQuery["me"]>["pods"];
@@ -28,24 +31,42 @@ const Pods: React.FC<PodsProps> = ({ pods, buttonProps }) => {
 
   const filteredList = pods
     .filter(({ name }) => name.toLowerCase().includes(filterText.toLowerCase()))
-    .map(({ id, name }) => (
-      <BorderBox key={id} padding={3} height={92}>
-        <Flex mb={2} alignItems="center">
+    .map(({ id, name, isAdmin, createdAt }) => (
+      <BorderBox key={id} padding={3}>
+        <Flex alignItems="flex-start" mb={2}>
           <StyledOcticon icon={MortarBoardIcon} mr={2} />
-          <Link
-            as={RouterLink}
-            to={generatePath(POD, { id })}
-            fontWeight="bold"
-            fontSize={1}
+          <Box>
+            <Box>
+              <Link
+                as={RouterLink}
+                to={generatePath(POD, { id })}
+                fontWeight="bold"
+                fontSize={1}
+                mr={2}
+              >
+                {name}
+              </Link>
+            </Box>
+            <Box>
+              <Text fontSize={1} mb={2}>
+                Pod description here.
+              </Text>
+            </Box>
+          </Box>
+        </Flex>
+        <LabelGroup>
+          <Label
+            variant="medium"
+            outline
+            borderColor="purple.4"
+            color="purple.4"
           >
-            {name}
-          </Link>
-        </Flex>
-        <Flex>
-          <Text fontSize={1} color="gray.7">
-            This is some nice info about pod!
-          </Text>
-        </Flex>
+            You are {isAdmin ? "Admin" : "Member"}
+          </Label>
+          <Label variant="medium" outline borderColor="pink.4" color="pink.4">
+            Created {timeAgo(createdAt)} ago
+          </Label>
+        </LabelGroup>
       </BorderBox>
     ));
 

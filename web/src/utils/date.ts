@@ -1,6 +1,10 @@
 // Converts unix timestamp into a time ago string like 7 hours ago.
 
 export const timeAgo = (unixTimestamp: any) => {
+  return getRelativeTime(unixTimestamp) + "s";
+};
+
+export const getRelativeTime = (unixTimestamp: any) => {
   const date = new Date(parseInt(unixTimestamp));
   const diff = new Date().getTime() - date.getTime();
   const seconds = Math.floor(diff / 1000);
@@ -8,35 +12,35 @@ export const timeAgo = (unixTimestamp: any) => {
   let interval = Math.floor(seconds / 31536000);
 
   if (interval > 1) {
-    return interval + "y";
+    return interval + " year";
   }
 
-  // interval = Math.floor(seconds / 2592000);
-  // if (interval > 1) {
-  //   return interval + 'month';
-  // }
+  interval = Math.floor(seconds / 2592000);
+  if (interval > 1) {
+    return interval + " month";
+  }
 
   interval = Math.floor(seconds / 604800);
   if (interval > 1) {
-    return interval + "w";
+    return interval + " week";
   }
 
   interval = Math.floor(seconds / 86400);
   if (interval > 1) {
-    return interval + "d";
+    return interval + " day";
   }
 
   interval = Math.floor(seconds / 3600);
   if (interval > 1) {
-    return interval + "h";
+    return interval + " hour";
   }
 
   interval = Math.floor(seconds / 60);
   if (interval > 1) {
-    return interval + "m";
+    return interval + " minute";
   }
 
-  return Math.floor(seconds) + "s";
+  return Math.floor(seconds) + " second";
 };
 
 // Converts unix timestamp to current date.
