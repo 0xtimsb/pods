@@ -27,8 +27,13 @@
 
 ## 📸 Screenshots
 
+### Home - Create and Search Pods.
 <img src="assets/screenshots/home.png" alt="Home" width="100%" />
+
+### Team Communication - Chat with Team and Invite Members and Admins.
 <img src="assets/screenshots/messaging.png" alt="Messaging" width="100%" />
+
+### Project Management - Create Tasks and Stories. Assign Team Users to the Task.
 <img src="assets/screenshots/project.png" alt="Project" width="100%" />
 
 ## Getting Started
