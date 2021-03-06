@@ -4,7 +4,9 @@ import {
   Box,
   ButtonDanger,
   ButtonPrimary,
+  CounterLabel,
   Flex,
+  Heading,
   Text,
 } from "@primer/components";
 
@@ -106,7 +108,7 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
         borderWidth={0}
         borderTopWidth={1}
       >
-        <Flex justifyContent="space-between" alignItems="center">
+        <Box>
           <Text fontSize={1}>
             <Text fontWeight="bold">{inviter.username}</Text>
             <Text> invited you to join </Text>
@@ -114,7 +116,7 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
             <Text> as </Text>
             <Text>{asAdmin ? "admin" : "member"}</Text>
           </Text>
-          <Flex>
+          <Flex justifyContent="flex-end" mt={1}>
             <ButtonDanger mr={2} onClick={() => handleCancelInvite(pod.id)}>
               Cancel
             </ButtonDanger>
@@ -122,7 +124,7 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
               Accept
             </ButtonPrimary>
           </Flex>
-        </Flex>
+        </Box>
       </BorderBox>
     )
   );
@@ -136,7 +138,7 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
         borderWidth={0}
         borderTopWidth={1}
       >
-        <Flex justifyContent="space-between" alignItems="center">
+        <Box>
           <Text fontSize={1}>
             <Text> You invited </Text>
             <Text fontWeight="bold">{invitee.username}</Text>
@@ -145,12 +147,14 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
             <Text> as </Text>
             <Text>{asAdmin ? "admin." : "member."}</Text>
           </Text>
-          <ButtonDanger
-            onClick={() => handleUninviteToPod(invitee.username, pod.id)}
-          >
-            Revert
-          </ButtonDanger>
-        </Flex>
+          <Flex justifyContent="flex-end" mt={1}>
+            <ButtonDanger
+              onClick={() => handleUninviteToPod(invitee.username, pod.id)}
+            >
+              Revert
+            </ButtonDanger>
+          </Flex>
+        </Box>
       </BorderBox>
     )
   );
@@ -158,11 +162,12 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
   return (
     <>
       <BorderBox mb={3} overflow="hidden">
-        <Box bg="gray.0" p={3}>
-          <Text fontSize={1} fontWeight="bold">
-            Received
-          </Text>
-        </Box>
+        <Flex bg="gray.0" p={2}>
+          <CounterLabel mr={2} px={2} py={1}>
+            {receivedInvites.length}
+          </CounterLabel>
+          <Heading fontSize={1}>Received</Heading>
+        </Flex>
         {receivedInvites.length === 0 ? (
           <BorderBox p={3} borderRadius={0} borderWidth={0} borderTopWidth={1}>
             <Text fontSize={1} color="gray.5">
@@ -174,11 +179,12 @@ const Invites: React.FC<InvitesProps> = ({ me }) => {
         )}
       </BorderBox>
       <BorderBox overflow="hidden">
-        <Box bg="gray.0" p={3}>
-          <Text fontSize={1} fontWeight="bold">
-            Sent
-          </Text>
-        </Box>
+        <Flex bg="gray.0" p={2}>
+          <CounterLabel mr={2} px={2} py={1}>
+            {sentInvites.length}
+          </CounterLabel>
+          <Heading fontSize={1}>Sent</Heading>
+        </Flex>
         {sentInvites.length === 0 ? (
           <BorderBox p={3} borderRadius={0} borderWidth={0} borderTopWidth={1}>
             <Text fontSize={1} color="gray.5">
