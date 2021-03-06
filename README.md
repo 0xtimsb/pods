@@ -1,6 +1,23 @@
 <img src="assets/zenmode-logo.png" alt="ZenMode Logo" width="180px" />
 <h3>A Project Management and Communication Tool for Teams.</h3>
 
+## 👨🏻‍🚀 Tech Stack
+
+- **Client** - **React, Apollo Client, Primer Components, React-Beautiful-DND, React-Hook-Form**
+- **Server** - **Node, Apollo Server Express, TypeORM, Type GraphQL, GraphQL Subscriptions, Argon, Connect-Redis**
+- **Database** - **PostgreSQL, Redis**
+
+## 📸 Screenshots
+
+<p float="left">
+  <img src="assets/screenshots/home.png" alt="Home" width="450px" />
+  <img src="assets/screenshots/messaging.png" alt="Messaging" width="450px" />
+</p>
+<p float="left">
+  <img src="assets/screenshots/project.png" alt="Project" width="450px" />
+</p>
+
+
 ## 🧐 Features
 
 ### Team Management and Communication
@@ -18,15 +35,6 @@
 ### Authetication and Security
 - **Secure authetication with diffrent access levels for diffrent APIs (Public, Authenticated, Member and Admin).**
 - **Cookie-session based authetication using redis.**
-
-## 👨🏻‍🚀 Tech Stack
-
-- **Client** - **React, Apollo Client, Primer Components, React-Beautiful-DND, React-Hook-Form**
-- **Server** - **Node, Apollo Server Express, TypeORM, Type GraphQL, GraphQL Subscriptions, Argon, Connect-Redis**
-- **Database** - **PostgreSQL, Redis**
-
-## 📸 Screenshots
-<img src="assets/preview-1.png" alt="Preview" width="75%" align="center" />
 
 ## Getting Started
 
