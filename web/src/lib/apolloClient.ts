@@ -1,9 +1,10 @@
 import { ApolloClient, HttpLink, InMemoryCache, split } from "@apollo/client";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
-import { read } from "node:fs";
 
 import { __prod__ } from "../constants/constant";
+
+import { pagination } from "../utils/fetch-policies";
 
 const httpLink = new HttpLink({
   uri: __prod__
@@ -37,6 +38,14 @@ const client = new ApolloClient({
     typePolicies: {
       Invite: {
         keyFields: ["invitee", ["id"], "pod", ["id"]],
+      },
+      Query: {
+        fields: {
+          messages: {
+            keyArgs: ["podId"],
+            merge: pagination,
+          },
+        },
       },
     },
   }),

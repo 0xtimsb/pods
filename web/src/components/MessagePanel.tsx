@@ -1,16 +1,18 @@
-import { BorderBox, Box, Button, Flex } from "@primer/components";
-import { useEffect, useRef, useState } from "react";
+import { gql, useApolloClient } from "@apollo/client";
+import { BorderBox, Flex } from "@primer/components";
+import { useEffect, useState } from "react";
+
+// Graphql
 import {
-  Message,
   NewMessagesSubscription,
   PodQuery,
   useMessagesLazyQuery,
   useMessagesQuery,
   useNewMessagesSubscription,
 } from "../generated/graphql";
+import useMessageScroll from "../hooks/useMessageScroll";
 
-import useInfiniteScroll from "../hooks/useInfinteScroll";
-
+// Components
 import MessageBox from "./MessageBox";
 import MessageInputBox from "./MessageInputBox";
 
@@ -19,25 +21,37 @@ interface MessagePanelProps {
 }
 
 const MessagePanel: React.FC<MessagePanelProps> = ({ pod }) => {
-  const scrollDiv = useRef<HTMLDivElement>(null);
-
-  const scrollToBottom = () => {
-    if (scrollDiv && scrollDiv.current) {
-      scrollDiv.current.scrollTop = scrollDiv.current.scrollHeight;
-    }
-  };
-
-  const { data: paginatedData } = useMessagesQuery({
+  const { data: paginatedData, fetchMore } = useMessagesQuery({
     variables: { podId: pod.id, limit: 10 },
   });
 
-  const { data, loading } = useNewMessagesSubscription({
+  const { data } = useNewMessagesSubscription({
     variables: { podId: pod.id },
   });
 
   const [messages, setMessages] = useState<
     NonNullable<NewMessagesSubscription["newMessages"]>[]
   >([]);
+
+  async function fetchMoreMessages() {
+    console.log("Fetching...");
+    if (paginatedData && paginatedData.messages.hasMore) {
+      await fetchMore({
+        variables: {
+          cursor: paginatedData.messages.result[0].createdAt,
+        },
+      });
+      setIsFetching(false);
+      console.log("Data received.");
+    }
+  }
+
+  const {
+    scrollRef,
+    isFetching,
+    setIsFetching,
+    scrollToBottom,
+  } = useMessageScroll(fetchMoreMessages);
 
   useEffect(() => {
     if (data && data.newMessages) {
@@ -48,10 +62,6 @@ const MessagePanel: React.FC<MessagePanelProps> = ({ pod }) => {
     }
   }, [data]);
 
-  // Fix scroll position on start.
-  useEffect(() => scrollToBottom());
-
-  // Fix scroll position on message received.
   useEffect(() => scrollToBottom(), [messages]);
 
   return (
@@ -66,7 +76,7 @@ const MessagePanel: React.FC<MessagePanelProps> = ({ pod }) => {
         overflowY="scroll"
         display="flex"
         flexDirection="column"
-        ref={scrollDiv}
+        ref={scrollRef}
       >
         {paginatedData &&
           paginatedData.messages.result.map((message) => (
