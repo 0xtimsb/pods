@@ -48,15 +48,17 @@ const PodPage: React.FC<PodPageInterface> = ({ match, me }) => {
 
   return (
     <Layout>
-      <UnderlineNavbar me={me} navItems={podNavItems} id={pod.id} />
       <Switch>
         <Route
           exact
           path={POD}
-          render={() => <Discussion me={me} pod={pod} />}
+          render={(props) => <Discussion me={me} pod={pod} {...props} />}
         />
-        <Route exact path={POD_PROJECT} render={() => <Board pod={pod} />} />
-        <Route exact path={POD_SETTINGS} render={() => <Settings />} />
+        <Route
+          exact
+          path={POD_PROJECT}
+          render={(props) => <Board me={me} pod={pod} {...props} />}
+        />
         <Redirect to={POD} />
       </Switch>
     </Layout>

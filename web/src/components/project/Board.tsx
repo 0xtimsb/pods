@@ -3,34 +3,41 @@ import {
   Box,
   Breadcrumb,
   Button,
-  ButtonDanger,
   ButtonPrimary,
-  Details,
   Dialog,
-  Dropdown,
   Flex,
   Text,
   TextInput,
-  useDetails,
 } from "@primer/components";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { generatePath, Link } from "react-router-dom";
+import { generatePath, NavLink } from "react-router-dom";
+
+// Constants
+import { podNavItems } from "../../constants/navItems";
 import { HOME, POD } from "../../constants/routes";
 
 // Graphql
-import { Pod, PodQuery, useCreateStoryMutation } from "../../generated/graphql";
+import {
+  MeQuery,
+  PodQuery,
+  useCreateStoryMutation,
+} from "../../generated/graphql";
+
+// Hooks
 import useInputModal from "../../hooks/useInputModal";
 import useProject from "../../hooks/useProject";
-import Container from "../Container";
 
 // Components
 import Column from "./Column";
+import Container from "../Container";
+import UnderlineNavbar from "../UnderlineNavbar";
 
 interface BoardProps {
+  me: NonNullable<MeQuery["me"]>;
   pod: NonNullable<PodQuery["pod"]>;
 }
 
-const Board: React.FC<BoardProps> = ({ pod }) => {
+const Board: React.FC<BoardProps> = ({ me, pod }) => {
   const [onDragEnd] = useProject(pod);
 
   const [createStory] = useCreateStoryMutation();
@@ -75,6 +82,7 @@ const Board: React.FC<BoardProps> = ({ pod }) => {
 
   return (
     <Container flexDirection="column">
+      <UnderlineNavbar me={me} navItems={podNavItems} id={pod.id} />
       <Dialog {...dialogProps} onDismiss={handleClose} aria-labelledby="label">
         <Dialog.Header>Add new story to the pod</Dialog.Header>
         <Box p={3}>
@@ -93,12 +101,18 @@ const Board: React.FC<BoardProps> = ({ pod }) => {
       </Dialog>
       <Flex py={3} justifyContent="space-between">
         <Breadcrumb>
-          <Breadcrumb.Item as={Link} to={HOME}>
+          <Breadcrumb.Item
+            as={(props) => <NavLink exact {...props} />}
+            to={HOME}
+          >
             <Text fontSize={2} fontWeight="bold">
               Home
             </Text>
           </Breadcrumb.Item>
-          <Breadcrumb.Item as={Link} to={generatePath(POD, { id: pod.id })}>
+          <Breadcrumb.Item
+            as={(props) => <NavLink exact {...props} />}
+            to={generatePath(POD, { id: pod.id })}
+          >
             <Text fontSize={2} fontWeight="bold">
               {pod.name}
             </Text>

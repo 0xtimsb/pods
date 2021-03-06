@@ -1,7 +1,8 @@
 import {
   generatePath,
-  Link as RouterLink,
+  NavLink,
   useLocation,
+  RouteProps,
 } from "react-router-dom";
 import { IconProps } from "@primer/octicons-react";
 import {
@@ -37,37 +38,38 @@ const UnderlineNavbar: React.FC<UnderlineNavbarProps> = ({
   me,
 }) => {
   const location = useLocation();
+
   return (
     <BorderBox
       bg="gray.0"
       borderRadius={0}
       borderWidth={0}
       borderBottomWidth={1}
-      style={{ position: "sticky", top: 0 }}
     >
       <Container justifyContent="space-between" alignItems="center">
         <Flex>
-          {navItems.map(({ name, route, icon }, index) => (
-            <UnderlineNav.Link
-              as={RouterLink}
-              to={generatePath(route, { id })}
-              key={index}
-              selected={location.pathname === generatePath(route, { id })}
-            >
-              <StyledOcticon icon={icon} mr={2} />
-              <Text
-                fontWeight={
-                  location.pathname === generatePath(route, { id })
-                    ? "bold"
-                    : "normal"
-                }
+          <UnderlineNav aria-label="Main">
+            {navItems.map(({ name, route, icon }, index) => (
+              <UnderlineNav.Link
+                as={(props) => <NavLink exact {...props} />}
+                key={index}
+                to={generatePath(route, { id })}
               >
-                {name}
-              </Text>
-            </UnderlineNav.Link>
-          ))}
+                <StyledOcticon icon={icon} mr={2} />
+                <Text
+                  fontWeight={
+                    location.pathname === generatePath(route, { id })
+                      ? "bold"
+                      : "normal"
+                  }
+                >
+                  {name}
+                </Text>
+              </UnderlineNav.Link>
+            ))}
+          </UnderlineNav>
         </Flex>
-        <SelectMenu style={{ zIndex: 999 }}>
+        <SelectMenu>
           <summary>
             <Flex alignItems="center" style={{ cursor: "pointer" }}>
               <img

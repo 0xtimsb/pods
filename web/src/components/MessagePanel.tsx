@@ -4,9 +4,12 @@ import {
   Message,
   NewMessagesSubscription,
   PodQuery,
+  useMessagesLazyQuery,
   useMessagesQuery,
   useNewMessagesSubscription,
 } from "../generated/graphql";
+
+import useInfiniteScroll from "../hooks/useInfinteScroll";
 
 import MessageBox from "./MessageBox";
 import MessageInputBox from "./MessageInputBox";
@@ -20,6 +23,8 @@ const MessagePanel: React.FC<MessagePanelProps> = ({ pod }) => {
     variables: { podId: pod.id, limit: 10 },
   });
 
+  const [messageLazy, { data: lazyMessages }] = useMessagesLazyQuery();
+
   const { data, loading } = useNewMessagesSubscription({
     variables: { podId: pod.id },
   });
@@ -27,6 +32,30 @@ const MessagePanel: React.FC<MessagePanelProps> = ({ pod }) => {
   const [messages, setMessages] = useState<
     NonNullable<NewMessagesSubscription["newMessages"]>[]
   >([]);
+
+  const handleFetchMore = () => {
+    console.log("fetch more");
+    if (paginatedData && paginatedData.messages.hasMore) {
+      setIsFetching(true);
+      messageLazy({
+        variables: {
+          podId: pod.id,
+          limit: 10,
+          cursor: paginatedData.messages.result[0].createdAt,
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (lazyMessages) {
+      console.log(lazyMessages.messages.result);
+    }
+  }, [lazyMessages]);
+
+  const { isFetching, setIsFetching, scrollWindowRef } = useInfiniteScroll(
+    handleFetchMore
+  );
 
   useEffect(() => {
     if (data && data.newMessages) {
@@ -49,6 +78,7 @@ const MessagePanel: React.FC<MessagePanelProps> = ({ pod }) => {
         overflowY="scroll"
         display="flex"
         flexDirection="column-reverse"
+        ref={scrollWindowRef}
       >
         {messages.map((message) => (
           <MessageBox key={message.id} message={message} />

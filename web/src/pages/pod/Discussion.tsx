@@ -14,11 +14,13 @@ import {
   Text,
   TextInput,
 } from "@primer/components";
-import { generatePath, Link } from "react-router-dom";
+import { generatePath, Link, NavLink } from "react-router-dom";
 
 // Container
 import Container from "../../components/Container";
 import MessagePanel from "../../components/MessagePanel";
+import UnderlineNavbar from "../../components/UnderlineNavbar";
+import { podNavItems } from "../../constants/navItems";
 import { HOME, POD } from "../../constants/routes";
 
 // Graphql
@@ -91,6 +93,7 @@ const Discussion = ({
 
   return (
     <Container flexDirection="column">
+      <UnderlineNavbar me={me} navItems={podNavItems} id={pod.id} />
       <Dialog {...dialogProps} onDismiss={handleClose} aria-labelledby="label">
         <Dialog.Header>Invite user to the pod</Dialog.Header>
         <Box p={3}>
@@ -123,12 +126,18 @@ const Discussion = ({
       </Dialog>
       <Flex py={3} justifyContent="space-between">
         <Breadcrumb>
-          <Breadcrumb.Item as={Link} to={HOME}>
+          <Breadcrumb.Item
+            as={(props) => <NavLink exact {...props} />}
+            to={HOME}
+          >
             <Text fontSize={2} fontWeight="bold">
               Home
             </Text>
           </Breadcrumb.Item>
-          <Breadcrumb.Item as={Link} to={generatePath(POD, { id: pod.id })}>
+          <Breadcrumb.Item
+            as={(props) => <NavLink exact {...props} />}
+            to={generatePath(POD, { id: pod.id })}
+          >
             <Text fontSize={2} fontWeight="bold">
               {pod.name}
             </Text>
@@ -189,6 +198,7 @@ const Discussion = ({
             </Flex>
             {pod.admins.map((admin) => (
               <BorderBox
+                key={admin.id}
                 px={3}
                 py={2}
                 borderRadius={0}
@@ -208,6 +218,7 @@ const Discussion = ({
             </Flex>
             {pod.members.map((member) => (
               <BorderBox
+                key={member.id}
                 px={3}
                 py={2}
                 borderRadius={0}
