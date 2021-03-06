@@ -1,14 +1,31 @@
-<h1 align="center">Zenmode</h1>
-<h3 align="center">The open-source team management and communication tool.</h3>
+<img src="assets/zenmode-logo.png" alt="ZenMode Logo" width="180px" />
+<h3>A Project Management and Communication Tool for Teams.</h3>
 
+## 🧐 Features
 
-- **Kanban Project Board**. Keep track of your todos and status, in your kanban board.
-- **Auto Sync**. No matter what changes you make, even drag-n-drop tasks positions, get synced with all other pod members.
-- **Real-time Communication**. Chat with pod members in real-time. No need for refresh. You send, they receive. It is that simple.
-- **Assign Tasks**. You can quickly assign tasks to pod members
-- **Secure Authetication**. Uses Redis store to keep track of sessions you are logged in. Your data in your hands.
+### Team Management and Communication
+- **Create pods and invite users as members and admins.**
+- **Websocket based messaging using graphql subscription.**
+- **Less data usage with cursor-pagination while fetching saved messages.**
+- **Cache modification for faster UI updates without reload using apollo client.**
 
-## Preview
+### Project Management
+- **Drag-n-drop project board in sync with postgresql database.**
+- **Lexo-ranking algorithm to store order of drag-n-drop in a board.**
+- **Assign tasks to members on project board.**
+- **Add multiple stories and tasks to the project board.**
+
+### Authetication and Security
+- **Secure authetication with diffrent access levels for diffrent APIs (Public, Authenticated, Member and Admin).**
+- **Cookie-session based authetication using redis.**
+
+## 👨🏻‍🚀 Tech Stack
+
+- **Client** - **React, Apollo Client, Primer Components, React-Beautiful-DND, React-Hook-Form**
+- **Server** - **Node, Apollo Server Express, TypeORM, Type GraphQL, GraphQL Subscriptions, Argon, Connect-Redis**
+- **Database** - **PostgreSQL, Redis**
+
+## 📸 Screenshots
 <img src="assets/preview-1.png" alt="Preview" width="75%" align="center" />
 
 ## Getting Started
@@ -23,14 +40,6 @@ Follow the steps below, after cloning the project:
 yarn install
 ```
 
-**or**
-
-- (Use npm to install)
-
-```bash
-npm install
-```
-
 This command installs all the dependencies needed for project to run locally.
 
 Enjoy 🎉
@@ -42,7 +51,7 @@ Enjoy 🎉
 - Node
 - Yarn
 
-**Database and Cache Storage:**
+**Databases:**
 
 - PostgreSQL
 - Redis
