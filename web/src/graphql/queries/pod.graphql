@@ -4,6 +4,7 @@ query Pod($podId: Int!) {
     name
     createdAt
     isAdmin
+    description
     admins {
       id
       username

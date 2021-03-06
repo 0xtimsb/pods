@@ -78,11 +78,11 @@ const Home: React.FC<HomeProps> = ({ me }) => {
     <Layout>
       <UnderlineNavbar me={me} navItems={homeNavItems} />
       <Dialog {...dialogProps} onDismiss={handleClose} aria-labelledby="label">
-        <Dialog.Header>Create new pod</Dialog.Header>
+        <Dialog.Header>Create New Pod</Dialog.Header>
         <Box p={3}>
-          <TextInput placeholder="Enter pod name" width={1} {...inputProps} />
+          <TextInput placeholder="Name" width={1} mb={2} {...inputProps} />
           <Flex mt={3} justifyContent="flex-end">
-            <Button mr={1} onClick={handleClose}>
+            <Button mr={2} onClick={handleClose}>
               Cancel
             </Button>
             <ButtonPrimary onClick={handleCreatePod}>Create</ButtonPrimary>

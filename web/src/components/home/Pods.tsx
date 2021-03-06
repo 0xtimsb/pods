@@ -31,7 +31,7 @@ const Pods: React.FC<PodsProps> = ({ pods, buttonProps }) => {
 
   const filteredList = pods
     .filter(({ name }) => name.toLowerCase().includes(filterText.toLowerCase()))
-    .map(({ id, name, isAdmin, createdAt }) => (
+    .map(({ id, name, isAdmin, createdAt, description }) => (
       <BorderBox key={id} padding={3}>
         <Flex alignItems="flex-start" mb={2}>
           <StyledOcticon icon={MortarBoardIcon} mr={2} />
@@ -49,7 +49,7 @@ const Pods: React.FC<PodsProps> = ({ pods, buttonProps }) => {
             </Box>
             <Box>
               <Text fontSize={1} mb={2}>
-                Pod description here.
+                {description}
               </Text>
             </Box>
           </Box>

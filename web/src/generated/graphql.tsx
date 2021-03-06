@@ -645,7 +645,7 @@ export type MeQuery = (
     & Pick<User, 'id' | 'username' | 'createdAt' | 'updatedAt'>
     & { pods: Array<(
       { __typename?: 'Pod' }
-      & Pick<Pod, 'id' | 'name' | 'createdAt' | 'isAdmin'>
+      & Pick<Pod, 'id' | 'name' | 'createdAt' | 'isAdmin' | 'description'>
     )>, sentInvites: Array<(
       { __typename?: 'Invite' }
       & Pick<Invite, 'asAdmin' | 'createdAt'>
@@ -705,7 +705,7 @@ export type PodQuery = (
   { __typename?: 'Query' }
   & { pod?: Maybe<(
     { __typename?: 'Pod' }
-    & Pick<Pod, 'id' | 'name' | 'createdAt' | 'isAdmin'>
+    & Pick<Pod, 'id' | 'name' | 'createdAt' | 'isAdmin' | 'description'>
     & { admins: Array<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
@@ -1530,6 +1530,7 @@ export const MeDocument = gql`
       name
       createdAt
       isAdmin
+      description
     }
     sentInvites {
       asAdmin
@@ -1638,6 +1639,7 @@ export const PodDocument = gql`
     name
     createdAt
     isAdmin
+    description
     admins {
       id
       username
