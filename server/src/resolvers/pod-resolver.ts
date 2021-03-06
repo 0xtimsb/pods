@@ -40,6 +40,8 @@ export class PodResolver {
   @Mutation(() => PodResponse)
   async createPod(
     @Arg("name") name: string,
+    @Arg("description", () => String, { nullable: true })
+    description: string | null,
     @Ctx() { req }: Context
   ): Promise<PodResponse> {
     if (name.length <= 2) {
@@ -62,6 +64,7 @@ export class PodResolver {
         .into(Pod)
         .values({
           name,
+          description: description || "",
         })
         .returning("*")
         .execute();
@@ -283,10 +286,11 @@ export class PodResolver {
       await getConnection()
         .createQueryBuilder()
         .delete()
-        .from(Pod)
-        .where({ id: podId })
+        .from(Pod, "pod")
+        .where("pod.id = :podId", { podId })
         .execute();
     } catch (e) {
+      console.log(e);
       return false;
     }
     return true;

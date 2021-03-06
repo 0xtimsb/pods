@@ -17,9 +17,15 @@ export class UserPod extends BaseEntity {
   @Column()
   isAdmin: boolean;
 
-  @ManyToOne(() => User, (user) => user.userPods, { primary: true })
+  @ManyToOne(() => User, (user) => user.userPods, {
+    primary: true,
+    onDelete: "CASCADE",
+  })
   user: User;
 
-  @ManyToOne(() => Pod, (pod) => pod.userPods, { primary: true })
+  @ManyToOne(() => Pod, (pod) => pod.userPods, {
+    primary: true,
+    onDelete: "CASCADE",
+  })
   pod: Pod;
 }

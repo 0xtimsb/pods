@@ -23,11 +23,11 @@ export class Message extends BaseEntity {
   text: string;
 
   @Field(() => User)
-  @ManyToOne(() => User, (user) => user.messages)
+  @ManyToOne(() => User, (user) => user.messages, { onDelete: "CASCADE" })
   user: User;
 
   @Field(() => Pod)
-  @ManyToOne(() => Pod, (pod) => pod.messages)
+  @ManyToOne(() => Pod, (pod) => pod.messages, { onDelete: "CASCADE" })
   pod: Pod;
 
   @Field(() => String)

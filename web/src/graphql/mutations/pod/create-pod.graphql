@@ -1,5 +1,5 @@
-mutation CreatePod($name: String!) {
-  createPod(name: $name) {
+mutation CreatePod($name: String!, $description: String) {
+  createPod(name: $name, description: $description) {
     pod {
       id
       name

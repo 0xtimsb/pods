@@ -69,6 +69,7 @@ export type Pod = {
   __typename?: 'Pod';
   id: Scalars['Int'];
   name: Scalars['String'];
+  description: Scalars['String'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   members: Array<User>;
@@ -165,6 +166,7 @@ export type MutationChangePasswordArgs = {
 
 
 export type MutationCreatePodArgs = {
+  description?: Maybe<Scalars['String']>;
   name: Scalars['String'];
 };
 
@@ -339,6 +341,7 @@ export type CancelInviteMutation = (
 
 export type CreatePodMutationVariables = Exact<{
   name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -804,8 +807,8 @@ export type CancelInviteMutationHookResult = ReturnType<typeof useCancelInviteMu
 export type CancelInviteMutationResult = Apollo.MutationResult<CancelInviteMutation>;
 export type CancelInviteMutationOptions = Apollo.BaseMutationOptions<CancelInviteMutation, CancelInviteMutationVariables>;
 export const CreatePodDocument = gql`
-    mutation CreatePod($name: String!) {
-  createPod(name: $name) {
+    mutation CreatePod($name: String!, $description: String) {
+  createPod(name: $name, description: $description) {
     pod {
       id
       name
@@ -833,6 +836,7 @@ export type CreatePodMutationFn = Apollo.MutationFunction<CreatePodMutation, Cre
  * const [createPodMutation, { data, loading, error }] = useCreatePodMutation({
  *   variables: {
  *      name: // value for 'name'
+ *      description: // value for 'description'
  *   },
  * });
  */
