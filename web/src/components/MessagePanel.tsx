@@ -21,6 +21,12 @@ interface MessagePanelProps {
 const MessagePanel: React.FC<MessagePanelProps> = ({ pod }) => {
   const scrollDiv = useRef<HTMLDivElement>(null);
 
+  const scrollToBottom = () => {
+    if (scrollDiv && scrollDiv.current) {
+      scrollDiv.current.scrollTop = scrollDiv.current.scrollHeight;
+    }
+  };
+
   const { data: paginatedData } = useMessagesQuery({
     variables: { podId: pod.id, limit: 10 },
   });
@@ -42,11 +48,11 @@ const MessagePanel: React.FC<MessagePanelProps> = ({ pod }) => {
     }
   }, [data]);
 
-  useEffect(() => {
-    if (scrollDiv && scrollDiv.current) {
-      scrollDiv.current.scrollTop = scrollDiv.current.scrollHeight;
-    }
-  }, [messages]);
+  // Fix scroll position on start.
+  useEffect(() => scrollToBottom());
+
+  // Fix scroll position on message received.
+  useEffect(() => scrollToBottom(), [messages]);
 
   return (
     <Flex flexDirection="column" flex={1}>
