@@ -1,4 +1,4 @@
-<img src="assets/zenmode-logo.png" alt="ZenMode Logo" width="180px" />
+<img src="assets/pods-logo.png" alt="Pods Logo" width="180px" />
 <h3>A Project Management and Communication Tool for Teams.</h3>
 
 ## 👨🏻‍🚀 Tech Stack
@@ -10,30 +10,36 @@
 ## 🧐 Features
 
 ### Team Management and Communication
+
 - **Create pods and invite users as members and admins.**
 - **Websocket based messaging using graphql subscription.**
 - **Less data usage with cursor-pagination while fetching saved messages.**
 - **Cache modification for faster UI updates without reload using apollo client.**
 
 ### Project Management
+
 - **Drag-n-drop project board in sync with postgresql database.**
 - **Lexo-ranking algorithm to store order of drag-n-drop in a board.**
 - **Assign tasks to members on project board.**
 - **Add multiple stories and tasks to the project board.**
 
 ### Authetication and Security
+
 - **Secure authetication with diffrent access levels for diffrent APIs (Public, Authenticated, Member and Admin).**
 - **Cookie-session based authetication using redis.**
 
 ## 📸 Screenshots
 
 ### Home - Create and Search Pods.
+
 <img src="assets/screenshots/home.png" alt="Home" width="100%" />
 
 ### Team Communication - Chat with Team and Invite Members and Admins.
+
 <img src="assets/screenshots/messaging.png" alt="Messaging" width="100%" />
 
 ### Project Management - Create Tasks and Stories. Assign Team Users to the Task.
+
 <img src="assets/screenshots/project.png" alt="Project" width="100%" />
 
 ## ⏳ Installation
@@ -48,7 +54,7 @@ yarn install
 
 This command installs all the dependencies needed for project to run locally.
 
-This project uses `yarn workspace` for managing `web` and `server` folders. 
+This project uses `yarn workspace` for managing `web` and `server` folders.
 
 - To run the project in development locally use:
 
@@ -63,11 +69,13 @@ yarn generate
 ```
 
 - To deploy web to heroku.
+
 ```bash
 yarn deploy-web
 ```
 
 - To deploy server to heroku.
+
 ```bash
 yarn deploy-server
 ```
