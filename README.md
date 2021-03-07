@@ -1,4 +1,4 @@
-<img src="assets/pods-logo.png" alt="Pods Logo" width="180px" />
+<img src="assets/pods-logo.png" alt="Pods Logo" width="125px" />
 <h3>A Project Management and Communication Tool for Teams.</h3>
 
 ## 👨🏻‍🚀 Tech Stack
