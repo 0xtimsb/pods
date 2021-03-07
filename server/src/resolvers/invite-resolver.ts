@@ -1,4 +1,4 @@
-import { FieldResolver, Resolver, Root } from "type-graphql";
+import { FieldResolver, Resolver } from "type-graphql";
 import { createQueryBuilder } from "typeorm";
 
 // Entities
