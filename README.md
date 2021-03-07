@@ -36,11 +36,9 @@
 ### Project Management - Create Tasks and Stories. Assign Team Users to the Task.
 <img src="assets/screenshots/project.png" alt="Project" width="100%" />
 
-## Getting Started
+## ⏳ Installation
 
 Follow the steps below, after cloning the project:
-
-### ⏳ Installation
 
 - (Use **yarn** to install (recommended). [Install yarn with these docs](https://yarnpkg.com/lang/en/docs/install/).)
 
@@ -50,7 +48,29 @@ yarn install
 
 This command installs all the dependencies needed for project to run locally.
 
-Enjoy 🎉
+This project uses `yarn workspace` for managing `web` and `server` folders. 
+
+- To run the project in development locally use:
+
+```bash
+yarn dev
+```
+
+- To generate GraphQL schema types for client from server.
+
+```bash
+yarn generate
+```
+
+- To deploy web to heroku.
+```bash
+yarn deploy-web
+```
+
+- To deploy server to heroku.
+```bash
+yarn deploy-server
+```
 
 ### 🖐 Requirements
 
