@@ -6,7 +6,7 @@
   ],
   "scripts": {
     "generate": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web generate\"",
-    "dev": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web dev\"",
+    "dev": "concurrently \"yarn workspace server dev\" \"sleep 20 && yarn workspace web start\"",
     "deploy-server": "git push https://git.heroku.com/pods-server.git HEAD:main",
     "heroku-postbuild": "yarn workspace server build"
   },
