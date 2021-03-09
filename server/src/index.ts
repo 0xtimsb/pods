@@ -124,8 +124,10 @@ const main = async () => {
   const httpServer = http.createServer(app);
   apolloServer.installSubscriptionHandlers(httpServer);
 
-  httpServer.listen(parseInt(process.env.PORT), () =>
-    console.log(`Running: http://localhost:${process.env.PORT}/graphql`)
+  const port = process.env.PORT || 4000;
+
+  httpServer.listen(port, () =>
+    console.log(`Running: http://localhost:${port}/graphql`)
   );
 };
 
